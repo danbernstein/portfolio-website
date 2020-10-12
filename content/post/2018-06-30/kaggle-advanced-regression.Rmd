@@ -1,0 +1,255 @@
+---
+title: Stacked Ensemble Modeling
+author: Dan
+date: '2018-06-30'
+slug: kaggle-advanced-regression
+categories: []
+tags: []
+description: ''
+image: ''
+keywords: ''
+draft: no
+
+---
+
+```{r, include = F}
+library(dplyr)
+library(tidyverse)
+library(randomForest) # for RF 
+library(caret) # for tuning ML algorithms
+library(modelr) # for the mae function 
+library(xgboost) # for gradient boosting
+library(caretEnsemble) # for stacking models
+library(e1071) # for skewness function
+library(plyr) # llply function
+
+## post-processing analysis ----
+
+test.df <- read.csv("./markdown_data/advanced_regression_kaggle/processed_data/test_df2018-06-17.csv", 
+                    stringsAsFactors = F, check.names = F)
+
+test <- read.csv("./markdown_data/advanced_regression_kaggle/data/test.csv", stringsAsFactors = F, check.names = F) 
+
+test_id <- test$Id
+
+y_train.df <- read.csv("./markdown_data/advanced_regression_kaggle/data/train.csv", stringsAsFactors = F) %>% 
+  filter(GrLivArea <= 4000)
+
+y_train <- y_train.df$SalePrice %>% 
+  log1p(.)
+
+train.df <- read.csv("./markdown_data/advanced_regression_kaggle/processed_data/train_df2018-06-17.csv", 
+                     stringsAsFactors = F) %>% select(-X)
+
+```
+
+ 
+## Summary
+
+I looked to Kaggle to further practice building predictive models. After optimizing single and ensemble regression techniques, I uncovered ensemble stacking as a method for building a strong predictive model from a collection of weak learners. The outcome is drastic improvements in predictive accuracy. This post will provide an overview of:
+
+1. the basics of automating data preparation using [caret](http://topepo.github.io/caret/index.html)
+2. building stacked ensemble modelling using [caretEnsemble](https://cran.r-project.org/web/packages/caretEnsemble/vignettes/caretEnsemble-intro.html)
+3. reason through how the various models that I used improve the ensemble predictions
+
+This post will deal less with the specifics of the dataset, and rather provide an overview of how these packages provide easy, flexible, and powerful methods for developing strong predictive models. 
+
+## Using caret to accelerate data processing and feature selection
+
+The [caret](http://topepo.github.io/caret/index.html) package is great for automating data pre-processing, feature selection, and tuning machine learning algorithms. It only takes one glance at the dimensions of the dataset in [Kaggle's Santander Value Prediction Challenge](https://www.kaggle.com/c/santander-value-prediction-challenge), which starts with over 4000 variables, to realize that tools are needed to quickly identify useless variables, especially those with little or no variance, and normalize highly skewed variables. caret can handle these repetitive actions through the preProcess function. Here we see that caret will evaluate all the variables for near-zero variance ("nzv") and perform the Box Cox and Yeo-Johnson Power transformations to normalize skewed data. 
+
+We will do a little work to impute for missing values. Another Kaggler has done a thorough job of determining good ways to handle missing data in this challenge, so I have copied the method, imputing "none" in some character vectors, zero for some numeric values, and then imputing the mode of all non-NA values in other numeric values.
+
+```{r, warning=F, include = F}
+# training data ----
+train <- read.csv("./markdown_data/advanced_regression_kaggle/data/train.csv", stringsAsFactors = F) 
+
+train_id <- train$Id
+
+train <- train %>% 
+  select(-Id) %>% 
+  filter(GrLivArea <= 4000)
+
+# missing the SalePrice value because that is the output to be predicted
+test <- read.csv("./markdown_data/advanced_regression_kaggle/data/test.csv", stringsAsFactors = F) 
+
+test <- test %>% 
+  select(-Id)
+
+ntrain <- nrow(train)
+ntest <- nrow(test)
+
+y_train <- train$SalePrice %>% 
+  log1p(.)
+
+output <- train$SalePrice
+
+# the training and test data is merged to ensure all transformations happen for both datasets
+all <- train %>% 
+  select(-SalePrice) %>% 
+  rbind(test)
+
+
+# fill missing data according to work done by other Kagglers ----
+
+## will impute "none" for any character strings with NAs
+none.char <- c("PoolQC","MiscFeature", "Alley", "Fence", "FireplaceQu",
+               "GarageType", "GarageFinish", "GarageQual", "GarageCond",
+               "BsmtQual", "BsmtCond", "BsmtExposure", "BsmtFinType1",
+               "BsmtFinType2", "MSSubClass", "MasVnrType")
+
+# will impute values with zero for all NAs
+none.numeric <- c("GarageYrBlt", "GarageArea", "GarageCars", "BsmtFinSF1", 
+                  "BsmtFinSF2", "BsmtUnfSF", "TotalBsmtSF", "MasVnrArea",
+                  "BsmtFullBath", "BsmtHalfBath")
+
+# will impute values with the mode for all NAs
+none.mode <- c("MSZoning", "Electrical", "KitchenQual", "Exterior1st",
+               "Exterior2nd", "SaleType", "Functional")
+
+# 
+all.fixmissing <- 
+  all %>% 
+  # the variables stored in none.char are imputed
+  mutate_if(colnames(.) %in% none.char, funs(replace(., is.na(.), "none"))) %>% 
+  # the variables stored in none.numeric are imputed
+  mutate_if(colnames(.) %in% none.numeric, funs(replace(., is.na(.), 0))) %>% 
+  # the variables in none.mode are imputed
+  mutate_if(colnames(.) %in% none.mode, funs(replace(., is.na(.), names(sort(-table(.)))[1]))) %>% 
+  # for any entries with NA for LotFrontage, it will be the median of all non-NA values within the same Neighborhood
+  group_by(Neighborhood) %>% 
+  mutate_at(vars(LotFrontage), ~ifelse(is.na(.), median(., na.rm = TRUE), .)) %>% 
+  ungroup() %>% 
+  # remove Utilities because there is no contrast in the test data
+  select(-Utilities) %>% 
+  mutate_if(is.character, as.factor)
+```
+
+```{r}
+dim(all.fixmissing)
+```
+
+```{r}
+train.predict <- 
+  all.fixmissing %>% 
+  data.frame() %>% 
+  predict(preProcess(., method=c("nzv", "BoxCox","YeoJohnson")), .)
+
+dim(train.predict)
+```
+
+We can see that caret has cut down on the number of variables because the non-zero variance (nzv) method discards any variables that provide little variance, thus little relevance for modelling.
+
+## Modeling 
+
+### basics of tuning a model with caret
+
+You can tune the parameters of any model included in caret: 
+
+```{r, warning=F}
+control <- trainControl(method = "repeatedcv", number = 10, repeats = 1,
+                        savePredictions = "final", 
+                        classProbs = F)
+
+mod <- caret::train(y_train~., 
+                    data = train.df, 
+                    trControl = control, 
+                    method = 'glm')
+mod
+```
+
+trainControl dictates how the model will be evaluated. Here we specify that the model perform repeated cross-validation (method = "repeatedcv"). meaning we will perform k-fold cross-validation multiple times. k-fold cross-validation involves splitting the data in k groups of roughly equal size, training the data repeatedly on all but one of these groups, and then testing the model on the one group that was left out. The test error from the k models is then averaged to provide a final test error to estimate the final model parameters. 
+
+### Improving predictive accuracy with stacked ensemble models 
+
+#### Fundamental concept of stacked ensemble models
+Stacked ensemble models have proven quite successful in winning Kaggle competitions because they leverage the unique strengths of various ML algorithms to build a stronger model. The basic idea is that multiple models are built on the training data (depicted by the three y-hat objects in the figure below, likely a decision tree, SVM, and neural network here). The resulting predicted values from these models, known as the base learner models, are used as the input to a second-level algorithm, often called the meta-model. The meta-model will produce a model that optimizes the predicted values from the base learners, providing a single stronger model because each base learner will often pick up on different patterns in the data. 
+
+<img src="/img/blogs/modelstacking.png" style = "display: block;
+    margin: 0 auto; background-color:white;";>
+    
+#### Implementation in caretEnsemble
+
+The [caretEnsemble](https://cran.r-project.org/web/packages/caretEnsemble/vignettes/caretEnsemble-intro.html) package streamlines the process of building and evaluating stacked ensemble models. 
+
+To implement a stacked ensemble model, we first have to bundle the trained base learners using caretList. Again, trControl determines how each model will be evaluated. It is important to specify the index for the base learners so that all the models train on the same data partitions. We specify the individual base learners in two ways. First, for any base learners that do not allow for parameter tuning, we provide them as a vector to the methodList parameter of caretList. For variables that allow for parameter tuning in caret, we will list the models individually as a list for "tuneList". For each model, we first tune the parameters like we saw above, and then specify the best set of parameters as a dataframe in the tuneGrid parameter of the caretModelSpec function. By specifying single values for the model parameters, we are speeding up computation because caretEnsemble will not attempt to optimize the models. 
+
+
+```{r, include = F, warnings = F}
+# these three lines set up parallel processing, which will speed up computation
+library(doParallel)
+cl <- makePSOCKcluster(2)
+registerDoParallel(cl)
+
+# the trainControl function
+control <- trainControl(method = "repeatedcv", number = 10, repeats = 1,
+                        savePredictions = "final", 
+                        index = createFolds(train.df$y_train, 2),
+                        classProbs = F)
+
+algorithmList <- c('glmboost', 'gbm', 'bayesglm') 
+set.seed(1000)
+
+# train the base learners
+models <- caretList(form = y_train~., 
+                    data = train.df,
+                    trControl = control,
+                    methodList = algorithmList,
+                    tuneList = list(
+                    xgbTree=caretModelSpec(method="xgbTree", 
+                                        tuneGrid=data.frame(.nrounds = 100, 
+                                                            .max_depth = 4, 
+                                                            .eta = 0.1,
+                                                            .gamma = 0,
+                                                            .colsample_bytree = 0.3,
+                                                            .min_child_weight = 0.5,
+                                                            .subsample = 1))
+                                   ))
+```
+
+<img src="/img/blogs/ensemblestack_metrics.jpeg" style = "display: block;
+    margin: 0 auto; background-color:white;";>
+
+For the meta-model, we again specify the how the model will be evaluated, here stored in the stackControl object. We specify the meta-model as the method to the caretStack function, here a general linear model (glm), and the best model will be selected based on root mean squared error (RMSE). The final model demonstrates a significant improvement in RMSE and adjusted R-squared. 
+
+```{r}
+#evaluation control
+stackControl <- trainControl(method = "repeatedcv", number = 5, repeats = 5,
+                             savePredictions = "final", 
+                             classProbs = F)
+
+# train the meta-model
+stack.glm <- caretStack(models, method = 'glm', 
+                        metric = "RMSE", trControl = stackControl)
+
+stack.glm
+```
+
+We can then predict values for the test data. The predict value is addition I made to automatically write the predicted values to a csv file for submission.
+"
+```{r}
+predict_values <- function(model, test_data){
+  predicted <- predict(model, test_data) %>% expm1(.) # to reverse log transformation
+  predicted.df <- cbind(test_id, predicted) %>% 
+    magrittr::set_colnames(c("Id", "SalePrice"))
+  
+ # write.table(predicted.df, file = paste0("./outputs/" , Sys.time(), "-predictedvalues", ".csv"), 
+#              sep = ",", col.names = T, row.names = F)
+}
+
+predict_values(stack.glm, test.df)
+```
+
+
+We will get a warning telling us that "prediction from a rank-deficient fit may be misleading" when the base learners are highly correlated, meaning they are picking up on the same trends in the data and adding little improvement in predictive accuracy. We can explore which of these base learners are highly correlated through a correlation matrix. 
+
+<img src="/img/blogs/table1.jpeg" style = "display: block;
+    margin: 0 auto; background-color:white;";>
+
+
+
+## Understanding the advantages of specific ML algorithms
+
+When trying to improve the ensemble predictive accuracy, it is easy to throw in many base leaners that don't provide large improvements in accuracy. caretEnsemble tries to warning you when your models are highly correlated and will provide only minor improvements. These minor improvements might matter if you are trying to score higher on Kaggle where small improvements in the evaluation metric can yield improvements in the leader board, but large improvements result from combining base learners that pick up on different patterns in the data.
+
+

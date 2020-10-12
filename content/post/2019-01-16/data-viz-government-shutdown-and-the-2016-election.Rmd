@@ -1,0 +1,147 @@
+---
+title: 'Data Viz: Government Shutdown and the 2016 Election'
+author: Dan
+date: '2019-01-16'
+slug: data-viz-government-shutdown-and-the-2016-election
+categories: []
+tags:
+  - R
+  - visualization
+description: ''
+image: ''
+keywords: ''
+draft: no
+---
+
+In January 2019, Axios produced a data visualization to demonstrate how the partial government shutdown was impacting different states and how that related to the outcomes of the 2016 presidential election. The visualization is a little confusing because there are two color scales, one for states that went for Trump and another for Clinton. Because the scales are distinguished by the 2016 winner, but the shade on each scale is determined by the number of federal workers affected by the government shutdown, the visualization is a little confusing. 
+
+To break it down into each of the map aesthetics, the x and y components are taken up by geographic data for each state's location, while the color scale is the 2016 winner and the position on each scale is the number of federal employees affected. The interactive map was allowed the user to see the number of employees affected as a raw number and a proportion of all workers in each state, as well as the margin of victory in the 2016 election. It becomes hard to compare states in the two different color scales and those that are geographically distant because you have to use the interactive feature.
+
+I decided to change the mapping aesthetics, instead of using geographic information, I used the margin of victory on the X axis, the Y axis is the number of workers affected by the shutdown, and the size of each dot is the percent of all workers in the state affected. I believe these changes still clearly highlight the states that are disproportionately affected, while also allowing better comparison. The major downside is that once you move away from the geographic map layout, the visualization becomes more difficult to immediately grasp the units (the state level) and you cannot label every state, so only the highlighted ones are identified. Additionally, there is substantial white space my visualization, which is not very appealing.
+
+
+```{r, echo=FALSE, out.width = "80%", out.extra='keepaspectratio', fig.align='center'}
+knitr::include_graphics("../markdown_data/data_viz/axios_shutdown_2019/axios_shutdown.png")
+```
+
+```{r, include = F}
+
+library(tidyverse)
+library(ggrepel)
+library(extrafont)
+
+
+# read data
+fed_jobs_cabinet <- openxlsx::read.xlsx("./markdown_data/data_viz/axios_shutdown_2019/raw_data/fed_jobs_cabinetagencies.xlsx",
+                                        startRow = 3)
+
+fed_jobs_smallagencies <- openxlsx::read.xlsx("./markdown_data/data_viz/axios_shutdown_2019/raw_data/fed_jobs_smallagencies.xlsx",
+                                              startRow = 3)
+
+all_jobs <- openxlsx::read.xlsx("./markdown_data/data_viz/axios_shutdown_2019/raw_data/all_jobs.xlsx")
+
+
+results_2016 <- openxlsx::read.xlsx("./markdown_data/data_viz/axios_shutdown_2019/raw_data/federalelections2016.xlsx",
+                                    sheet = "Table 2. Electoral &  Pop Vote",
+                                    startRow = 4)
+
+# merge data
+
+# still missing FDA, IHS
+shutdown_agencies <- c('Homeland Security', 'Housing and Urban Development', 'Commerce', 'Interior', 
+                       'Transportation', 'State', 'Agriculture', 'Justice', 
+                       'Treasury', 'Environmental Protection Agency', 'Food and Drug Administration', 'Indian Health Services', 
+                       'National Aeronautics and Space Administration', 'Small Business Administration')
+
+fed_jobs_proc <-
+  bind_rows(fed_jobs_cabinet, fed_jobs_smallagencies) %>% 
+  rename(Agency = Employment.as.values) %>% 
+  mutate(Agency = tolower(str_remove_all(Agency, pattern = ".*-|DEPARTMENT OF |THE "))) %>% 
+  filter(Agency != "Cabinet Level Agencies|Large Independent Agencies (1000 or more Employees)") %>% 
+  gather(2:54, key = "State", value = 'fed_jobs') %>% 
+  spread(key = Agency, value = fed_jobs) %>% 
+  mutate(State = str_remove_all(tolower(State), pattern = ".*-")) %>% 
+  mutate(State = str_replace_all(State, pattern = "\\.", replacement = " ")) %>% 
+  select(State, one_of(tolower(shutdown_agencies))) %>% 
+  gather(key = "Agency", value = "fed_jobs", -State) %>% 
+  group_by(State) %>% 
+  mutate(tot_fed_jobs = sum(fed_jobs, na.rm = T)) %>% 
+  ungroup() %>% 
+  select(-Agency, -fed_jobs) %>% 
+  unique() %>% 
+  slice(1:51)
+
+
+all_jobs_proc <-
+  all_jobs %>% 
+  mutate(State = tolower(State)) %>% 
+  select(State, total_jobs = `June&#10;2018`) %>% 
+  slice(1:51)
+
+results_2016_proc <-
+  results_2016 %>% 
+  mutate(trump_perc = `Trump.(R)` * 100 / Total.Vote,
+         clinton_perc = `Clinton.(D)` * 100 / Total.Vote,
+         dif_perc = trump_perc - clinton_perc,
+         sign = if_else(dif_perc > 0, "positive", "negative")) %>% 
+  select(State = X1, dif_perc, sign) %>% 
+  slice(1:51)
+
+
+states_data <- 
+  left_join(fed_jobs_proc, all_jobs_proc, by = "State") %>% 
+  bind_cols(., results_2016_proc) %>% 
+  mutate(perc_fed_jobs = tot_fed_jobs / (total_jobs * 1000) * 10000)
+
+
+# visualize data
+
+p <-
+  ggplot(states_data,
+         aes(x = dif_perc, y = perc_fed_jobs, size = tot_fed_jobs,
+             text = paste('State:', State,
+                          '<br>Number of jobs affected per 10,000 people:', round(perc_fed_jobs, 1),
+                          '<br>Total number of jobs affected: ', round(tot_fed_jobs, 1),
+                          '<br>2016 Margin of victory: ', abs(round(dif_perc, 1)))))+
+  geom_text_repel(
+    data = subset(subset(states_data, perc_fed_jobs > 100)),
+    aes(label = State), 
+    size = 4,
+    segment.color = "black",
+    box.padding = unit(0.65, "lines"),
+    family="Comic Sans MS")+
+  geom_point()+
+  geom_segment(aes(x = 0, xend = 0, y=0, yend=Inf), linetype = 2, size = 0.5, colour = "grey")+
+  geom_segment(aes(x = -2, xend = -12, y=1000, yend=1000),  
+               lineend = 'round', linejoin = 'mitre',
+               arrow = arrow(length = unit(0.02, "npc"),
+                             type="closed"),
+               size = 1, colour = "blue")+
+  annotate("text", x = -20, y = 1000, label = "clinton", colour = "blue", size = 6)+
+  geom_segment(aes(x = 2, xend = 12, y=1000, yend=1000),  
+               lineend = 'round', linejoin = 'mitre',
+               arrow = arrow(length = unit(0.02, "npc"),
+                             type="closed"),
+               size = 1, colour = "red")+
+  annotate("text", x = 20, y = 1000, label = "trump", colour = "red", size = 6)+  
+  geom_point(aes(colour = sign))+
+  scale_colour_manual(values = c("positive" = "#E91D0E", "negative" = "#3333FF"))+
+  theme_minimal()+
+  geom_hline(yintercept=0)+
+  theme(axis.line = element_blank(), panel.border = element_blank(),
+        legend.position = "none",
+        panel.grid = element_blank(),
+        text = element_text(family="Comic Sans MS"),
+        axis.text.x = element_text(margin=margin(-15,0,0,0)),
+        title = element_text(face = "bold"))+
+  labs(x = "margin of victory in 2016 election (% popular vote)", 
+       y = "Federal Jobs Affected (per 10,000 workers)",
+       title = "DC is in a league of its own",
+       subtitle = "size is the total number of furloughed employees")+
+  ylim(0, 1000)
+
+```
+
+```{r, echo=FALSE, out.width = "80%", out.extra='keepaspectratio', fig.align='center'}
+knitr::include_graphics("../markdown_data/data_viz/axios_shutdown_2019/axios_shutdown_remade.png")
+```

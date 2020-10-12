@@ -1,0 +1,72 @@
+---
+title: Developing a Chrome Extension To Parse Recipes
+author: Dan
+date: '2020-10-12'
+slug: recipe-scraper
+categories: []
+tags: ['chrome', 'tools', 'cooking', 'javascript']
+description: ''
+image: ''
+keywords: ''
+draft: yes
+---
+
+
+
+<p>I love cooking, and I am heavily dependent on a couple of websites for new recipe ideas. Oftentimes, these websites
+contain multiple advertisements to drive revenue or the recipe contains a lot of background information that is not immediately relevant to the recipe, such as the history of the dish or how the chef developed the recipe.</p>
+<p>Problem: I love cooking but I hate all of this irrelevant content on recipe websites. I want to go to a recipe webpage and be able to easily extract the recipe with no frills.</p>
+<p>Solution: A chrome extension! There are multiple possible solutions; any technology that allows you to process a webpage would work. You could write a simple script and deploy it on a cloud service provide, like Amazon Web Services or Google Cloud Platform, but these solutions would be overly complex for the task and they would actually not be able to accomplish the whole task. This task requires the solution to present the extracted recipe to the user with minimal work. Cloud service providers would not be able to access the web browser containing the webpage and then control the browser to present the extracted recipe. Chrome extensions are made for this task. Chrome extensions let you accomplish small tasks using data directly available in the browser and interact with the browser session to accomplish the task.</p>
+<div id="basic-background-on-chrome-extensions" class="section level2">
+<h2>Basic Background on Chrome Extensions</h2>
+<p>Chrome extensions are just a handful of files that respond to how you navigate the internet. You can write a chrome extension that runs whenever you go to a specific domain (i.e., run a script whenever you go to ’*.google.com’) or you can write an extension that only runs when the user clicks the chrome extension icon in their toolbar.</p>
+<p>You need a few specific files to create a chrome extension:
+* <a href="https://developer.chrome.com/extensions/manifest">manifest.json</a> : a template file that provides metadata about your extension, such as the name, description, and version. This file also provides instructions on what permissions your extension requires (i.e., which tabs you are allowing the extension to access), and which files should be run when the user interacts with the extension.
+* <a href="https://developer.chrome.com/extensions/background_pages">background scripts</a> : background scripts are run when a user does a specific action. For example, a background script might run when the extension is first installed or the user clicks the extension icon.
+* <a href="https://developer.chrome.com/extensions/content_scripts">content scripts</a>: content scripts interact directly with the webpage.</p>
+<p>The distinction between background and content scripts is vague. I like to think of background scripts as entry points that listen for the user interaction, while content scripts are the logic used for interacting with the webpage after the user as triggered an action. We will not be using a dedicated content script in this project, but we will be injecting javascript into the webpage to get the page’s content using in-line javascript, which serves the same role that a content script would play.</p>
+</div>
+<div id="project-structure" class="section level2">
+<h2>Project Structure</h2>
+<pre><code>README
+manifest.json
+recipe-scraper/ 
+  background.js
+  img/recipe-book.png</code></pre>
+</div>
+<div id="chrome-extension-entry-point" class="section level2">
+<h2>Chrome Extension Entry Point</h2>
+<p>I want the extension to run when the user clicks the icon in the toolbar. This interaction is defined through a listener function that listens for a specific interaction.</p>
+<pre><code>// Called when the user clicks on the browser action.
+chrome.browserAction.onClicked.addListener(function(tab) {
+    chrome.tabs.executeScript({
+        /// get the href, body, and head of the current tab, they will all be used during processing
+        code: &#39;[window.location.href, document.body.innerHTML, document.head.innerHTML]&#39;
+      }, process_page );
+});</code></pre>
+<p>You could write an extension to run whenever a page loads, when the extension is first installed, or a variety of other circumstances. Here we are using in-line code to retrieve the contents of the web page, specifically the URL of the webpage (‘window.location.href’), the webpage body (‘document.body.innerHTML’), and the document header, which contains the webpage stylesheets for formatting and styling the webpage (‘document.head.innerHTML’). This in-line code is interacting directly with the webpage DOM, this is the same task that content scripts often provide. This logic could have been placed in a separate content script file if it was more complicated.</p>
+<p>After the chrome extension extracts these features, it sends them to a function called <code>process_page</code> which will determine how the page should be processed.</p>
+</div>
+<div id="extracting-the-recipe" class="section level2">
+<h2>Extracting the Recipe</h2>
+<p>The first iteration of this extension was based on attempting to parse the recipe section of the webpage. I quickly realized that recipe websites generally use a similar webpage template which include HTML elements that use the same ids and classes for the same types of information. Multiple webpages use a class name of ‘recipe-body’ or ‘post-content’ for the main recipe content. However, many websites do not use any specific HTML elements for the recipe content, so the recipe is just plain text. This scenario is more difficult to parse and would require using regular expressions to attempt to identify where the recipe begins and ends.</p>
+<p>I found that there was a more common webpage component that could extract the recipe in a more reliable manner: print previews. Many websites includ a button to format the webpage into a printer-friendly version. The logic of the extension first attempts to identify an HTML element that contains the URL for the well-formatted print preview (<code>get_print_url</code>). If the extension successfully identifies the URL, it will then take control of the user’s browser tab and navigate to that link (<code>chrome.tabs.update()</code>). If the extension fails to identify the URL, it will attempt to extract the recipe from the webpage (<code>extract_text</code>). If all else fails, the extension will handle errors by alerting the user of the issue.</p>
+<pre><code>function process_page(results) {
+    /// attempt to identify the URL for the printer-friendly webpage. If not found, extract the recipe from the webpage.
+    try {
+        var [tab_url, html, head] = results[0]
+        var doc = new DOMParser().parseFromString(html, &quot;text/html&quot;);
+        var print_url = get_print_url(doc, tab_url)
+        if (typeof(print_url) !== &#39;undefined&#39;) {
+            chrome.tabs.update({url: print_url});
+        } else {
+            extract_text(doc, head)
+        }
+    }
+    catch(err) {
+        console.log(err)
+        alert(`Sorry, we are unable to extract the recipe from this webpage.\nError information: ${err}`);
+    };
+}</code></pre>
+<p>The internal logic for parsing the webpage to identify the URL and extract the recipe are included the GitHub repository and will change as I try to generalize these two functions to apply to more recipe websites.</p>
+</div>

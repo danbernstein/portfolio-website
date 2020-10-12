@@ -1,0 +1,290 @@
+---
+title: The John Oliver Effect
+author: Dan
+date: '2018-07-30'
+slug: the-john-oliver-effect
+categories: []
+tags:
+  - Bibliometrics
+  - Network Analysis
+description: ''
+image: ''
+keywords: ''
+draft: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T,
+                      message= F, 
+                      warning = F)
+```
+
+## Background
+
+John Oliver recently discussed genetic editing on *Last Week Tonight*. Luckily by chance I have had an automated R script running everyday that collects all tweets that mention the term *CRISPR*, the leading method of genetic editing at this time. Bringing these two events together, I am interested to see how John Oliver discussing genetic editing might impact the level of social media activity surrounding the topic, represented by the tweets captured mentioned CRISPR. 
+
+
+## Questions
+
+All of the following questions are concerned with how the twitter data changes after John Oliver's episode first aired at 11 PM EST on Sunday, July 1, 2018. Descriptions of the scope of each question are briefly outlined here, and further described below.
+
+1. How does the magnitude of twitter activity change?
+
+2. How does the composition of tweets change in terms of the number of original tweets vs. retweets?
+
+3. How does the composition of twitter users engaged change in terms of the personal bios describing the twitter users?
+
+
+## Methods
+
+Tweets including the term *CRISPR* were collected using an automated R script ([twitteR](https://cran.r-project.org/web/packages/twitteR/twitteR.pdf) package) between June 9 and July 26, 2018. Unforunately tweets were not collected every day because the computer was not active on every day, though attempts were made to recollect missed days when possible. All collection and analysis was conducted in R 3.4.4.
+
+## Results
+
+#### 1. How does the magnitude of twitter activity change?
+
+While *crispr* is mentioned on a daily a basis, *John Oliver* only begins appearing in the same tweets on July 2, the day after the episode aired. References of *John Oliver* peaks with 207 mentions on the first day, July 2, and then quickly tapers off, with a short resurgence (46 mentions) around June 13. No John Oliver referencs appear past July 21. 
+
+```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+library(dplyr)
+library(tm)
+library(data.table)
+library(purrr)
+library(plotly)
+library(readr)
+library(stringr)
+library(igraph)
+library(wordcloud)
+library(tidytext)
+library(reshape2)
+library(tm)
+library(network)
+
+crisprtweet.df <-
+  list.files("/home/dan/data/bitbucket/twitter_data/outputs/crispr",
+             full.names = T) %>% 
+  map_df(~read_csv(., na = "na")) 
+
+tweets.df <-
+  crisprtweet.df %>% 
+  distinct(.) %>% 
+  mutate(Day = lubridate::date(created)) %>%
+  mutate(john = as.character(ifelse(grepl("John Oliver", .$text), 1, 0))) %>% 
+  mutate(link = if_else(isRetweet,
+                    str_extract(string = text, pattern = ("(?<=RT @).*(?=: )")), screenName)) %>% 
+  mutate(link = if_else(str_detect(link, ":"), str_replace(link,"\\:.*",""), link))
+```
+
+```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+tweets.day.john <- 
+  tweets.df %>% 
+  mutate(john = if_else(john == "0", "CRISPR", "CRISPR & John Oliver")) %>%
+  group_by(Day, john) %>% 
+  tally() %>% 
+  arrange(desc(n)) 
+
+ggplot(data = tweets.day.john, mapping = aes(x = Day, n, color = john)) +
+  geom_line()+
+  xlab("Day")+ylab("Number of Term Mentions")+
+  labs(color = "Terms Mentioned")
+
+```
+
+#### 2. How does the composition of tweets change?
+
+##### In terms of original tweets vs. retweets
+
+```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+## plot tweets and retweets
+tweets.content <-
+  tweets.df %>% 
+  group_by(Day, john, isRetweet) %>% 
+  tally() %>% 
+  arrange(desc(n)) %>% 
+  ungroup() %>% 
+  mutate(isRetweet = if_else(isRetweet, "Retweet", "Tweet")) %>% 
+  mutate(john = if_else(john == 1, "'CRISPR' and 'John Oliver'", "'CRISPR'"))
+
+ggplot(data = tweets.content, mapping = aes(x = Day, n, color = isRetweet)) +
+  facet_grid(rows = vars(john), scales = "free") +
+  geom_line()+
+  xlab("Day")+ggtitle("Number of Tweets with references")+
+  labs(color = "Type of Tweet")
+```
+
+#### 3. How does the composition of twitter users engaged change?
+Teasing out the characteristics of the twitter users is the most interesting aspect of this analysis, in my opinion. We can quickly rather the twitter biographies of the users in the tweet dataset: 
+```{r eval = F}
+twitter_bios <- twitteR::lookupUsers(users) %>% 
+  twListToDF()
+```
+The lookupUsers function provides a number of individual-level features that might be useful in various contexts, including the number of followers and favorites the user has, the date the account was created, and a self-provided biographic description and location, if available. For now, we will first look at the self-provided descriptions to see if those who tweeted in response to John Oliver are different in their personal descriptions than other users who tweet about CRISPR, and then look at the geographic distributions. 
+
+##### In terms of the personal bios describing the twitter users
+
+There are approximately 26,000 unique twitter users in the dataset, of which about 3000 did not have a bio description as of August 2018. The users were classified into three groups for comparison: 1) tweeted about crispr only in conjunction with John Oliver (~300 users), 2) tweeted about crispr both in conjunction with John Oliver and elsewhere (~187 users), 3) tweeted about crispr but never in conjunction with John Oliver (~26340 users). The wordcloud below gives a general understanding of the personal descriptions for these three groups, where the text size of each word is a measure of the words frequency within the group, not across groups (for example, the same text size in groups 1 and 2 does not indicate the same frequencies). 
+
+In the below plots, A indicates users who only mentioned CRISPR in conjunction with John Oliver, B indicates users who never mentioned John Oliver, and C indicates uers who mentioned CRISPR both in conjunction and others.
+
+```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+## three group comparison
+twitter_user_bios <- read_csv("./markdown_data/john_oliver_effect/processed_data/twitter_users_info.csv")
+
+users <- c(tweets.df$screenName)
+
+tweets.bios_threegroup <-
+  tweets.df %>% 
+  group_by(screenName) %>% 
+  summarize(ever_john_mean = mean(as.numeric(john))) %>% 
+  mutate(ever_john = if_else(ever_john_mean == 1, "A", 
+                             if_else(ever_john_mean == 0, "B",
+                                     "C"))) %>% 
+  ungroup() 
+
+twitter_user_bios_cleaned_threegroup <-
+  twitter_user_bios %>% 
+  unique() %>% 
+  filter(screenName %in% users) %>% 
+  left_join(., tweets.bios_threegroup, by = "screenName")
+
+bio_words_threegroup_source <- 
+  tidytext::unnest_tokens(twitter_user_bios_cleaned_threegroup, "word", input = description) %>% 
+  anti_join(stop_words, by = c("word" = "word")) %>% 
+  count(word, ever_john) %>% 
+  ungroup()
+
+bio_words_threegroup_plot <-
+  bio_words_threegroup_source %>% 
+  group_by(ever_john) %>% 
+  top_n(10) %>%
+  ungroup() %>% 
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(x = reorder(word, -n), y = n, fill = ever_john)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ever_john, scales = "free",
+             labeller = labeller(groupwrap = label_wrap_gen(20))) +
+  labs(y = "",
+       x = NULL) +
+  coord_flip()
+
+bio_words_threegroup_plot
+```
+
+```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+bio_words_threegroup_source %>% 
+  group_by(ever_john) %>% 
+  arrange(desc(n)) %>% 
+  acast(word ~ ever_john, value.var = "n", fill = 0) %>% 
+  comparison.cloud(colors = c("#F8766D", "#00BFC4", "green"), 
+                   scale = c(2,.5),
+                   random.order = F,
+                   max.words = 150,
+                   title.size = 2)
+```
+
+The users who mentioned crispr only alongside John Oliver (green text) show a diversity of occupational descriptions (celebrity, teacher, coach, assistant), and a number of potential media references (fan, tv, web). The users who mentioned crispr both in relation to John Oliver and in other contexts show a large preference for biomedical and scientific descriptions (genomics, biotech, research, cancer, health). 
+
+Unfortunately, this wordcloud algorithm partitions the words so that each word only appears in the group where it has the highest frequency, thus words that are common across groups, such as "science" only appear in one group. This issue leads the group where John Oliver and CRISPR are never comentioned to include very few words because the group size is so large that the frequency of common words is much smaller than those words' frequencies in the  the other groups. This algorithm would be improved by providing a mixed mechanism, potentially blending the colors to indicate to degree to which a word appears in multiple groups. 
+
+
+We can get a little bit more information on the group that never mentioned John Oliver by splitting the users into two groups: 1) mentioned John Oliver, regardless of other mentions of CRISPR, and 2) never mentioned John Oliver within tweets about CRISPR.
+
+```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+tweets.bios_twogroup <-
+  tweets.df %>% 
+  group_by(screenName) %>% 
+  summarize(ever_john_sum = sum(as.numeric(john))) %>% 
+  mutate(ever_john = if_else(ever_john_sum == 0, "John Oliver Not Mentioned", "John Oliver Mentioned")) %>%
+  ungroup() 
+
+twitter_user_bios_cleaned_twogroup <-
+  twitter_user_bios %>% 
+  unique() %>% 
+  filter(screenName %in% users) %>% 
+  left_join(., tweets.bios_twogroup, by = "screenName")
+
+bio_words_twogroup_source <- 
+  tidytext::unnest_tokens(twitter_user_bios_cleaned_twogroup, "word", input = description) %>% 
+  anti_join(stop_words, by = c("word" = "word")) %>% 
+  count(word, ever_john) %>% 
+  ungroup()
+```
+
+```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+bio_words_twogroup_source %>% 
+  group_by(ever_john) %>% 
+  top_n(10) %>%
+  ungroup() %>% 
+  mutate(word = reorder(word, n)) %>%
+  ggplot(aes(word, n, fill = ever_john)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~ever_john, scales = "free",
+             labeller = labeller(groupwrap = label_wrap_gen(20))) +
+  labs(y = "",
+       x = NULL) +
+  coord_flip()
+```
+
+```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+bio_words_twogroup_source %>% 
+  acast(word ~ ever_john, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = c("#F8766D", "#00BFC4"),
+                   max.words = 300,
+                   title.size = 1.2)
+```
+
+## Among users who first tweeted about CRISPR in relation to John Oliver, who are they retweeting?
+
+```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+## one and done (tweeted about CRISPR and John Oliver first)----
+users.firstjohn <-
+  tweets.df %>% 
+  group_by(screenName) %>% 
+  # get the first tweet for each person
+  arrange(created) %>% 
+  top_n(., n = -1, wt = created) %>% 
+  ungroup() %>% 
+  distinct(screenName, .keep_all = T) 
+
+# users who tweeted first the first time about John Oliver and CRISPR
+firstjohn <-
+  users.firstjohn %>% 
+  filter(john == 1)
+
+# subset only people who first tweeted about JO + crispr ----
+tweets.firstjohn <- 
+  tweets.df %>% 
+  filter(screenName %in% firstjohn$screenName) 
+
+
+# identify users who first tweeted about JO based on screen names in users.firstjohn
+
+tweets.grouped_john <- 
+  tweets.df %>% 
+  left_join(., users.firstjohn, by = "screenName") 
+
+# first retweet source for everyone
+tweets.grouped_john %>%  
+  distinct(screenName, .keep_all = T) %>% 
+  count(john.y, link.y) %>% 
+  group_by(john.y) %>% 
+  arrange(desc(n)) %>% 
+  top_n(5)
+```
+
+Among all retweets, the most common sources are The Rock (who starred in a fictional movie about CRISPR gone wrong), Sciences New (the news branch of Science Magazine), Scientific American, STAT news, and Nature Biotechnology. Beyond the first source, mayn of the sources are academic or professional organizations with a focus on health and technology. 
+
+```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+# retweet source of individual tweets for everyone
+firstjohn %>%  
+  # use the john value of the whether the first tweet invokes John Oliver
+  # use the source of the individual tweet, rather than the first tweet 
+  count(john, link) %>% 
+  group_by(john) %>% 
+  arrange(desc(n)) %>% 
+  top_n(5)
+```
+
+Among the 359 users who first tweeted about CRISPR in conjunction with John Oliver, the most popular tweet sources of their first tweets were TIME (63), Synthego (43), Rolling Stone (36), and the Bulletin of the Atomic Scientists (8). When we look at the source of all retweets in this group, the same sources top the list. In comparison to the entire retweet dataset, those individuals who first retweeted about crispr in conjunction with John Oliver seem to respond to information from more general news organizations. Inter
+
+

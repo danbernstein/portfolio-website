@@ -1,0 +1,202 @@
+---
+title: 'Forecasting: Attributable Death'
+author: Dan
+date: '2018-10-30'
+slug: forecasting-attributable-death
+categories: []
+tags: []
+description: ''
+image: ''
+keywords: ''
+draft: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T,
+                      message= F, 
+                      warning = F,
+                      fig.align = "center")
+```
+
+*This is the fourth and final post in a series that seek to recreate the methods used in [Future ozone-related acute excess mortality under climate and population change scenarios in China: A modeling study](https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002598#sec014). All the posts build on my previous post on [forecasting](https://danbernstein.netlify.com/post/learning-forecasting/), by using data available from national and international research initatives to project future scenarios for complex systems including [atmospheric chemistry](https://danbernstein.netlify.com/post/climate-modeling/), [population dynamics](https://danbernstein.netlify.com/post/population-projections/), and [mortality rate](https://danbernstein.netlify.com/post/mortality-rate-projections/). This post focuses on combining the previous three projections to derive human health outcome metrics: attributable fraction and attributable daily death.*
+
+This post does not actually forecast anything, but it does bring together three forecasts (ozone concentrations, population dynamics, and mortality rates) to demonstrate the methods used to forecast future attributable deaths. This task is more about wrangling the outputs of the other forecasts into a format that is efficient for calculating the final value. 
+
+IMPORTANT NOTE: This post uses the CRF values for the Chinese population from the [2017 nationwide study](https://ehp.niehs.nih.gov/doi/abs/10.1289/EHP1849?url_ver=Z39.88-2003&rfr_id=ori:rid:crossref.org&rfr_dat=cr_pub%3dpubmed). These values are not appropriate for the subset of the US population that I will use here. Additionally, the mortality rate used is purely hypothetical and is not based on any epidemiological studies.
+
+## Methods: Calculating Attributable Annual Death 
+
+### *Overview of Analysis*
+
+The workflow for this analysis involves recreating the methods used in the PLOS Medicine article under the heading "health impact assessment". 
+
+To break down this section into discrete steps:
+
+* load the appropriate packages
+* Wrangle the outputs of the other forecasts into datasets appropriate for inputting into the calculations
+* Calculate attributable fraction (AF) and attributable daily deaths (ADD) for the general population and under group-specific conditions
+
+## Analysis 
+
+The historical and future ozone values represent monitoring stations across the state of California. The population projections are solely for the city of San Francisco, CA. To fully reproduce the methods in the PLOS Medicine article, I would need to subset the raster values that fall within a  given city's geographic boundaries.
+
+```{r}
+library(dplyr)
+library(tidyverse)
+library(tsibble)
+
+## load bias-corrected, spatially disaggregated future ozone values, 2051-2055
+ts_futuretro3 <- 
+  read_csv("./markdown_data/forecasting_tro3/cali_stations_ts/future_tro3.csv") %>% 
+  column_to_rownames("X1")
+
+## load historical ozone observations, 2011
+ts_histtro3 <- 
+  read_csv("./markdown_data/forecasting_tro3/cali_stations_ts/hist_tro3.csv") %>% 
+  column_to_rownames("X1")
+
+## population projections, for each decade between 2010 and 2100
+
+pop_proj <- read.csv("./markdown_data/forecasting_tro3/pop_projections/sf_2010_2100.csv")
+```
+
+
+The concentration-response functions are taken from the Chinese epidemiological study:
+```{r}
+## CRF from paper conducted in major chinese cities
+
+crf_groups <- c("all_nonaccidental", "cardiovascular", "respiratory", "5-64", "65-74", 
+                ">=75", "Warm (May-Oct)", "Cold (Nov-Apr")
+crf <- c(0.24, 0.27, 0.18, 0.13, 0.19, 0.42, 0.20, 0.43)
+crf_95l <- c(0.13, 0.10, -0.11, -0.23, 0.03, 0.21, 0.08, 0.21)
+crf_95u <- c(0.35, 0.44, 0.47, 0.48, 0.34, 0.64, 0.31, 0.65)
+crf_df <- data_frame(crf_groups, crf, crf_95l, crf_95u)
+
+```
+
+I have created a purely hypothetical mortality rate to use in the calculation. This value is not based on any epidemiological studies and is purely to stand in for the mortality rate variable in subsequent calculations:
+```{r}
+# simulated mortality rate (10 deaths per 10 million people)
+mort_rate <- 10 / 10000000
+```
+
+A simple function will take in ozone concentration values ("x") and multiple it by the concentration response factor to obtain the attributable fraction at each station at each time point.
+```{r}
+calcAF <- function(df, crf_val){
+  AF <-
+  df %>% 
+  mutate_if(is.numeric, function(x){1 - exp(-x * crf_val[1])}) # AF = 1 - exp(tro3 * crf)
+  
+  return(AF)
+}
+
+# data wrangling
+hist_data <- 
+  ts_histtro3 %>% 
+  mutate(val = rownames(.)) %>% 
+  gather(dt, obs, -val) %>% 
+  mutate(obs = replace_na(obs, 0)) %>% 
+  spread(key = val, value = obs) %>% 
+  mutate(dt = lubridate::as_date(dt)) %>% 
+  as_tsibble()
+
+# calculate attributable fraction (AF)
+hist.AF.sf <- calcAF(hist_data, crf_df$crf) 
+```
+
+The data frame of AF values is then merged with population projections and the simulated mortality rate. In the last line, the attributable daily deaths are calculated based on the population projections ("x"), mortality rates, and attributable fractions. 
+```{r}
+# data wrangling and then calculate attributable daily deaths (ADD)
+hist.ADD.sf <-
+  hist.AF.sf %>% 
+  gather(station, af) %>% 
+  mutate(start_decade = plyr::round_any(lubridate::year(dt), 10, floor)) %>% 
+  left_join(., pop_proj, by = c('start_decade' = 'start_year')) %>% 
+  # bind the simulated mortality rate
+  mutate(mortrate = mort_rate) %>% 
+  # calculate ADD
+  mutate_if(grepl("ssp", names(.)), function(x){x * .$mortrate * .$af}) # Yb * POP * AF
+```
+
+The attributable daily deaths are then aggregated annually to produce the estimated annual deaths associated with the ozone contentration changes. 
+```{r}
+# aggregate the annual data
+# note that this code is only using a single measure per month, so the totals are 
+# only for 12 days of the year, simply to demonstrate the methods
+hist.annualdeaths.sf <- 
+  hist.ADD.sf %>% 
+  as.data.frame() %>% 
+  mutate(year = lubridate::year(dt)) %>% 
+  dplyr::select(-mortrate) %>% 
+  group_by(station, year) %>% 
+  # sum grouped values in the same year
+  summarise_at(vars(starts_with("ssp")), sum) %>% 
+  ungroup()
+
+hist.annualdeaths.sf
+```
+
+The output is a data frame where each row is a station for a given year and the sum of all ADD within the year under the five shared ocioeconomic pathways.
+
+We now repeat the process for the future data.
+```{r}
+## future
+
+future_data <- 
+  ts_futuretro3 %>% 
+  mutate(val = rownames(.)) %>% 
+  gather(dt, obs, -val) %>% 
+  mutate(obs = replace_na(obs, 0)) %>% 
+  spread(key = val, value = obs) %>% 
+  mutate(dt = lubridate::as_date(dt)) %>% 
+  as_tsibble()
+
+# calculate attributable fraction (AF)
+future.AF.sf <- calcAF(future_data, crf_df$crf) 
+
+# data wrangling and then calculate attributable daily deaths (ADD)
+future.ADD.sf <-
+  future.AF.sf %>% 
+  gather(station, af) %>% 
+  mutate(start_decade = plyr::round_any(lubridate::year(dt), 10, floor)) %>% 
+  left_join(., pop_proj, by = c('start_decade' = 'start_year')) %>% 
+  # bind the simulated mortality rate
+  mutate(mortrate = mort_rate) %>% 
+  # calculate ADD
+  mutate_if(grepl("ssp", names(.)), function(x){x * .$mortrate * .$af}) # Yb * POP * AF
+
+# aggregate the annual data
+# note that this code is only using a single measure per month, so the totals are 
+# only for 12 days of the year, simply to demonstrate the methods
+future.annualdeaths.sf <- 
+  future.ADD.sf %>% 
+  as.data.frame() %>% 
+  mutate(year = lubridate::year(dt)) %>% 
+  dplyr::select(-mortrate) %>% 
+  group_by(station, year) %>% 
+  # sum grouped values in the same year
+  summarise_at(vars(starts_with("ssp")), sum) %>% 
+  ungroup()
+```
+
+With the annual estmates for the historical and future period, we can now calculate the future excess by subtracting the historical annual deaths from the future annual deaths. To simplify this calculation, I will subset the future values to only include the year 2051. 
+
+```{r}
+# let's compare 2011 to 2051
+future.excess.annualdeaths.sf <- 
+  future.annualdeaths.sf %>% 
+  filter(year == 2051) %>% 
+  left_join(hist.annualdeaths.sf, by = "station") %>% 
+  dplyr::select(-year.x, -year.y) %>% 
+  dplyr::mutate(ssp1.excess = ssp1.x - ssp1.y,
+                   ssp2.excess = ssp2.x - ssp2.y,
+                   ssp3.excess = ssp3.x - ssp3.y,
+                   ssp4.excess = ssp4.x - ssp4.y,
+                   ssp5.excess = ssp5.x - ssp5.y) %>% 
+  dplyr::select_at(vars(contains("excess")))
+
+future.excess.annualdeaths.sf
+```
+
+There are increases at all stations between 2011 and 2051. The PLOS Medicine article further explored how the various forecasts in ozone, population, and mortality contributed to the excess mortality. I will not attempt to recreate these methods because I have used a hypothetical mortality rate in this calculation and I have not conducted the appropriate geospatial subsetting to obtain the local ozone concentrations within the city of interest. This article has been an excellent model for practicing forecasting and deepening my knowledge of environmental health. 
+

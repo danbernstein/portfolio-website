@@ -1,0 +1,41 @@
+---
+title: Analyzing Cyclist Crash Data in New York City
+author: Dan
+date: '2019-01-02'
+slug: crash-analysis-nyc
+categories: []
+tags:
+  - R
+  - GIS
+  - geospatial
+description: ''
+image: ''
+keywords: ''
+draft: no
+---
+
+
+
+<p>In a previous post, I determined that there was not enough data available to assess the impact of bike lane installation on cyclist incident rates in Washington DC. The methodology I pursued in that post was based on a 2012 article in the American Journal of Public Health (AJPH) that conducted an analysis of New York City for bike lanes installed between 1996 and 2006, including limiting analysis to the five years before and two years following a bike lane installation to assess impact. That article used a five year pre-installation period to better capture trends over time, and only a two year post-installation period to include a greater number of street segments in the analysis. The authors concluded that bike lanes did not improve safety in any crash category and noted that confounding factors, such as changes in bicyclist volume associated with bike lane installation, might help explain the patterns observed.</p>
+<p>In this post, I will provide an update to the AJPH article analysis, including assessing new bike lanes installed from 2006 to 2016, and assessing whether the incident rates change if you extend the two-year post-installation window further. I hypothesize that in the longer post-installation period, we might see reductions as people adjust to bike lanes on their streets. I will also attempt to integrate changes in bicyclist volume to capture the confounding factors that the original authors noted.</p>
+<div id="methods" class="section level2">
+<h2>Methods:</h2>
+<p>the AJPH article conducted a two-stage design approach. To break down this task into discrete steps:</p>
+<div id="stage-1-identify-comparison-group" class="section level4">
+<h4>Stage 1: Identify comparison group</h4>
+<ul>
+<li>gather the appropriate data</li>
+<li>load the appropriate packages</li>
+<li>apply frequency-matching techniques to identify comparison for each treatment element at the segment and intersection-level</li>
+<li>calculate number of pre and post-installation incidents for five categories of crashes (“total crashes, multiple-vehicle crashes (crashes involving multiple vehicles but no bicyclists or pedestrians), bicyclist crashes (e.g., vehicle—bicycle collisions), pedestrian crashes (vehicle—pedestrian collisions), and injurious or fatal crashes (crashes that caused at least one injury or fatality).”)</li>
+<li>organize the covariates and calculated values into a useful format</li>
+</ul>
+</div>
+<div id="stage-2-model-the-impact-of-bike-lane-installation" class="section level4">
+<h4>Stage 2: Model the impact of bike lane installation</h4>
+<ul>
+<li>use generalized estimating equation (GEE) methodology to apply Poisson and negative binomial
+regression models to the data set consisting of the treatment and comparison goups</li>
+</ul>
+</div>
+</div>

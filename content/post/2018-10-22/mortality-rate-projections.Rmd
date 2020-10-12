@@ -1,0 +1,151 @@
+---
+title: Mortality Rate Projections
+author: Dan
+date: '2018-10-22'
+slug: mortality-rate-projections
+categories: []
+tags:
+  - R
+  - Time Series Analysis
+description: ''
+image: ''
+keywords: ''
+draft: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T,
+                      message= F, 
+                      warning = F,
+                      fig.align = "center")
+```
+
+*This is the third in a series of posts that seek to recreate the methods used in [Future ozone-related acute excess mortality under climate and population change scenarios in China: A modeling study](https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002598#sec014). All the posts build on my previous post on [forecasting](https://danbernstein.netlify.com/post/learning-forecasting/), by using data available from national and international research initatives to project future scenarios for complex systems including atmospheric chemistry, population dynamics, and mortality. This post focuses on the third projection: mortality rate.*
+
+The previous two posts discussed projecting future ozone concentrations using global climate models and projecting population dynamics to understand the size and age structure of future demographic scenarios. This post will describe methods for projecting national mortality rates to adjust epidemiological mortality counts collected at the city level. In the next post, the three preceding projections will be brought together to estimate the future excess mortality attributable to ozone concentration change.
+
+## Methods: Projecting National Mortality Rates for City-Level Adjustments
+
+### *Overview of Analysis*
+
+The workflow for this analysis involves recreating the methods used in the PLOS Medicine article.
+
+"*City-level baseline cause-specific, age-group-specific, and seasonal mortality counts were also obtained from the previous publication [46]. Future changes in age-group-specific mortality rates and their 95% probability intervals (PIs) in 2050–2055 versus 2010–2015 were obtained using data from the United Nation’s 2017 World Population Prospects [49] and the MortCast package, which projects age-specific mortality rates using the Kannisto, Lee–Carter, and related methods as described in Ševčíková et al. [50].*
+
+*The calculated changing ratios of mortality rates in 2050–2055 versus 2010–2015 in China were 0.68 (95% PI: 0.35–1.02) for individuals aged 5–64 years, 0.50 (95% PI: 0.26–0.73) for individuals aged 65–74 years, and 0.83 (95% PI: 0.61–1.05) for individuals aged ≥75 years. Because no projection data for city-level cause-specific and seasonal mortality rates were available in China, we assumed constant daily mortality counts for each city in the future when estimating future cause-specific and seasonal ozone-related acute excess mortality.*"
+
+To break down this excerpt into discrete steps:
+
+* load the appropriate packages
+* Use life expectancies and mathematical parameters to estimate mortality rates
+* Aggregate mortality rates into age brackets (5-64, 65-74, ≥75)
+* Calculate mortality rate changing ratios to adjust mortality counts for future scenarios
+
+## Analysis 
+
+As the excerpt notes, the [MortCast package](https://cran.r-project.org/web/packages/MortCast/MortCast.pdf) provides the data and algorithms for projecting life expectancies and mortality rates. The package vignette provides an easy step-by-step process for projecting life expectancies and mortality rates.
+
+MortCast loads the [wpp2017](https://cran.r-project.org/web/packages/wpp2017/wpp2017.pdf) package as a dependency, meaning the wpp2017 package will load whenever MortCast is loaded, and the data available in wpp2017 will be available for analysis. wpp2017 is the 2017 revision of the World Population Prospects available from the United Nations Population Division. The datasets historical and future mortality rates for men and women (mxM and mxF, respectively), historic life expectancies with one entry per country (e0M an e0F), and projected life expectancies (e0Mproj and e0Fproj). The projected data also includes lower and upper 80 and 95% confidence values denoted by a number, 80 or 95, and a letter, u or l (i.e. e0Fproj80l for the lower 80% confidence interval). 
+
+A quick look at the mxM dataset shows that each row denotes a separate age group within a given geographic area, either a country, region, or globally. The following columns indicate the mortality rates from 1950 through 2095 in five-year increments.
+
+```{r}
+library(MortCast)
+library(tidyverse)
+
+data(mxM, mxF, e0F, e0M, e0Fproj, e0Mproj, package = "wpp2017")
+
+head(mxM)[,1:6]
+```
+
+The mortality rate datasets can be subset for a specific country ("United States of America"), and then extrapolated into higher age brackets using the Coherent Kannisto method. 
+
+```{r}
+country <- "United States of America"
+mxm <- subset(mxM, name == country)[,4:16] %>% 
+  slice(-2)
+mxf <- subset(mxF, name == country)[,4:16] %>% 
+  slice(-2)
+rownames(mxm) <- rownames(mxf) <- c(0, seq(5, 100, by=5))
+```
+
+```{r}
+# Step 1: extrapolate from 100+ to 130+ using Coherent Kannisto
+mx.cokannisto <- cokannisto(mxm, mxf, proj.ages = seq(100, 130, by = 5))
+```
+
+The projected mortality rates serve as the input for estimating the Coherent Lee-Carter parameters. 
+
+```{r}
+# Steps 2-5: estimate coherent Lee-Carter parameters
+lc.est <- lileecarter.estimate(mx.cokannisto$male, mx.cokannisto$female, 
+                               ax.index = ncol(mx.cokannisto$male), ax.smooth = TRUE)
+
+
+```
+
+The projected mortality rates and Lee-Carter parameters then serve to predict future mortality rates. 
+
+```{r}
+# Steps 6-9: project future mortality rates based on future 
+# life expectancies from WPP2017
+
+# add 2010-2015 from E0F and E0M to the projections, which start with 2015-2020
+e0f <- as.numeric(cbind(subset(e0F, name == country)[,ncol(e0F)], subset(e0Fproj, name == country)[-(1:2)]))
+e0m <- as.numeric(cbind(subset(e0M, name == country)[,ncol(e0M)], subset(e0Mproj, name == country)[-(1:2)]))
+names(e0f) <- names(e0m) <- c("2010-2015", colnames(e0Fproj)[-(1:2)])
+
+# output: predict age-specific mortality rates
+# input: future life expectancies for male and female (e0m and e0f) projected using CR Lee-Carter parameters
+pred <- mortcast(e0m, e0f, lc.est) 
+
+pred$female$mx[,1:8]
+```
+
+We see that the mortality rates in China are all greatly reduced between 2015-2095 (bear in mind that the plot uses a log scale to allow all the age groups to be plotted concurrently).
+```{r}
+pred.plot.data <- 
+pred$female$mx %>% 
+  cbind(age_group = row.names(.)) %>% 
+  as_data_frame() %>% 
+  gather(key = year, value = mort.rate, -age_group) %>% 
+  mutate(year = as.numeric(stringr::str_replace(year, "-.*", ""))) %>% 
+  mutate(mort.rate = round(as.numeric(mort.rate), 5),
+         age_group = as.numeric(age_group)) 
+
+
+library(directlabels)
+
+pred.plot.data %>% 
+  ggplot(., aes(x = year, y = mort.rate, group = age_group, color = age_group)) +
+  theme(legend.title = element_text("Age Group"))+
+  labs(title = "Projected Mortality Rates (2015-2095)",
+       y = "Mortality Rate")+
+  scale_color_gradient(low = "red", high = "blue")+
+  scale_y_log10()+
+  geom_line()  +
+  geom_dl(aes(label = age_group), method = list(dl.combine("last.points"), cex = 0.8)) +
+  guides(color=FALSE)
+
+```
+
+
+The ultimate purposes of the projected mortality rates is to determine the ratio of future to present mortality rates within age groups in 2050-2055 versus 2010-2015. I have attempted to reproduce these results in many ways: using the wpp2017 data by itself, weighting the projected mortality rates by the population projections under the five shared socioeconomic projections, and through age-group standardization relative to a single population projection scenario. Unfortunately, I have been unable to produce the results exactly. I suspect that the issues arise either becaue the article uses mortality rates that are directly related to the Chinese mortality counts (this data is unavailable publicly) or the exact weighting or projections are not clear. 
+
+Update: The co-authors were willing to share the code snippet with me and I have reproduced the article's mortality rate ratios. The co-authors used the upper and lower 95% confidence interval datasets in the wpp2017 package to produce the median values and also aggregate the age bands using the accompanying population projection datasets. Because I did not produce the analysis, I will not share the code, however I am sure the co-authors would be willing to share it with other enthusiasts.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

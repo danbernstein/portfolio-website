@@ -1,0 +1,231 @@
+---
+title: Scraping and Visualizing My Rideshare and Bicycling Activity
+author: Dan
+date: '2019-05-12'
+slug: visualizing-personal-transportation-use
+categories: []
+tags:
+  - R
+  - javascript
+  - webscraping
+  - data wrangling
+description: ''
+image: ''
+keywords: ''
+draft: no
+---
+```{r include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+Summary: This small project started out with two goals: web scraping and visualizing movement data. As the project developed, I found that the web scraping took most of the time, and the visualization was best left to well-developed javascript frameworks, rather than developing it from scratch. 
+
+Check out the [final visualization](https://bit.ly/2Q2G9zN). 
+
+## Webscraping
+
+*Note: It is extremely important to read and understand the website user agreement for any website from which you might want to scrape data. Many websites will refer to web scraping as a "extraction", "crawling", "mining", or other terms. If there is any question that web scraping will violate a website's user agreement, I encourage you to reach out to the organization before proceeding.*
+
+## Ride With GPS
+The Ride With GPS (RWG) website proved difficult to scrape because authenication is routed through a React component. However, the public website allows you to search for any user by their unique rider ID number. 
+
+```{r}
+user_url <- "https://ridewithgps.com/users/1076256"
+```
+
+Once on the user page, RWG allows you to view summary statistics over different time frames (months, years, etc.). In the lower panel, the site provides access to the most recent twenty or so rides. You can see more rides by navigating to the Ride Log or Calendar pages. I found the easiest method was to navigate to the Ride Log, then change to the Calendar mode. When you examine the page source code (hit the F12 button), the page contains the response to a GET request that provides ride data for the current month. The request has a common url structure that contains the rider ID, year, and month: 
+`https://ridewithgps.com/activities/calendar?user_id=1076256&year=2019&month=4`
+
+With this pattern, we can construct urls for all months going back to the beginning of the data feed. We create two vectors, one with year values and the other with months. Using a handy tidyr function called ```crossing```, we create a dataframe with each combination of the two vectors as a row. 
+
+On each of these calendar pages, we can then extract all hyperlinks (href attributes) and then filter for those that contain "/trips", which denote links to actual ride data. 
+```{r}
+library(tidyverse) # data manipulation
+library(trackeR) # reading TCX files
+library(sf) # converting and manipulating simple feature objects
+library(geojsonio) # read write geojson files
+library(rvest) # web scraping package
+
+# set up data frame of months and years to paste together into urls  
+years <- 2017:2019
+months <- 1:12  
+
+month_year_combos <- tidyr::crossing(years,months)
+
+extract_ride_urls <- function(base_url, year, month){
+  url <- glue::glue("{base_url}&year={year}&month={month}")
+  
+  ride_urls <- 
+    read_html(url) %>% 
+    html_nodes('a') %>% 
+    html_attr('href') %>% 
+    tibble(url = .) %>% 
+    filter(str_detect(url, "/trips")) 
+  
+  return(ride_urls)
+}
+
+# map the data frame to the extract_urls function to get urls from every month
+ride_urls <- map2_dfr(.x = month_year_combos$years, 
+                      .y = month_year_combos$months, 
+                      .f = function(.x, .y) {
+             extract_ride_urls(
+               "https://ridewithgps.com/activities/calendar?user_id=1076256", 
+               .x, 
+               .y)
+             })
+```
+
+
+We the navigate to each ride url and download the data in two formats (kml and tcx) because at this point we don't know which one will be more useful for our end goals. At the same time, we also extract the ride ID number and the date-time, so we can use this information. 
+```{r}
+# go to a ride url and download data
+download_ride_data <- function(ride_url){
+  output_text <- 
+    ride_url %>% str_remove("/trips/")
+  
+  date_time <- 
+    read_html(paste0("https://ridewithgps.com", ride_url)) %>% 
+    html_node(".clear") %>% 
+    html_text() %>% 
+    str_remove_all("\\n")
+  
+  tibble(url = output_text, date = date_time)
+  
+  download.file(glue::glue("https://ridewithgps.com{ride_url}.kml"),
+                paste0('outputs/rwg/kml/', output_text, ".kml"),
+                mode = "wb")
+  
+  download.file(glue::glue("https://ridewithgps.com{ride_url}.tcx"),
+                paste0('outputs/rwg/tcx/', output_text, ".tcx"),
+                mode = "wb")
+}
+
+# map the download function to the urls 
+ride_dates <- map_dfr(ride_urls$url, download_ride_data)
+
+write_csv(ride_dates, "outputs/csv/ride_dates.csv")
+```
+
+KML files are specific to Google Earth, though they can be converted into more common formats, such as shapefiles and geojson. TCX is a data format common on GPS-enabled athletic training applications, they contain every turn and distance logged during the ride. Here, we will read the TCX file with the ```trackeR``` package and convert it into the geojson format so it can be easily mapped. Each row in the TCX file has a date time. We will pull the date time for the first point in each file to start as the ride's start date-time. The ```convert_to_multistring``` function reads the TCX file, pulls the first date-time, and then converts the object into a simple features object, collapses all the points into a single line string that connects all the points in order, and then adds the date-time attribute. We then map the function to all TCX files, and combine the list output into a single sf collection that contains all rides, one ride per row. Finally, we write out the sf object as a geojson file. 
+```{r}
+# list out all tcx files in the directory
+tcx_files <- list.files("outputs/rwg/tcx", full.names = T)
+
+convert_to_multistring <- function(file){
+  tcx_file <- trackeR::readTCX(file)
+  
+  date <-
+    tcx_file %>% 
+    slice(1) %>% 
+    pull(time) %>% 
+    lubridate::as_datetime()
+  
+  st_as_sf(x = tcx_file, 
+           coords = c("longitude", "latitude")) %>% 
+    dplyr::summarize(do_union = FALSE) %>%
+    st_cast("LINESTRING") %>% 
+    mutate(date = date, 
+           mode = "rwg") 
+  
+}
+
+string_list <- purrr::map(tcx_files, convert_to_multistring)
+rwg_string_df <- do.call(rbind, string_list)
+geojsonio::geojson_write(rwg_string_df, file = "outputs/rwg/geojson/rwg_all.geojson")
+
+```
+
+## Uber
+Uber allows users to freely [download](https://help.uber.com/riders/article/download-your-data?nodeId=2c86900d-8408-4bac-b92a-956d793acd11) all their data as a csv file. The data includes the latitude and longitude and a street address, when possible, for the pickup and dropoff point. While you can view the route driven in the app and through email receipts, I have not found a way to convert those static maps into common geographic formats. For the time being, we can use the Open Source Routing Machine available through the ```stplanr``` package to get the preferable driving route between the pickup and dropoff points. The function routes between the start and end latitude and longitude, converts the output to a spatial lines data frame, and then into a simple features object. The lines are then collapsed into a single line segment, and the date-time and mod e are added as attributes. You will need to filter out any cancelled rides before calculating the routes because any missing latitude and longitude values will throw an error. The list output from the mapping is then collapsed into a single sf object and written as a geojson file.
+
+```{r}
+route_from_to <- function(date_val, start_lat, start_lng, end_lat, end_lng){
+  
+#  date <- date_val
+
+  tryCatch(
+    viaroute(
+        startlat = start_lat,
+        startlng = start_lng,
+        endlat = end_lat,
+        endlng = end_lng,
+        alt = F) %>% 
+    viaroute2sldf() %>% 
+    st_as_sf() %>% 
+    dplyr::summarize(do_union = FALSE) %>%
+    mutate(date = date_val,
+           mode = "uber"),
+    error = function(c){
+      print(glue::glue("failed to process {file}"))}
+    )
+}
+
+uber_raw <- 
+  read_csv("outputs/uber/Uber Data/Rider/trips_data.csv") %>% 
+  rowid_to_column() %>% 
+  filter(`Trip or Order Status` %in% c("COMPLETED", "FARE_SPLIT")) %>% 
+  filter(!(rowid %in% c(85, 103, 111, 121, 164, 190, 195, 198, 201, 207, 211)))
+
+uber_lines <- pmap(list(uber_raw$`Begin Trip Time`,
+                        uber_raw$`Begin Trip Lat`,
+                        uber_raw$`Begin Trip Lng`, 
+                        uber_raw$`Dropoff Lat`, 
+                        uber_raw$`Dropoff Lng`),
+                   route_from_to)
+
+uber_string_df <- do.call('rbind', uber_lines)
+
+geojson_write(uber_string_df, file = "outputs/uber/routes/uber_all_lines.geojson")
+```
+
+
+## Capital Bikeshare
+Capital Bikeshare explicitly prohibits web scraping on its website. However, you can download your personal ride data by navigating to the Trips page via the sidebar. You can then download your data in 16-month increments. The resulting data includes the start and end date-time and location and the ride duration. You can merge this data with the geolocated stations available on the [DC Open Data portal](http://opendata.dc.gov/datasets/capital-bike-share-locations), and then put it through the Google Routing API. While the routing function used in ```stplanr``` is free and fast, it does not seem to allow you to change the profile to bicycling, thus we use the Google Routing API, which comes with free credit for the first 12 months (as of this writing in May 2019).
+
+```{r}
+library(mapsapi) # calling the google maps API
+# function to call routing API
+get_directions <- function(a,b,c,d, date){
+  
+  date <- date
+  
+  doc <- mp_directions(
+    origin = c(a,b),
+    destination = c(c,d),
+    alternatives = FALSE,
+    key = key,
+    mode = "bicycling"
+  )
+  
+  route_test <- mp_get_routes(doc) %>% 
+    select(geometry) %>% 
+    mutate(date = date,
+           mode = "cabi") 
+}
+
+# replace this value with your unique API key at https://developers.google.com/maps/documentation/directions/intro
+key = key 
+
+# map the routing function to the dataframe
+cabi_route_strings <- 
+  purrr::pmap(list(
+    ride_geolocated$start_lon,
+    ride_geolocated$start_lat,
+    ride_geolocated$end_lon,
+    ride_geolocated$end_lat,
+    ride_geolocated$startdatetime
+  ),  get_directions)
+
+# collapse the list into a sf object
+cabi_string_df <- do.call(rbind, cabi_route_strings)
+
+# write out
+geojson_write(cabi_string_df, file = "outputs/cabi/cabi_all_line.geojson")
+```
+
+Now all three datasets are in a similar format with the same attributes (datetime and mode). The dataset contains about 1200 lines and is about 8.1 megabytes in size.
+
+## Visualization
+I found that visualizing lots of transportation data is common among the same organizations that I pulled data from. In fact, Uber has open-sourced its graphics framework, [deck.gl](https://deck.gl/#/), for visualizing large quantities of movement data. You can access deck.gl via javascript code, or through [kepler.gl](https://github.com/keplergl/kepler.gl), an online application that makes it easy to load different data formats and visualize millions of data points simultaneously. 
+
