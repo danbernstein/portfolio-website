@@ -83,7 +83,7 @@ function process_page(results) {
 }
 ```
 
-The internal logic for parsing the webpage to identify the URL and extract the recipe are included the GitHub repository and will change as I try to generalize these two functions to apply to more recipe websites. 
+The internal logic for parsing the webpage to identify the URL and extract the recipe are included the [GitHub repository](https://github.com/danbernstein/recipe-scraper) and will change as I try to generalize these two functions to apply to more recipe websites. 
 
 
 
