@@ -25,7 +25,7 @@ Yes, AWS does list storage and compute as specific categories alongside many tri
 
 Let’s breakdown some of the other services to see how analyzing each service as either storage or computing can make it easier to identify the appropriate services for your work.
 
-## Database
+#### Database
 
 All the services under Database are storage formats fit for specific use cases.
 
@@ -35,7 +35,7 @@ The [Relational Database Service (RDS)](https://aws.amazon.com/rds/) is a standa
 
 Other database services are more specific because the data types present challenges for other relational and non-relational databases. [Neptune](https://aws.amazon.com/neptune/) is a graph database useful for network analysis and [Timestream](https://aws.amazon.com/timestream/) stores time series data.
 
-## Machine Learning
+#### Machine Learning
 
 Machine Learning is an incredibly common use case in cloud computing because these tasks often require more computational resources than your personal computer can realistically provide. At their core, all of the Machine Learning services simplify the process of transforming data. With this in mind, you can scan the long list of AWS services for the computing services that you need.
 
@@ -48,7 +48,7 @@ AWS provides the [SageMaker](https://aws.amazon.com/sagemaker/) service to take 
 
 Some of the other categories are a combination of storage and compute because specific use cases require highly specialized storage and computing options. Let’s breakdown one of these categories to see how AWS has developed specialized storage and computing services for common developer tasks.
 
-## Developer Tools
+#### Developer Tools
 
 Code has to be stored somewhere. You might be familiar with [GitHub](https://github.com/) or [BitBucket](https://bitbucket.org/), two of the most popular websites for hosting code. These websites allow you to save your code in a repository and collaborate with others. AWS has their own service for hosting code repositories, [CodeCommit](https://aws.amazon.com/codecommit/). This service is a storage service because it simply saves versions of your code.
 

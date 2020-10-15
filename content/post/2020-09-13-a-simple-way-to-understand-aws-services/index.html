@@ -21,15 +21,15 @@ author_twitter: ''
 <p><em>But wait, aren’t storage and compute categories in the list of services? How can all the services fit into those two categories?</em></p>
 <p>Yes, AWS does list storage and compute as specific categories alongside many trigger on a repository;more, but this categorization is misleading. These two categories are only the services that are commonly understood to be storage and compute. When you start to read about the other services you will start to see that most of them are a form of storage or compute that are tailored to a specific purpose.</p>
 <p>Let’s breakdown some of the other services to see how analyzing each service as either storage or computing can make it easier to identify the appropriate services for your work.</p>
-<div id="database" class="section level2">
-<h2>Database</h2>
+<div id="database" class="section level4">
+<h4>Database</h4>
 <p>All the services under Database are storage formats fit for specific use cases.</p>
 <p>The <a href="https://aws.amazon.com/rds/">Relational Database Service (RDS)</a> is a standard relational database fit for well-structured data where your primary goal is to run analytics over the data rather than retrieve individuals rows. These queries are common in business intelligence where aggregating and summarizing values is commonplace.</p>
 <p><a href="https://aws.amazon.com/dynamodb/">DynamoDB</a> is a non-relational database that is well-suited for storing information where retrieving individual rows is critical. Maybe you want to build an e-commerce website where customers browse a catalog, read about each product’s features, and move specific products to a virtual shopping cart. You might store both your catalog and the basket in DynamoDB tables because this type of database is optimized for storing and retrieving information about individual items.</p>
 <p>Other database services are more specific because the data types present challenges for other relational and non-relational databases. <a href="https://aws.amazon.com/neptune/">Neptune</a> is a graph database useful for network analysis and <a href="https://aws.amazon.com/timestream/">Timestream</a> stores time series data.</p>
 </div>
-<div id="machine-learning" class="section level2">
-<h2>Machine Learning</h2>
+<div id="machine-learning" class="section level4">
+<h4>Machine Learning</h4>
 <p>Machine Learning is an incredibly common use case in cloud computing because these tasks often require more computational resources than your personal computer can realistically provide. At their core, all of the Machine Learning services simplify the process of transforming data. With this in mind, you can scan the long list of AWS services for the computing services that you need.</p>
 <p>You could deploy your own machine learning model using generic computing services, such as <a href="https://aws.amazon.com/ec2/">EC2</a>, but you would need to configure the environment to ensure the server had all of the right packages to run the model. Additionally, you would need to manage how the servers scaled to meet changing demand.</p>
 <p>AWS provides the <a href="https://aws.amazon.com/sagemaker/">SageMaker</a> service to take the headache out of deploying machine learning models. You simply pick a predefined machine learning model or supply your own, and AWS will ensure all the appropriate resources are available and the underlying EC2 instances scale up and down automatically to meet demand. Many of the other services under this category focus on computing for specific machine learning tasks, such as forecasting with <a href="https://aws.amazon.com/forecast/">AWS Forecast</a> or natural language processing with <a href="https://aws.amazon.com/comprehend/">AWS Comprehend</a>.</p>
@@ -37,12 +37,12 @@ author_twitter: ''
 <div id="suites-of-services-for-common-tasks" class="section level2">
 <h2>Suites of Services For Common Tasks</h2>
 <p>Some of the other categories are a combination of storage and compute because specific use cases require highly specialized storage and computing options. Let’s breakdown one of these categories to see how AWS has developed specialized storage and computing services for common developer tasks.</p>
-</div>
-<div id="developer-tools" class="section level2">
-<h2>Developer Tools</h2>
+<div id="developer-tools" class="section level4">
+<h4>Developer Tools</h4>
 <p>Code has to be stored somewhere. You might be familiar with <a href="https://github.com/">GitHub</a> or <a href="https://bitbucket.org/">BitBucket</a>, two of the most popular websites for hosting code. These websites allow you to save your code in a repository and collaborate with others. AWS has their own service for hosting code repositories, <a href="https://aws.amazon.com/codecommit/">CodeCommit</a>. This service is a storage service because it simply saves versions of your code.</p>
 <p>Oftentimes, a developer might want to trigger an action whenever a new version of a file is added to a repository. The trigger might update the content on a website or fix a bug in a mobile app. AWS has services that make it easy to set up these triggers and ensure that any changes do not break your pre-existing application. <a href="https://aws.amazon.com/codebuild/">CodeBuild</a>, <a href="https://aws.amazon.com/codebuild/">CodeDeploy</a>, and <a href="https://aws.amazon.com/codepipeline/">CodePipeline</a> are a suite of services that manage the process of testing and deploying any changes. At their core, these services identify changes in the CodeCommit repository and transform your application to meet the changes.</p>
 <p>You could use open-source tools to complete many of the tasks these AWS services accomplish, but it is often simpler and cheaper to use AWS’ service because it has been specifically developed to work with other AWS services. But beware, heavy reliance on these services could make it more difficult to move to a different cloud service provider.</p>
+</div>
 </div>
 <div id="services-for-common-types-of-data" class="section level2">
 <h2>Services for Common Types of Data</h2>

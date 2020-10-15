@@ -1,0 +1,18 @@
+---
+title: Data Science DC Meetup
+author: Dan
+date: '2019-03-14'
+slug: []
+categories: []
+tags:
+  - talks
+  - safe lane
+description: ''
+lastmod: ''
+image: ''
+author_twitter: ''
+---
+
+<div width='80%'  >
+  <iframe width='100%' height='700px' src='slides.pdf' > </iframe>
+</div>

@@ -28,6 +28,17 @@ We donno how to have access to a specific page's taxonomies yet. Having that wou
     {{ if site.Params.meta.description }}
       <p class="lead">{{ site.Params.meta.description }}</p>
     {{ end }}
+    <!-- add tag buttons here !!!!!!!!!!!!!!!!!!!!!!!!!-->
+      <div class="pb-1 mt-1">
+        {{- range site.Params.meta.tags -}}
+        <a href="/tags/{{ . | urlize }}">
+          <span background-color='white' class="badge badge-pill text-nav mr-2 mb-1 py-2">
+            {{ . | humanize | upper }}
+          </span>
+        </a>
+        {{- end -}}
+      </div>
+    <!-- end add new tag buttons -->
   </div>
 </div>
 <div class="bg-mat container-fluid py-3" style="background-color:#f9f9f9;">
