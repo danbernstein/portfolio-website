@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Data By Dan</title>
+    <link>https://danbernstein.netlify.app/</link>
+    <description>Recent content on Data By Dan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
+    <lastBuildDate>Mon, 12 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://danbernstein.netlify.app/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Developing a Chrome Extension To Parse Recipes</title>
+      <link>https://danbernstein.netlify.app/post/recipe-scraper/</link>
+      <pubDate>Mon, 12 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/recipe-scraper/</guid>
+      <description>I love cooking, and I am heavily dependent on a couple of websites for new recipe ideas. Oftentimes, these websites contain multiple advertisements to drive revenue or the recipe contains a lot of background information that is not immediately relevant to the recipe, such as the history of the dish or how the chef developed the recipe.
+Problem: I love cooking but I hate all of this irrelevant content on recipe websites.</description>
+    </item>
+    
+    <item>
+      <title>Tennessee Evictions Summit</title>
+      <link>https://danbernstein.netlify.app/talks/2020-10-02-tennessee-evictions-summit/</link>
+      <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/talks/2020-10-02-tennessee-evictions-summit/</guid>
+      <description>  
+ </description>
+    </item>
+    
+    <item>
+      <title>A Simple Way to Understand AWS Services</title>
+      <link>https://danbernstein.netlify.app/post/2020-09-13-a-simple-way-to-understand-aws-services/</link>
+      <pubDate>Sun, 13 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2020-09-13-a-simple-way-to-understand-aws-services/</guid>
+      <description>A quick glance at the list of services available on AWS can be overwhelming. As of September 2020, there are over 160 AWS services, some of which have informative names, such as simple storage service (S3), and others which are incredibly obtuse, like Neptune and Greengrass. The number and variety of services has even inspired catchy songs. Looking at the list, you might start to think, “do I need to use all of those to build my application?</description>
+    </item>
+    
+    <item>
+      <title>CSV, conf, v5</title>
+      <link>https://danbernstein.netlify.app/talks/2020-05-13-csv-conf-v5/</link>
+      <pubDate>Wed, 13 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/talks/2020-05-13-csv-conf-v5/</guid>
+      <description>  
+ </description>
+    </item>
+    
+    <item>
+      <title>Self-Represented Litigants Network Conference</title>
+      <link>https://danbernstein.netlify.app/talks/2020-03-06-2020-srln/</link>
+      <pubDate>Fri, 06 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/talks/2020-03-06-2020-srln/</guid>
+      <description>  
+ </description>
+    </item>
+    
+    <item>
+      <title>2020 Innovations in Technology Conference</title>
+      <link>https://danbernstein.netlify.app/talks/2020-01-11-2020-innovations-in-technology-conference/</link>
+      <pubDate>Sat, 11 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/talks/2020-01-11-2020-innovations-in-technology-conference/</guid>
+      <description>  
+ </description>
+    </item>
+    
+    <item>
+      <title>DC Futures Forum</title>
+      <link>https://danbernstein.netlify.app/talks/2019-10-02-dc-futures-forum/</link>
+      <pubDate>Wed, 02 Oct 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/talks/2019-10-02-dc-futures-forum/</guid>
+      <description>  
+ </description>
+    </item>
+    
+    <item>
+      <title>Scraping and Visualizing My Rideshare and Bicycling Activity</title>
+      <link>https://danbernstein.netlify.app/post/2019-05-12/visualizing-personal-transportation-use/</link>
+      <pubDate>Sun, 12 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2019-05-12/visualizing-personal-transportation-use/</guid>
+      <description>Summary: This small project started out with two goals: web scraping and visualizing movement data. As the project developed, I found that the web scraping took most of the time, and the visualization was best left to well-developed javascript frameworks, rather than developing it from scratch.
+Check out the final visualization.
+Webscraping Note: It is extremely important to read and understand the website user agreement for any website from which you might want to scrape data.</description>
+    </item>
+    
+    <item>
+      <title>Data Science DC Meetup</title>
+      <link>https://danbernstein.netlify.app/talks/2019-03-14-data-science-dc-meetup/</link>
+      <pubDate>Thu, 14 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/talks/2019-03-14-data-science-dc-meetup/</guid>
+      <description>  
+ </description>
+    </item>
+    
+    <item>
+      <title>Visualizing the Government Shutdown and the 2016 Election</title>
+      <link>https://danbernstein.netlify.app/post/2019-01-16/data-viz-government-shutdown-and-the-2016-election/</link>
+      <pubDate>Wed, 16 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2019-01-16/data-viz-government-shutdown-and-the-2016-election/</guid>
+      <description>In January 2019, Axios produced a data visualization to demonstrate how the partial government shutdown was impacting different states and how that related to the outcomes of the 2016 presidential election. The visualization is a little confusing because there are two color scales, one for states that went for Trump and another for Clinton. Because the scales are distinguished by the 2016 winner, but the shade on each scale is determined by the number of federal workers affected by the government shutdown, the visualization is a little confusing.</description>
+    </item>
+    
+    <item>
+      <title>About Dan</title>
+      <link>https://danbernstein.netlify.app/about-dan/</link>
+      <pubDate>Mon, 14 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/about-dan/</guid>
+      <description>I want to improve our social systems – social services, public health, environment, transportation – to make them more efficient and impactful for those in need. I like to create and explore new data sources to generate insights and draw conclusions about the world. I have experience collaborating with non-profits to make data more accessible for non-technical audiences.</description>
+    </item>
+    
+    <item>
+      <title>Analyzing Cyclist Crash Data in New York City</title>
+      <link>https://danbernstein.netlify.app/post/2019-01-02/crash-analysis-nyc/</link>
+      <pubDate>Wed, 02 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2019-01-02/crash-analysis-nyc/</guid>
+      <description>In a previous post, I determined that there was not enough data available to assess the impact of bike lane installation on cyclist incident rates in Washington DC. The methodology I pursued in that post was based on a 2012 article in the American Journal of Public Health (AJPH) that conducted an analysis of New York City for bike lanes installed between 1996 and 2006, including limiting analysis to the five years before and two years following a bike lane installation to assess impact.</description>
+    </item>
+    
+    <item>
+      <title>Computer Vision and Deep Learning to Identify Bikelane Hazards</title>
+      <link>https://danbernstein.netlify.app/post/2018-12-12/deep-learning-for-image-classification/</link>
+      <pubDate>Wed, 12 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2018-12-12/deep-learning-for-image-classification/</guid>
+      <description>At a meeting of the Transportation Techies Meet Up in early 2018, another Techie announced that he had gathered images from traffic cameras around Arlington, VA at intersections with bike lanes. The data is available at here. He suggested that this data would likely be well-suited for computer vision (CV) to automate the process of classifying the images based on whether the bike lane was blocked or not.
+I recently decided to learn about computer vision to tackle this challenge.</description>
+    </item>
+    
+    <item>
+      <title>Forecasting: Attributable Death</title>
+      <link>https://danbernstein.netlify.app/post/2018-10-30/forecasting-attributable-death/</link>
+      <pubDate>Tue, 30 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2018-10-30/forecasting-attributable-death/</guid>
+      <description>This is the fourth and final post in a series that seek to recreate the methods used in Future ozone-related acute excess mortality under climate and population change scenarios in China: A modeling study. All the posts build on my previous post on forecasting, by using data available from national and international research initatives to project future scenarios for complex systems including atmospheric chemistry, population dynamics, and mortality rate. This post focuses on combining the previous three projections to derive human health outcome metrics: attributable fraction and attributable daily death.</description>
+    </item>
+    
+    <item>
+      <title>Mortality Rate Projections</title>
+      <link>https://danbernstein.netlify.app/post/2018-10-22/mortality-rate-projections/</link>
+      <pubDate>Mon, 22 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2018-10-22/mortality-rate-projections/</guid>
+      <description>This is the third in a series of posts that seek to recreate the methods used in Future ozone-related acute excess mortality under climate and population change scenarios in China: A modeling study. All the posts build on my previous post on forecasting, by using data available from national and international research initatives to project future scenarios for complex systems including atmospheric chemistry, population dynamics, and mortality. This post focuses on the third projection: mortality rate.</description>
+    </item>
+    
+  </channel>
+</rss>

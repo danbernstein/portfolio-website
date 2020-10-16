@@ -1,5 +1,5 @@
 ---
-title: 'Data Viz: Government Shutdown and the 2016 Election'
+title: 'Visualizing the Government Shutdown and the 2016 Election'
 author: Dan
 date: '2019-01-16'
 slug: data-viz-government-shutdown-and-the-2016-election
@@ -15,16 +15,25 @@ draft: no
 
 In January 2019, Axios produced a data visualization to demonstrate how the partial government shutdown was impacting different states and how that related to the outcomes of the 2016 presidential election. The visualization is a little confusing because there are two color scales, one for states that went for Trump and another for Clinton. Because the scales are distinguished by the 2016 winner, but the shade on each scale is determined by the number of federal workers affected by the government shutdown, the visualization is a little confusing. 
 
+<center>
+![](/post/2019-01-16/data-viz-government-shutdown-and-the-2016-election_files/axios_shutdown.png){width=400px height=400px}
+</center>
+
+
 To break it down into each of the map aesthetics, the x and y components are taken up by geographic data for each state's location, while the color scale is the 2016 winner and the position on each scale is the number of federal employees affected. The interactive map was allowed the user to see the number of employees affected as a raw number and a proportion of all workers in each state, as well as the margin of victory in the 2016 election. It becomes hard to compare states in the two different color scales and those that are geographically distant because you have to use the interactive feature.
 
 I decided to change the mapping aesthetics, instead of using geographic information, I used the margin of victory on the X axis, the Y axis is the number of workers affected by the shutdown, and the size of each dot is the percent of all workers in the state affected. I believe these changes still clearly highlight the states that are disproportionately affected, while also allowing better comparison. The major downside is that once you move away from the geographic map layout, the visualization becomes more difficult to immediately grasp the units (the state level) and you cannot label every state, so only the highlighted ones are identified. Additionally, there is substantial white space my visualization, which is not very appealing.
 
 
-```{r, echo=FALSE, out.width = "80%", out.extra='keepaspectratio', fig.align='center'}
-knitr::include_graphics("../markdown_data/data_viz/axios_shutdown_2019/axios_shutdown.png")
-```
+<center>
+  ![](/post/2019-01-16/data-viz-government-shutdown-and-the-2016-election_files/axios_shutdown_remade.png){width=600px height=400px}
+</center>
 
-```{r, include = F}
+
+### Code
+
+
+```{r, include = TRUE, echo=TRUE, eval=FALSE, warning=FALSE}
 
 library(tidyverse)
 library(ggrepel)
@@ -32,16 +41,16 @@ library(extrafont)
 
 
 # read data
-fed_jobs_cabinet <- openxlsx::read.xlsx("./markdown_data/data_viz/axios_shutdown_2019/raw_data/fed_jobs_cabinetagencies.xlsx",
+fed_jobs_cabinet <- openxlsx::read.xlsx("raw_data/fed_jobs_cabinetagencies.xlsx",
                                         startRow = 3)
 
-fed_jobs_smallagencies <- openxlsx::read.xlsx("./markdown_data/data_viz/axios_shutdown_2019/raw_data/fed_jobs_smallagencies.xlsx",
+fed_jobs_smallagencies <- openxlsx::read.xlsx("raw_data/fed_jobs_smallagencies.xlsx",
                                               startRow = 3)
 
-all_jobs <- openxlsx::read.xlsx("./markdown_data/data_viz/axios_shutdown_2019/raw_data/all_jobs.xlsx")
+all_jobs <- openxlsx::read.xlsx("raw_data/all_jobs.xlsx")
 
 
-results_2016 <- openxlsx::read.xlsx("./markdown_data/data_viz/axios_shutdown_2019/raw_data/federalelections2016.xlsx",
+results_2016 <- openxlsx::read.xlsx("raw_data/federalelections2016.xlsx",
                                     sheet = "Table 2. Electoral &  Pop Vote",
                                     startRow = 4)
 
@@ -140,8 +149,4 @@ p <-
        subtitle = "size is the total number of furloughed employees")+
   ylim(0, 1000)
 
-```
-
-```{r, echo=FALSE, out.width = "80%", out.extra='keepaspectratio', fig.align='center'}
-knitr::include_graphics("../markdown_data/data_viz/axios_shutdown_2019/axios_shutdown_remade.png")
 ```

@@ -4,7 +4,7 @@ author: Dan
 date: '2018-06-30'
 slug: kaggle-advanced-regression
 categories: []
-tags: []
+tags: ['R', 'analysis', 'machine learning']
 description: ''
 image: ''
 keywords: ''
@@ -12,7 +12,7 @@ draft: no
 
 ---
 
-```{r, include = F}
+```{r, include = F, eval=F}
 library(dplyr)
 library(tidyverse)
 library(randomForest) # for RF 
@@ -60,7 +60,7 @@ The [caret](http://topepo.github.io/caret/index.html) package is great for autom
 
 We will do a little work to impute for missing values. Another Kaggler has done a thorough job of determining good ways to handle missing data in this challenge, so I have copied the method, imputing "none" in some character vectors, zero for some numeric values, and then imputing the mode of all non-NA values in other numeric values.
 
-```{r, warning=F, include = F}
+```{r, warning=F, include = F, eval=F}
 # training data ----
 train <- read.csv("./markdown_data/advanced_regression_kaggle/data/train.csv", stringsAsFactors = F) 
 
@@ -125,11 +125,11 @@ all.fixmissing <-
   mutate_if(is.character, as.factor)
 ```
 
-```{r}
+```{r, eval=F}
 dim(all.fixmissing)
 ```
 
-```{r}
+```{r, eval=F}
 train.predict <- 
   all.fixmissing %>% 
   data.frame() %>% 
@@ -146,7 +146,7 @@ We can see that caret has cut down on the number of variables because the non-ze
 
 You can tune the parameters of any model included in caret: 
 
-```{r, warning=F}
+```{r, warning=F, eval=F}
 control <- trainControl(method = "repeatedcv", number = 10, repeats = 1,
                         savePredictions = "final", 
                         classProbs = F)
@@ -175,7 +175,7 @@ The [caretEnsemble](https://cran.r-project.org/web/packages/caretEnsemble/vignet
 To implement a stacked ensemble model, we first have to bundle the trained base learners using caretList. Again, trControl determines how each model will be evaluated. It is important to specify the index for the base learners so that all the models train on the same data partitions. We specify the individual base learners in two ways. First, for any base learners that do not allow for parameter tuning, we provide them as a vector to the methodList parameter of caretList. For variables that allow for parameter tuning in caret, we will list the models individually as a list for "tuneList". For each model, we first tune the parameters like we saw above, and then specify the best set of parameters as a dataframe in the tuneGrid parameter of the caretModelSpec function. By specifying single values for the model parameters, we are speeding up computation because caretEnsemble will not attempt to optimize the models. 
 
 
-```{r, include = F, warnings = F}
+```{r, include = F, warnings = F, eval=F}
 # these three lines set up parallel processing, which will speed up computation
 library(doParallel)
 cl <- makePSOCKcluster(2)
@@ -212,7 +212,7 @@ models <- caretList(form = y_train~.,
 
 For the meta-model, we again specify the how the model will be evaluated, here stored in the stackControl object. We specify the meta-model as the method to the caretStack function, here a general linear model (glm), and the best model will be selected based on root mean squared error (RMSE). The final model demonstrates a significant improvement in RMSE and adjusted R-squared. 
 
-```{r}
+```{r, eval=F}
 #evaluation control
 stackControl <- trainControl(method = "repeatedcv", number = 5, repeats = 5,
                              savePredictions = "final", 
@@ -227,7 +227,7 @@ stack.glm
 
 We can then predict values for the test data. The predict value is addition I made to automatically write the predicted values to a csv file for submission.
 "
-```{r}
+```{r, eval=F}
 predict_values <- function(model, test_data){
   predicted <- predict(model, test_data) %>% expm1(.) # to reverse log transformation
   predicted.df <- cbind(test_id, predicted) %>% 
@@ -235,7 +235,7 @@ predict_values <- function(model, test_data){
   
  # write.table(predicted.df, file = paste0("./outputs/" , Sys.time(), "-predictedvalues", ".csv"), 
 #              sep = ",", col.names = T, row.names = F)
-}
+, eval=F}
 
 predict_values(stack.glm, test.df)
 ```

@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?><metadata>
+<idinfo>
+<citation>
+<citeinfo>
+<origin/>
+<title>Bicycle Lanes</title>
+<geoform>vector digital data</geoform>
+<pubinfo>
+<pubplace/>
+<publish>DDOT</publish>
+</pubinfo>
+<lworkcit>
+<citeinfo>
+<origin/>
+<title>DC Geographic Information System</title>
+<geoform>vector digital data</geoform>
+</citeinfo>
+</lworkcit>
+</citeinfo>
+</citation>
+<descript>
+<abstract>Bicycle Lanes. The dataset contains locations and attributes of both existing and proposed bicycle lanes based upon the DC Bicycle Master Plan. These are not bicycle trails. Created as part of the District of Columbia, Department of Transportation (DDOT) Street Spatial Database (SSD)</abstract>
+<purpose>Bicycle Lanes</purpose>
+<supplinf>This dataset is the line geometry that represents Bicycle Lanes.</supplinf>
+</descript>
+<status>
+<progress>In work</progress>
+<update>As needed</update>
+</status>
+<spdom>
+<bounding>
+<westbc>-77.091269</westbc>
+<eastbc>-76.916393</eastbc>
+<northbc>38.973620</northbc>
+<southbc>38.823547</southbc>
+</bounding>
+</spdom>
+<keywords>
+<theme>
+<themekt>None</themekt>
+<themekey>bicycle</themekey>
+<themekey>bicycle lane</themekey>
+<themekey>bike</themekey>
+<themekey>lane</themekey>
+</theme>
+<theme>
+<themekt>ISO 19115 Topic Categories</themekt>
+<themekey>transportation</themekey>
+</theme>
+<place>
+<placekt>None</placekt>
+<placekey>DCGIS</placekey>
+<placekey>DC</placekey>
+<placekey>District of Columbia</placekey>
+<placekey>DC GIS</placekey>
+<placekey>Washington</placekey>
+<placekey>D.C.</placekey>
+</place>
+<stratum>
+<stratkt>None</stratkt>
+<stratkey>terrestrial</stratkey>
+</stratum>
+</keywords>
+<accconst>None</accconst>
+<useconst>This work is licensed under a Creative Commons Attribution 4.0 International License.</useconst>
+<ptcontac>
+<cntinfo>
+<cntorgp>
+<cntorg>D.C. Office of the Chief Technology Officer</cntorg>
+<cntper>GIS Data Coordinator</cntper>
+</cntorgp>
+<cntaddr>
+<addrtype>mailing and physical</addrtype>
+<address>200 I Street SE, 5th Floor</address>
+<city>Washington</city>
+<state>DC</state>
+<postal>20003</postal>
+<country>US</country>
+</cntaddr>
+<cntfax>(202) 727-5660</cntfax>
+<cntemail>dcgis@dc.gov</cntemail>
+<cntemail>markos.yeterawork@dc.gov</cntemail>
+<hours>8:30 am - 5 pm</hours>
+</cntinfo>
+</ptcontac>
+<datacred>District of Columbia, Department of Transportation. DDOT GIS</datacred>
+</idinfo>
+<dataqual>
+<attracc>
+<attraccr>Data believed to be complete and accurate, subject to change.</attraccr>
+</attracc>
+<logic>In process of validation by source and/or responsible agency.</logic>
+<complete>Data believed to be complete and accurate, subject to change.</complete>
+<lineage>
+<procstep>
+<procdesc>This data was gathered in 2004 by Toole Design for the 2005 Bicycle Master Plan.</procdesc>
+<procdate>20040101</procdate>
+<proccont>
+<cntinfo>
+<cntorgp>
+<cntorg>Toole Design</cntorg>
+</cntorgp>
+</cntinfo>
+</proccont>
+</procstep>
+</lineage>
+</dataqual>
+<spdoinfo>
+<direct>Vector</direct>
+<ptvctinf>
+<sdtsterm>
+<sdtstype>String</sdtstype>
+<ptvctcnt>1370</ptvctcnt>
+</sdtsterm>
+</ptvctinf>
+</spdoinfo>
+<eainfo>
+<detailed>
+<enttyp>
+<enttypl>DCGIS.BicycleLane</enttypl>
+<enttypd>BicycleLane is the line geometry that represents DDOT Bicycle Lanes</enttypd>
+<enttypds>District of Columbia, Department of Transportation</enttypds>
+</enttyp>
+<attr>
+<attrlabl>NOTES</attrlabl>
+<attrdef>Bicycle lane notes</attrdef>
+<attrdefs>ESRI</attrdefs>
+<attrdomv>
+          <udom>Sequential unique whole numbers that are automatically generated.</udom>
+        </attrdomv>
+</attr>
+<attr>
+<attrlabl>Shape</attrlabl>
+<attrdef>Feature geometry</attrdef>
+<attrdefs>ESRI</attrdefs>
+<attrdomv>
+          <udom>Coordinates defining the features.</udom>
+        </attrdomv>
+</attr>
+<attr>
+<attrlabl>FACILITYID</attrlabl>
+</attr>
+<attr>
+<attrlabl>STREETSEGID</attrlabl>
+</attr>
+<attr>
+<attrlabl>SOURCEID</attrlabl>
+<attrdef>Feature geometry.</attrdef>
+<attrdefs>ESRI</attrdefs>
+<attrdomv>
+          <udom>Coordinates defining the features.</udom>
+        </attrdomv>
+</attr>
+<attr>
+<attrlabl>TravelDirection</attrlabl>
+<attrdef>Direction of travel</attrdef>
+<attrdefs>ESRI</attrdefs>
+<attrdomv>
+          <udom>Coordinates defining the features.</udom>
+        </attrdomv>
+</attr>
+<attr>
+<attrlabl>BikeLaneLength</attrlabl>
+<attrdef>Length of bicycle lane</attrdef>
+<attrdefs>ESRI</attrdefs>
+<attrdomv>
+          <udom>Coordinates defining the features.</udom>
+        </attrdomv>
+</attr>
+<attr>
+<attrlabl>BIKELANELENGTH</attrlabl>
+<attrdef>Length of bicycle lane</attrdef>
+<attrdefs>ESRI</attrdefs>
+<attrdomv>
+          <udom>Sequential unique whole numbers that are automatically generated.</udom>
+        </attrdomv>
+</attr>
+<attr>
+<attrlabl>Year_Installed</attrlabl>
+<attrdef>Year installed</attrdef>
+<attrdefs>Esri</attrdefs>
+<attrdomv>
+          <udom>Sequential unique whole numbers that are automatically generated.</udom>
+        </attrdomv>
+</attr>
+<attr>
+<attrlabl>SHAPE.LEN</attrlabl>
+</attr>
+<attr>
+<attrlabl>SHAPE</attrlabl>
+<attrdef>Feature geometry.</attrdef>
+<attrdefs>ESRI</attrdefs>
+<attrdomv>
+          <udom>Coordinates defining the features.</udom>
+        </attrdomv>
+</attr>
+<attr>
+<attrlabl>Notes</attrlabl>
+<attrdef>Length of feature in internal units.</attrdef>
+<attrdefs>ESRI</attrdefs>
+<attrdomv>
+          <udom>Positive real numbers that are automatically generated.</udom>
+        </attrdomv>
+</attr>
+<attr>
+<attrlabl>OBJECTID</attrlabl>
+<attrdef>Internal feature number.</attrdef>
+<attrdefs>ESRI</attrdefs>
+<attrdomv>
+          <udom>Sequential unique whole numbers that are automatically generated.</udom>
+        </attrdomv>
+</attr>
+<attr>
+<attrlabl>TRAVELDIRECTION</attrlabl>
+<attrdef>Feature geometry.</attrdef>
+<attrdefs>ESRI</attrdefs>
+<attrdomv>
+          <udom>Coordinates defining the features.</udom>
+        </attrdomv>
+</attr>
+<attr>
+<attrlabl>FACILITY</attrlabl>
+<attrdef>Shared Lane - These are roads that are not wide enough for bike lanes; they contain a bike symbol and chevron in the travel lane indicating that cars and bikes must share this space. Bike Lane – bike lane on both sides of a two-way road; one side on a one-way road. Climbing Lane –same as a bike lane; the difference is that there is a bike lane on the uphill side of the road, and a shared lane on the downhill side. Cycle Track – This is a buffer and/or post separated bike lane (15th St, PA Ave, and L St are the only ones right now). Neighborhood Bikeway – low-volume and low-speed streets that have been optimized for bicycle travel through treatments such as traffic calming, way-finding signage and pavement markings.</attrdef>
+<attrdefs>ESRI</attrdefs>
+<attrdomv>
+          <udom>Coordinates defining the features.</udom>
+        </attrdomv>
+</attr>
+<attr>
+<attrlabl>SE_ANNO_CAD_DATA</attrlabl>
+</attr>
+<attr>
+<attrlabl>GIS_ID</attrlabl>
+</attr>
+<attr>
+<attrlabl>GlobalID</attrlabl>
+</attr>
+<attr>
+<attrlabl>Creator</attrlabl>
+</attr>
+<attr>
+<attrlabl>Created</attrlabl>
+</attr>
+<attr>
+<attrlabl>Editor</attrlabl>
+</attr>
+<attr>
+<attrlabl>Edited</attrlabl>
+</attr>
+<attr>
+<attrlabl>Facility</attrlabl>
+<attrdef>Combination of the street centerline and bike facility.</attrdef>
+<attrdefs>ESRI</attrdefs>
+<attrdomv>
+          <udom>Sequential unique whole numbers that are automatically generated.</udom>
+        </attrdomv>
+</attr>
+<attr>
+<attrlabl>NEED_SYMBOL</attrlabl>
+<attrdef>Feature geometry.</attrdef>
+<attrdefs>Esri</attrdefs>
+<attrdomv>
+          <udom>Coordinates defining the features.</udom>
+        </attrdomv>
+</attr>
+<attr>
+<attrlabl>NEED_SYM_1</attrlabl>
+<attrdef>Internal feature number.</attrdef>
+<attrdefs>Esri</attrdefs>
+<attrdomv>
+          <udom>Sequential unique whole numbers that are automatically generated.</udom>
+        </attrdomv>
+</attr>
+<attr>
+<attrlabl>REPAINT_LINE</attrlabl>
+<attrdef>Internal feature number.</attrdef>
+<attrdefs>Esri</attrdefs>
+<attrdomv>
+          <udom>Sequential unique whole numbers that are automatically generated.</udom>
+        </attrdomv>
+</attr>
+</detailed>
+</eainfo>
+<distinfo>
+<distrib>
+<cntinfo>
+<cntorgp>
+<cntorg>D.C. Office of the Chief Technology Officer</cntorg>
+<cntper>GIS Data Coordinator</cntper>
+</cntorgp>
+<cntaddr>
+<addrtype>mailing and physical</addrtype>
+<address>200 I Street SE, 5th Floor</address>
+<city>Washington</city>
+<state>DC</state>
+<postal>20003</postal>
+<country>US</country>
+</cntaddr>
+<cntfax>(202) 727-5660</cntfax>
+<cntemail>dcgis@dc.gov</cntemail>
+<hours>8:30 am - 5 pm</hours>
+</cntinfo>
+</distrib>
+<distliab>See access and use constraints information.</distliab>
+<custom>DC datasets can be downloaded from "http://opendata.dc.gov".</custom>
+</distinfo>
+<metainfo>
+<metd>20171018</metd>
+<metrd>10/10/2006</metrd>
+<metc>
+<cntinfo>
+<cntorgp>
+<cntorg>D.C. Office of the Chief Technology Officer</cntorg>
+<cntper>GIS Data Coordinator</cntper>
+</cntorgp>
+<cntaddr>
+<addrtype>mailing and physical</addrtype>
+<address>200 I Street SE, 5th Floor</address>
+<city>Washington</city>
+<state>DC</state>
+<postal>20003</postal>
+<country>US</country>
+</cntaddr>
+<cntfax>(202) 727-5660</cntfax>
+<cntemail>dcgis@dc.gov</cntemail>
+<hours>8:30 am - 5 pm</hours>
+</cntinfo>
+</metc>
+<metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn>
+<metstdv>FGDC-STD-001-1998</metstdv>
+<mettc>local time</mettc>
+</metainfo>
+</metadata>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+  
+    
+      
+
+
+
+
+
+
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Developing a Chrome Extension To Parse Recipes | Data By Dan</title>
+<meta name="title" content="Developing a Chrome Extension To Parse Recipes | Data By Dan" />
+<meta name="description" content="I love cooking, and I am heavily dependent on a couple of websites for new recipe ideas. Oftentimes, these websites contain multiple advertisements to drive revenue or the recipe contains a lot of background information that is not immediately relevant to the recipe, such as the history of the dish or how the chef developed the recipe.
+Problem: I love cooking but I hate all of this irrelevant content on recipe websites."> 
+
+
+<link rel="canonical" href="https://danbernstein.netlify.app/post/recipe-scraper/" />
+
+
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:description" content="" /> 
+  <meta name="twitter:title" content="Developing a Chrome Extension To Parse Recipes | Data By Dan" />
+  <meta name="twitter:url" content="https://danbernstein.netlify.app/post/recipe-scraper/" />
+  <meta name="twitter:site" content="@Softorage" /> 
+  <meta name="twitter:creator" content="@Softorage" /> 
+   
+
+
+
+  
+  <meta property="og:title" content="Developing a Chrome Extension To Parse Recipes | Data By Dan" />
+  <meta property="og:description" content="" /> 
+  <meta property="og:site_name" content="Data By Dan" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://danbernstein.netlify.app/post/recipe-scraper/" />
+  
+   
+
+
+
+<meta property="article:published_time" content="2020-10-12 00:00:00 &#43;0000 UTC" />
+
+
+  
+  
+  <script type="application/ld+json">
+      { 
+          "@context": "http://schema.org", 
+          "@type": "BlogPosting",
+          "headline": "Developing a Chrome Extension To Parse Recipes",
+          
+          "url": "https://danbernstein.netlify.app/",
+          
+          "datePublished": "2020-10-12T00:00:00Z",
+          
+          
+          "dateModified": "2020-10-12T00:00:00Z",
+          
+          "description": ,
+          
+          
+          "author": {
+              "@type": "Person",
+              "name": "Dan"
+          },
+          
+          "publisher": {
+            "@type": "Organization",
+            "name": "Dan Bernstein",
+            "logo": {
+              "@type": "ImageObject",
+              "url": ""
+            }
+          },
+          
+          "sameAs" : [
+            
+            
+              "https://github.com/danbernstein",  
+            
+              "https://twitter.com/danbernstein18"
+            ]
+          
+        }
+      </script>
+  
+
+
+    
+    <meta name="generator" content="Hugo 0.76.4" />
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/assets/css/main.min.9a551348bb4a6a2c0bc4401302fe04a74b1507276ba1d0aca4b2308afb7f452e.css" integrity="sha256-mlUTSLtKaiwLxEATAv4Ep0sVBydrodCspLIwivt/RS4=" crossorigin="anonymous">
+  
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+  
+  <link rel=apple-touch-icon sizes=180x180 href=https://danbernstein.netlify.app//assets/favicon/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://danbernstein.netlify.app//assets/favicon/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=https://danbernstein.netlify.app//assets/favicon/favicon-16x16.png><link rel=manifest href=https://danbernstein.netlify.app//assets/favicon/site.webmanifest><link rel=mask-icon href=https://danbernstein.netlify.app//assets/favicon/safari-pinned-tab.svg color=#7817c4><link rel=icon href=https://danbernstein.netlify.app//assets/favicon/favicon.ico type=image/x-icon><link rel="shortcut icon" href=https://danbernstein.netlify.app//assets/favicon/favicon.ico type=image/x-icon><meta name=apple-mobile-web-app-title content="Vibrant Shadows Theme"><meta name=application-name content="Vibrant Shadows Theme"><meta name=msapplication-TileColor content="#ffffff"><meta name=theme-color content="#ffffff">
+  
+  
+  
+  <meta name="theme-color" content="#fff6f8">
+  
+  <meta name="msapplication-navbutton-color" content="#fff6f8">
+  
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  
+</head>
+<body><header>
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top flex-column">
+    <div class="container-fluid">
+      
+      <a class="navbar-brand rounded px-3" href="https://danbernstein.netlify.app/"><span class="text-nav"><span class="brand">&nbsp;&nbsp;Data By Dan</span></span></a>
+      
+      
+        <a class="navbar-toggler border-0 bg-nav p-2" role="button" href="#" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="text-clr2">&#9776;</span>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-md-auto">
+             
+            
+              
+                <li class="nav-item mx-1 my-2">
+                  <a class="btn bg-nav text-clr1" href="/about-dan/">About Dan</a>
+                </li>
+              
+            
+          </ul>
+          
+            
+          
+        </div>
+      
+    </div>
+    
+  </nav>
+</header>
+<div id="content">
+<div class="container-fluid bg-clr1 text-nav text-center pb-3 pt-4 position-relative shadow">
+  <div style="height:3.5rem;"></div>
+  <h1>Developing a Chrome Extension To Parse Recipes</h1>
+  <p class="description"></p>
+</div>
+<div class="container-fluid bg-nav p-4">  
+  <div class="row">
+ 
+    <div class="col-md-auto">
+ 
+        
+      
+      <div class="py-1">
+        <div class="d-inline mr-auto small text-muted post-meta"></span>
+        
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        By Dan &#183; 7 min read &#183; <span class=''>Last updated: October 12, 2020</div>
+        
+        
+        
+        <div class="d-inline ml-auto float-right">
+          Share on:&nbsp;&nbsp;
+          <span class="lead">
+            
+              <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2frecipe-scraper%2f&quote=Developing%20a%20Chrome%20Extension%20To%20Parse%20Recipes" rel="noreferrer nofollow" target="_blank" title="Share on Facebook" aria-label="Share on Facebook"><span class="fab fa-facebook"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2frecipe-scraper%2f&text=Developing%20a%20Chrome%20Extension%20To%20Parse%20Recipes:%0Ahttps%3a%2f%2fdanbernstein.netlify.app%2fpost%2frecipe-scraper%2f" rel="noreferrer nofollow" target="_blank" title="Share on Twitter" aria-label="Share on Twitter"><span class="fab fa-twitter"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2frecipe-scraper%2f&title=Developing%20a%20Chrome%20Extension%20To%20Parse%20Recipes&summary=&source=Data%20By%20Dan" rel="noreferrer nofollow" target="_blank" title="Share on LinkedIn" aria-label="Share on LinkedIn"><span class="fab fa-linkedin"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://t.me/share/url?url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2frecipe-scraper%2f&text=Developing%20a%20Chrome%20Extension%20To%20Parse%20Recipes" rel="noreferrer nofollow" target="_blank" title="Share on Telegram" aria-label="Share on Telegram"><span class="fab fa-telegram"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="whatsapp://send?text=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2frecipe-scraper%2f%0A%0ADeveloping%20a%20Chrome%20Extension%20To%20Parse%20Recipes" data-text="Developing a Chrome Extension To Parse Recipes" data-href="https://danbernstein.netlify.app/post/recipe-scraper/" rel="noreferrer nofollow" target="_blank" title="Share on Whatsapp" aria-label="Share on Whatsapp"><span class="fab fa-whatsapp"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://reddit.com/submit?url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2frecipe-scraper%2f&title=Developing%20a%20Chrome%20Extension%20To%20Parse%20Recipes" rel="noreferrer nofollow" target="_blank" title="Share on Reddit" aria-label="Share on Reddit"><span class="fab fa-reddit"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="mailto:?subject=Developing%20a%20Chrome%20Extension%20To%20Parse%20Recipes&body=%0A%0Ahttps%3a%2f%2fdanbernstein.netlify.app%2fpost%2frecipe-scraper%2f" target="_blank" title="Share via email" aria-label="Share via email"><span class="fas fa-envelope"></span></a>
+            
+          </span>
+        </div>
+        
+        
+        
+        
+      </div>
+      
+      
+      <div class="py-3">
+      
+
+
+<p>I love cooking, and I am heavily dependent on a couple of websites for new recipe ideas. Oftentimes, these websites
+contain multiple advertisements to drive revenue or the recipe contains a lot of background information that is not immediately relevant to the recipe, such as the history of the dish or how the chef developed the recipe.</p>
+<p>Problem: I love cooking but I hate all of this irrelevant content on recipe websites. I want to go to a recipe webpage and be able to easily extract the recipe with no frills.</p>
+<p>Solution: A chrome extension! There are multiple possible solutions; any technology that allows you to process a webpage would work. You could write a simple script and deploy it on a cloud service provide, like Amazon Web Services or Google Cloud Platform, but these solutions would be overly complex for the task and they would actually not be able to accomplish the whole task. This task requires the solution to present the extracted recipe to the user with minimal work. Cloud service providers would not be able to access the web browser containing the webpage and then control the browser to present the extracted recipe. Chrome extensions are made for this task. Chrome extensions let you accomplish small tasks using data directly available in the browser and interact with the browser session to accomplish the task.</p>
+<div id="basic-background-on-chrome-extensions" class="section level2">
+<h2>Basic Background on Chrome Extensions</h2>
+<p>Chrome extensions are just a handful of files that respond to how you navigate the internet. You can write a chrome extension that runs whenever you go to a specific domain (i.e., run a script whenever you go to ’*.google.com’) or you can write an extension that only runs when the user clicks the chrome extension icon in their toolbar.</p>
+<p>You need a few specific files to create a chrome extension:
+* <a href="https://developer.chrome.com/extensions/manifest">manifest.json</a> : a template file that provides metadata about your extension, such as the name, description, and version. This file also provides instructions on what permissions your extension requires (i.e., which tabs you are allowing the extension to access), and which files should be run when the user interacts with the extension.
+* <a href="https://developer.chrome.com/extensions/background_pages">background scripts</a> : background scripts are run when a user does a specific action. For example, a background script might run when the extension is first installed or the user clicks the extension icon.
+* <a href="https://developer.chrome.com/extensions/content_scripts">content scripts</a>: content scripts interact directly with the webpage.</p>
+<p>The distinction between background and content scripts is vague. I like to think of background scripts as entry points that listen for the user interaction, while content scripts are the logic used for interacting with the webpage after the user as triggered an action. We will not be using a dedicated content script in this project, but we will be injecting javascript into the webpage to get the page’s content using in-line javascript, which serves the same role that a content script would play.</p>
+</div>
+<div id="project-structure" class="section level2">
+<h2>Project Structure</h2>
+<pre><code>README
+manifest.json
+recipe-scraper/ 
+  background.js
+  img/recipe-book.png</code></pre>
+</div>
+<div id="chrome-extension-entry-point" class="section level2">
+<h2>Chrome Extension Entry Point</h2>
+<p>I want the extension to run when the user clicks the icon in the toolbar. This interaction is defined through a listener function that listens for a specific interaction.</p>
+<pre><code>// Called when the user clicks on the browser action.
+chrome.browserAction.onClicked.addListener(function(tab) {
+    chrome.tabs.executeScript({
+        /// get the href, body, and head of the current tab, they will all be used during processing
+        code: &#39;[window.location.href, document.body.innerHTML, document.head.innerHTML]&#39;
+      }, process_page );
+});</code></pre>
+<p>You could write an extension to run whenever a page loads, when the extension is first installed, or a variety of other circumstances. Here we are using in-line code to retrieve the contents of the web page, specifically the URL of the webpage (‘window.location.href’), the webpage body (‘document.body.innerHTML’), and the document header, which contains the webpage stylesheets for formatting and styling the webpage (‘document.head.innerHTML’). This in-line code is interacting directly with the webpage DOM, this is the same task that content scripts often provide. This logic could have been placed in a separate content script file if it was more complicated.</p>
+<p>After the chrome extension extracts these features, it sends them to a function called <code>process_page</code> which will determine how the page should be processed.</p>
+</div>
+<div id="extracting-the-recipe" class="section level2">
+<h2>Extracting the Recipe</h2>
+<p>The first iteration of this extension was based on attempting to parse the recipe section of the webpage. I quickly realized that recipe websites generally use a similar webpage template which include HTML elements that use the same ids and classes for the same types of information. Multiple webpages use a class name of ‘recipe-body’ or ‘post-content’ for the main recipe content. However, many websites do not use any specific HTML elements for the recipe content, so the recipe is just plain text. This scenario is more difficult to parse and would require using regular expressions to attempt to identify where the recipe begins and ends.</p>
+<p>I found that there was a more common webpage component that could extract the recipe in a more reliable manner: print previews. Many websites includ a button to format the webpage into a printer-friendly version. The logic of the extension first attempts to identify an HTML element that contains the URL for the well-formatted print preview (<code>get_print_url</code>). If the extension successfully identifies the URL, it will then take control of the user’s browser tab and navigate to that link (<code>chrome.tabs.update()</code>). If the extension fails to identify the URL, it will attempt to extract the recipe from the webpage (<code>extract_text</code>). If all else fails, the extension will handle errors by alerting the user of the issue.</p>
+<pre><code>function process_page(results) {
+    /// attempt to identify the URL for the printer-friendly webpage. If not found, extract the recipe from the webpage.
+    try {
+        var [tab_url, html, head] = results[0]
+        var doc = new DOMParser().parseFromString(html, &quot;text/html&quot;);
+        var print_url = get_print_url(doc, tab_url)
+        if (typeof(print_url) !== &#39;undefined&#39;) {
+            chrome.tabs.update({url: print_url});
+        } else {
+            extract_text(doc, head)
+        }
+    }
+    catch(err) {
+        console.log(err)
+        alert(`Sorry, we are unable to extract the recipe from this webpage.\nError information: ${err}`);
+    };
+}</code></pre>
+<p>The internal logic for parsing the webpage to identify the URL and extract the recipe are included the <a href="https://github.com/danbernstein/recipe-scraper">GitHub repository</a> and will change as I try to generalize these two functions to apply to more recipe websites.</p>
+</div>
+
+      </div>
+      
+      
+      
+      <div class="pt-4 mt-2 border-top">
+        <div class="d-inline mr-auto small text-muted post-meta mb-1">
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        </div>
+        
+        
+        
+      
+      
+      
+      
+      
+        <div class="mt-3">
+        <span class="">Tags:</span>&nbsp;&nbsp;&nbsp;<a href="/tags/javascript"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">JAVASCRIPT</span></a><a href="/tags/chrome"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">CHROME</span></a><a href="/tags/tools"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">TOOLS</span></a><a href="/tags/cooking"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">COOKING</span></a></div>
+      
+      
+      </div>
+      
+    </div>
+  </div>
+  
+  
+  
+</div>
+
+    </div><footer class="text-center p-2 text-muted footer">
+  
+    
+    <div class="py-2 lead">
+      
+        
+          <a class="ml-2" href="https://github.com/danbernstein"><span class="fab fa-github" aria-label="Join us on Github"></span></a>
+        
+      
+        
+          <a class="ml-2" href="https://twitter.com/danbernstein18"><span class="fab fa-twitter" aria-label="Join us on Twitter"></span></a>
+        
+      
+    </div>
+    
+  
+
+  
+
+  <div class="py-2 copyright">
+    <small>Copyright &#169; 2020 Dan Bernstein <b>&#183;</b> Content license: CC-BY-SA-3.0 <b>&#183;</b> Powered by <a class="font-weight-bold text-reset text-decoration-none" href="https://gohugo.io">Hugo</a> <b>&#183;</b> Theme <a class="font-weight-bold text-reset text-decoration-none" href="">Shadows</a> by <span class="softorage"><a class="font-weight-bold text-reset" href="https://softorage.com">Softorage</a></span></small>
+  </div>
+</footer>
+
+    
+    
+    
+    <script src="/assets/js/main.min.6ff0d57b7558f0225c80bade926a349330bc25d85e7ceff50d911f1156023c3e.js" integrity="sha256-b/DVe3VY8CJcgLrekmo0kzC8JdhefO/1DZEfEVYCPD4=" crossorigin="anonymous"></script>
+    <script src="/assets/js/custom.min.c8274a0cac0477f854e63f09626cc63858bb2bc9db8faecbb2834846952c7fd6.js" integrity="sha256-yCdKDKwEd/hU5j8JYmzGOFi7K8nbj67LsoNIRpUsf9Y=" crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Lato&display=swap" rel="stylesheet">
+    
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+  </body>
+</html>

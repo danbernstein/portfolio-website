@@ -1,0 +1,282 @@
+---
+title: "Forecasting: Climate Modeling"
+author: Dan
+date: '2018-09-30'
+slug: climate-modeling
+categories: []
+tags:
+  - analysis
+  - forecasting
+  - R
+description: ''
+image: ''
+keywords: ''
+draft: no
+---
+
+
+
+<p><em>This is the first in a series of posts that seek to recreate the methods used in <a href="https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002598#sec014">Future ozone-related acute excess mortality under climate and population change scenarios in China: A modeling study</a>. All the posts build on my previous post on <a href="https://danbernstein.netlify.com/post/learning-forecasting/">forecasting</a>, by using data available from national and international research initatives to project future scenarios for complex systems including atmospheric chemistry, population dynamics, and mortality. This post focuses on the first projection: future change in atmospheric ozone concentrations.</em></p>
+<p>In climate modeling, predicting future concentrations of various chemicals involves complex dynamic interactions that rely upon expertise in atmospheric chemistry and physics. Dedicated research has developed dynamic models that simulate these future values on various time horizons and provide these datasets for public use. Real-world observational data can be matched to these time series simulations to derive more accurate predictions at particular geographic locations through a process called bias correction. With information that link these chemicals to disease progression, researchers can approximate the future burden of disease.</p>
+<div id="methods-resampling-historical-data-and-bias-correction-of-future-estimates" class="section level2">
+<h2>Methods: Resampling Historical Data and Bias Correction of Future Estimates</h2>
+<div id="overview-of-analysis" class="section level3">
+<h3><em>Overview of Analysis</em></h3>
+<p>The workflow for this analysis involves recreating the methods used in the PLOS Medicine article.</p>
+<p><em>“In the bias-correction step, daily ozone observations (daily maximum 8-h average, MDA8) at 778 monitoring sites were first assigned to the fine-scale (0.25° × 0.25°) grid cells. The values of fine-scale observations were determined by the average value of monitoring sites within each grid cell. The fine-scale observations were then resampled to coarse-scale (2.0° × 2.5°, latitude × longitude) using a bilinear interpolation, which enables direct comparisons between observations and historical simulations of the Geophysical Fluid Dynamics Laboratory (GFDL) chemistry-climate model CM3 (GFDL-CM3). In a given 2.0° × 2.5° grid cell, for each of the 12 months, all daily values within the same month in a study period were used to construct a distribution function of daily values in this month. Biases were then identified by comparing the corresponding distribution functions between historical GFDL-CM3 simulations and observations.”</em></p>
+<p>To break down this excerpt into discrete steps:</p>
+<ul>
+<li>load the appropriate packages</li>
+<li>Collect simulated and observational meteorological data</li>
+<li>Assign observational data to grid cells</li>
+<li>Resample gridded observational data to an appropriate grid for direct comparison through bilinear interpolation</li>
+<li>Create a suitable data object for climate4R analysis</li>
+<li>Conduct bias correction</li>
+</ul>
+</div>
+<div id="data" class="section level3">
+<h3><em>Data</em></h3>
+<div id="load-the-appropriate-packages" class="section level4">
+<h4>Load the appropriate packages</h4>
+<p>I have chosen to use the <a href="https://github.com/SantanderMetGroup">climate4R package bundle</a>, developed by the Santander Meteorology Group at the University of Cantabria in Spain. The bundle provides various functions for working with climate data packaged into aptly named packages (loadeR, transformeR, downscaleR, and visualizeR). The packages make it easy to manipulate, analyze, and visualize datasets that are common in climate modeling, such at NetCDF files. As we will see, we can manipulate more common geospatial datasets, such as vectors and rasters, into the appropriate format for the climate4R environment with a little work.</p>
+<pre class="r"><code># these five packages make up the climate4R bundle
+library(loadeR)
+library(transformeR)
+library(downscaleR)
+library(visualizeR)
+library(climate4R.climdex)
+
+library(tidyverse) # for common data wrangling 
+library(raster) # to manipulate raster data before inputting into climate4R structure
+library(rgdal) # to load geospatial data</code></pre>
+</div>
+<div id="collect-simulated-and-observational-meteorological-data" class="section level4">
+<h4>Collect simulated and observational meteorological data</h4>
+<p>I will be comparing the observational data to simulated data that assume a certain future climate state described by radiative forcing, an atmospheric property that relates earth’s solar absoprtion to the energy radiates back into space. The trend in future greenhouse gas (GHG) concentrations in these assumed future states are called representative concentration pathways (RCP). In this instance, I will compare observational data to simulated data assuming a future radiative forcing that promotes a moderate future GHG trajectory: RCP4.5. To compare potential futures, one might use RCP8.5 to model a more severe future radiative forcing environment.</p>
+<p>The simulated historical and future datasets for ozone were collected from the Geophysical Fluid Dynamics Laboratory (GFDL) chemistry-climate model CM3 (GFDL-CM3). The <a href="http://nomads.gfdl.noaa.gov:8080/DataPortal/cmip5.jsp">data portal</a> provides access to datafrom a range of experiments conducted under the Coupled Model Intercomparison Project (CMIP), an international collaboration to set standards in climate modeling. The simulated data under RCP4.5 in the CM3 experiment is taken from the intersecting <a href="http://nomads.gfdl.noaa.gov:8080/DataPortal/getModelExperDataByRealm.jsp?coupled_name=GFDL-CM3&amp;exper_name=rcp45&amp;exper_id=exper_id_5GjzEYkqOW&amp;realiz_id=realiz_id_JDbdw5mxpa">grid cell</a> on the data portal. After setting a few parameters, including the time period and the variable of interest (“tro3” for tri-oxygen), the portal produces the dataset for download as a netcdf (.nc) file. This process works for both the historical and future simulated data.</p>
+<pre class="r"><code># load the global climate model for ozone in gridded format ----
+gcm.tro3.data &lt;- &quot;./climate_tro3/raw_data/tro3/tro3_Amon_GFDL-CM3_rcp45_r1i1p1_201101-201512.nc&quot;
+str.gcm.tro3 &lt;- dataInventory(gcm.tro3.data)
+
+gcm.tro3 &lt;- loadeR::loadGridData(gcm.tro3.data, var = &quot;tro3@60000&quot;,
+                       years = 2011:2015, 
+                       lonLim = NULL, latLim = NULL)
+
+spatialPlot(climatology(gcm.tro3), background = &quot;countries&quot;)
+
+gcm.hist &lt;- subsetYears(gcm.tro3, years = 2011)
+
+gcm.tro3.future.data &lt;- &quot;./climate_tro3/raw_data/tro3_future/tro3_Amon_rcp45_r1i1p1_2051_2055.nc&quot;
+gcm.tro3.future &lt;- loadeR::loadGridData(gcm.tro3.future.data, var = &quot;tro3@60000&quot;,
+                                 years = 2051:2055, 
+                                 lonLim = NULL, latLim = NULL)
+
+# correct dates in the global climate model to ensure the ecosystem understands the data to be monthly, this will be important during visualization 
+gcm.hist$Dates$start &lt;- str_replace(gcm.hist$Dates$start, &quot;-15&quot;, &quot;-16&quot;)
+gcm.hist$Dates$end &lt;- str_replace(gcm.hist$Dates$end, &quot;-15&quot;, &quot;-16&quot;)
+gcm.tro3.future$Dates$start &lt;- str_replace(gcm.tro3.future$Dates$start, &quot;15&quot;, &quot;16&quot;)
+gcm.tro3.future$Dates$end &lt;- str_replace(gcm.tro3.future$Dates$end, &quot;15&quot;, &quot;16&quot;)</code></pre>
+<p>It is worth exploring the structure of this data type to understand how the observational data will need to be transformed to work in the climate4R ecosystem.</p>
+<pre class="r"><code>str(gcm.tro3)</code></pre>
+<p>This dataset is a list of four items that provide the information for analyzing and visualizing meteorological data that has both a spatial and temporal component.
++ “$ Variable” contains information about the variable of interest, here tro3 (ozone), including the description and quantification of the unit of measurement (Description: Mole Fraction of O3, Units: parts per billion (1e-9) concentration). There are additional options in case the data should be aggregated at the daily or monthly level. In this situation, we are already working with monthly measurements, so neither of these options are used. Of particular interest for global climate models is the level object, which specifies the z-dimension of the dataset. Here the z-dimension is a measure of the distance from the surface of the earth, with low values close to the surface and higher values in the upper atmosphere. I had originally worked at z = 100000 and there was data gaps over much of the continents, though at very low values there is low spatial variabilty. I settled on z = 60,000 to provide sufficient coverage while also providing variability.</p>
+<ul>
+<li>“$ Data” contains the time series values for the variable of interest in a three-dimensional array, where the first dimension is the time units (here it is 60 monthly measurements), then the y-axis and the x-axis. The dimensions of the three axes are then listed as the “dimensions” attribute (here: “time”, “lat”, “lon”). This attribute must be included in the data structure.</li>
+<li>“$ xyCoords” contains the actual values for the x and y dimensions, with attributes detailing the coordinate reference system being used (here set to “LatLonProjection” so climate4R understands that the data is in Latitude and Longitude rather than other geospatial structures), as well as the resolution for both spatial dimensions. It is worth noting that the order of the xyCoords is in the order of the name: x then y; however the order of dimensions in the Data object is reversed, in the order of the dimension attribute of the data object (time, y (latitude), then x (longitude)).</li>
+<li>“$ Dates” contains the temporal dimensions, providing both a start and end to each time period. For this row in this monthly dataset, the start and end values are the same.</li>
+</ul>
+</div>
+<div id="observational-data" class="section level4">
+<h4>Observational data</h4>
+<p>Observational data was collected from the U.S. Environmental Protection Agency’s Clean Air Status and Trends Network (CASTNET). The <a href="https://java.epa.gov/castnet/clearsession.do">data portal</a> provides and easy click-through menu to filter for the data of interest. Here, I am interested in getting aggregate concentration data (monthly) for Ozone 8-hour daily maximum (MDA8) for the same time period as the historical simulated data (2011-2015). The data includes seven monitoring sites in California.</p>
+<pre class="r"><code>## load observational data as a shapefile
+cali.shp &lt;- readOGR(&quot;./climate_tro3/processed_data/cali_eobs_shp&quot;, 
+                    layer = &quot;cali_eobs_shp&quot;, 
+                    stringsAsFactors = F)
+
+# correct the data type of the time series value (MDA8 ozone concentration) to numeric
+cali.shp$OZONE_8HR_ &lt;- as.numeric(cali.shp$OZONE_8HR_)
+str(cali.shp)</code></pre>
+</div>
+</div>
+<div id="analysis" class="section level3">
+<h3><em>Analysis</em></h3>
+<div id="assign-observational-data-to-fine-scale-grid-cells" class="section level4">
+<h4>Assign observational data to fine-scale grid cells</h4>
+<p>The observational data is stored as point data which has no inherent spatial dimensionality. To input the data into the climate4R ecosystem, the data will need to be split into separate datasets for any transformations to ensure only data within the same month is considered when aggregating, interpolating, etc. After splitting the data with the <code>split()</code> function, each data set is converted from point data, also called vector data, to a raster grid with 0.25 resolution in both the x and y direction. Within each 0.25 x 0.25 grid square, all data points in the same month are averaged to produce a raster of average spatially distributed ozone concentration.</p>
+<pre class="r"><code>points_list &lt;- split(cali.shp, as.numeric(lubridate::month(lubridate::mdy_hms(cali.shp$DDATE))))
+
+raster_list &lt;- lapply(points_list, function(x){rasterize(x, raster(extent(x), resolution = 0.25, crs = crs(x)),
+                                                         field = &#39;OZONE_8HR_&#39;, 
+                                                         fun=function(y,...){mean(y, na.omit = T)})
+})
+
+raster_brick &lt;- brick(raster_list)
+plot(raster_brick)</code></pre>
+</div>
+<div id="resample-gridded-observational-data-to-an-appropriate-grid-for-direct-comparison-through-bilinear-interpolation" class="section level4">
+<h4>Resample gridded observational data to an appropriate grid for direct comparison through bilinear interpolation</h4>
+<p>To compare observational data with GFDL simulated data, I resample the observational data to the same resolution as the simulated data (2.5, 2) using a method called bilinear interpolation. According to the PLOS Medicine article, this allows for direct comparison between the datasets.</p>
+<pre class="r"><code>raster_brick_resample &lt;-
+  raster_brick %&gt;% 
+  raster::resample(x = .,
+                   y =  raster(extent(.), resolution = c(2.5,2.0), 
+                               crs = crs(.)), 
+                   method = &quot;bilinear&quot;) %&gt;% 
+  flip(., &quot;y&quot;)
+
+raster_aperm &lt;- aperm(raster::as.array(raster_brick_resample), c(3, 1, 2),
+                      ymn = ymin(raster_brick_resample))
+
+grid &lt;- raster::raster(extent(raster_brick_resample), 
+                       crs = crs(raster_brick_resample),
+                      # ymn = ymin(raster_brick_resample@extent),
+                       resolution = res(raster_brick_resample))</code></pre>
+<p>It is worth noting here that the way that the raster package interprets grids is through reading the x axis values left to right and the y axis from top to bottom. This means that the range of the y axis, when described in the <code>extent()</code> function will give the larger value first because this value is at the top of the grid. This is a problem when you put this data into the climate4R ecosystem and attempt to bias correct. After much trial and error, the simplest solution I have found is to flip the y-axis values in the raster dataset using the <code>flip()</code> function, and then take the reverse order of y-axis values when slotting the raster data into a climate4R-compliant data structure (more to come on this later).</p>
+</div>
+<div id="create-a-data-object-suitable-for-climate4r-analysis" class="section level4">
+<h4>Create a data object suitable for climate4R analysis</h4>
+<p>With the data now at the appropriate resolution, I can input the data into the proper data structure to then conduct bias correction using the climate4R bundle. First, I copy the object for the ozone global climate model that is already in the appropriate data structure for climate4R, then replace various components of the object with the observational data: 1) change the $Data object to the observational array, 2) create the list called “locs” and fill it with the xy-coordinates information, setting the appropriate projection and resolutions as attributes, 3) setting the Dates object with start and end variables that match the global climate model dates (set to the 16th of each month in the year 2011).</p>
+<p><em>Note: as I mentioned earlier, the y-axis values have to be reversed (using the <code>{r, eval=FALSE} rev()</code> function to make the data compliant with climate4R).</em></p>
+<pre class="r"><code>cali.aperm &lt;- gcm.tro3 # copy global climate model data to provide data structure
+cali.aperm$Data &lt;- raster_aperm # fill data with properly structured cali observational data
+attr(cali.aperm$Data, &quot;dimensions&quot;) &lt;- c(&quot;time&quot;, &quot;lat&quot;, &quot;lon&quot;)
+
+locs &lt;- list() 
+locs$x &lt;- xFromCol(grid, col = 1:ncol(grid))
+locs$y &lt;- rev(yFromRow(grid, row = 1:nrow(grid)))
+attr(locs, &quot;projection&quot;) &lt;- &quot;LatLonProjection&quot;
+attr(locs, &quot;resX&quot;) &lt;- 2.5
+attr(locs, &quot;resY&quot;) &lt;- 2
+cali.aperm$xyCoords &lt;- locs
+
+cali.aperm$Dates &lt;- NULL
+for (i in 1:12){
+  cali.aperm$Dates$start[i] &lt;- paste(paste(&quot;2011&quot;, if_else(i &lt; 10, paste0(&quot;0&quot;, i), paste(i)), &quot;16&quot;, sep = &quot;-&quot;), &quot;12:00:00 GMT&quot;)
+  cali.aperm$Dates$end[i] &lt;- cali.aperm$Dates$start[i]
+  }</code></pre>
+<p>We can see from the spatial plot that the object is in the proper format for visualization. Next we will see if it works for analysis.</p>
+<pre class="r"><code>spatialPlot(climatology(cali.aperm), backdrop.theme = &quot;countries&quot;)</code></pre>
+</div>
+<div id="conduct-bias-correction" class="section level4">
+<h4>Conduct bias correction</h4>
+<p>Bias correction uses three pieces of information to predict a fourth. We have information for historical observational data, historical simulated rcp4.5 data, and future simulated rcp4.5 data. Using these three data pieces, the <code>biasCorrection()</code> function identifies the trend in difference between the two historical datasets to adjust the future simulated dataset. This process produces a bias-adjusted future simulation that more closely relates to the observational data. Numerous methods are available for bias correction, here I use empirical quantile mapping (“eqm”).</p>
+<pre class="r"><code>bc &lt;- biasCorrection(y = cali.aperm, 
+                     x = gcm.hist,
+                     newdata = gcm.tro3.future, 
+                     method = &quot;eqm&quot;)</code></pre>
+<p>We can see the output of bias correction at one location. The black lines are the historical and future simulated data, the blue is the historical observational data, and the red is the bias-adjusted future data. The historical observational data only contains one year’s worth of data.</p>
+<pre class="r"><code># plotting after bias correction ----
+historical.obs &lt;- subsetGrid(cali.aperm, latLim = cali.aperm$xyCoords$y[3], 
+                        lonLim = cali.aperm$xyCoords$x[1], outside = T) 
+future.corrected &lt;- subsetGrid(bc, latLim = cali.aperm$xyCoords$y[3], 
+                               lonLim = cali.aperm$xyCoords$x[1], outside = T) 
+historical.sim &lt;- interpGrid(gcm.hist, getGrid(historical.obs)) 
+future.sim &lt;- interpGrid(gcm.tro3.future, getGrid(historical.obs)) 
+
+ts &lt;- list(&quot;OBS&quot; = historical.obs,
+          &quot;SIM-OBS&quot; = historical.sim,
+          &quot;FUTURE-RAW&quot; = future.sim,
+          &quot;FUTURE-ADJ&quot; = future.corrected)
+
+temporalPlot(ts,
+             cols = c(&quot;blue&quot;, &quot;black&quot;, &quot;black&quot;, &quot;red&quot;),
+             xyplot.custom = list(main = &quot;Projected Ozone Concentration&quot;, ylab = &quot;Concentration (ppb)&quot;))</code></pre>
+<p>The bias-corrected future values are then converted from the course to the fine scale through spatial disaggregation whereby basic arithmetic computed on spatial distributions translate data between resolutions while maintaining consistency in specific patterns, here the temporal scaling pattern. The steps of this process are: (1) identifying and subtracting the temporal scaling factor (essentially the difference between the historical and the future spatial distribution, compared on a monthly mean), (2) interpolating the remainder from 2.5 x 2.0 resolution to 0.25 x 0.25, and (3) adding the temporal scaling factor back to the fine-scale values to produce a final bias-adjusted spatially-disaggregated simulations. The <a href="https://journals.plos.org/plosmedicine/article/file?type=supplementary&amp;id=info:doi/10.1371/journal.pmed.1002598.s005">supplementary material</a> for the referenced paper provides a good depiction of this process on page 6. The final product is then suitable to combine with population projections and health data to approximate future mortality attributable to atmospheric ozone concentration changes.</p>
+<div id="step-1-identifying-and-subtracting-the-temporal-scaling-factor-essentially-the-difference-between-the-historical-and-the-future-spatial-distribution-compared-on-a-monthly-mean" class="section level5">
+<h5><em>Step 1: identifying and subtracting the temporal scaling factor (essentially the difference between the historical and the future spatial distribution, compared on a monthly mean)</em></h5>
+<pre class="r"><code># construct vector of mean monthly at course scale to subtract from bias-corrected future values
+matched.course &lt;- vector(length = length(bc$Dates$start), mode = &quot;numeric&quot;)
+match.x &lt;- vector(length(bc$xyCoords$x), mode = &quot;numeric&quot;)
+match.y &lt;- vector(length(bc$xyCoords$y), mode = &quot;numeric&quot;)
+
+# copy the bias-adjusted data to provide object structure
+# the Data object will be replaced 
+monthlymean.course &lt;- bc
+
+for (i in 1:length(bc$Dates$start)){
+
+  for (j in 1:length(bc$xyCoords$x)){
+    
+    for (k in 1:length(bc$xyCoords$y)){
+      matched.course[i] &lt;- match((lubridate::month(as.POSIXct(bc$Dates$start)))[i],
+                                 lubridate::month(as.POSIXct(cali.aperm$Dates$start)))
+      
+      match.x[j] &lt;- match(bc$xyCoords$x[j], cali.aperm$xyCoords$x)
+      
+      match.y[k] &lt;- match(bc$xyCoords$y[k], cali.aperm$xyCoords$y)
+      
+      monthlymean.course$Data[i,k,j] &lt;- cali.aperm$Data[matched.course[i], match.y[k], match.x[j]]
+    }
+  }
+}
+
+spatialPlot(climatology(monthlymean.course))
+
+# step 1: create course temporal scaling factor by subtracting monthly means
+future.temporalscaling.course &lt;- gridArithmetics(bc, monthlymean.course, operator = &quot;-&quot;,
+                                template = NULL)
+
+spatialPlot(climatology(future.temporalscaling.course))</code></pre>
+</div>
+<div id="step-2-interpolating-the-remainder-from-2.5-x-2.0-resolution-to-0.25-x-0.25" class="section level5">
+<h5><em>Step 2: interpolating the remainder from 2.5 x 2.0 resolution to 0.25 x 0.25</em></h5>
+<pre class="r"><code># Step 2: interpolate course temporal scaling factor to fine
+future.temporalscaling.fine &lt;- 
+  future.temporalscaling.course %&gt;% 
+  interpGrid(., new.coordinates = list(x = seq(min(future.temporalscaling.course$xyCoords$x), 
+                                               max(future.temporalscaling.course$xyCoords$x), 
+                                               0.25),
+                                       y = seq(min(future.temporalscaling.course$xyCoords$y), 
+                                               max(future.temporalscaling.course$xyCoords$y), 
+                                               0.25)),
+             method = &quot;bilinear&quot;, bilin.method = &quot;akima&quot;) 
+
+spatialPlot(climatology(future.temporalscaling.fine))</code></pre>
+</div>
+<div id="step-3-adding-the-temporal-scaling-factor-back-to-the-fine-scale-values-to-produce-a-final-bias-adjusted-spatially-disaggregated-simulations" class="section level5">
+<h5><em>Step 3: adding the temporal scaling factor back to the fine-scale values to produce a final bias-adjusted spatially-disaggregated simulations</em></h5>
+<pre class="r"><code># interpolate the historical data 
+cali.aperm.fine &lt;- 
+  cali.aperm %&gt;% 
+  interpGrid(., new.coordinates = list(x = seq(min(cali.aperm$xyCoords$x), 
+                                               max(cali.aperm$xyCoords$x), 
+                                               0.25),
+                                       y = seq(min(cali.aperm$xyCoords$y), 
+                                               max(cali.aperm$xyCoords$y), 
+                                               0.25))) 
+
+monthlymean.fine &lt;- future.temporalscaling.fine
+
+for (i in 1:length(future.temporalscaling.fine$Dates$start)){
+
+  for (j in 1:length(future.temporalscaling.fine$xyCoords$x)){
+    
+    for (k in 1:length(future.temporalscaling.fine$xyCoords$y)){
+      matched.course[i] &lt;- match((lubridate::month(as.POSIXct(future.temporalscaling.fine$Dates$start)))[i],
+                                 lubridate::month(as.POSIXct(cali.aperm.fine$Dates$start)))
+      
+      match.x[j] &lt;- match(future.temporalscaling.fine$xyCoords$x[j], cali.aperm.fine$xyCoords$x)
+      
+      match.y[k] &lt;- match(future.temporalscaling.fine$xyCoords$y[k], cali.aperm.fine$xyCoords$y)
+      monthlymean.fine$Data[i,k,j] &lt;- cali.aperm.fine$Data[matched.course[i], match.y[k], match.x[j]]
+    }
+  }
+}
+
+# Step 3: add fine monthly means to fine temporal scaling factors to get final fine downscaled projection
+future.downscale.fine &lt;- gridArithmetics(future.temporalscaling.fine, 
+                                         monthlymean.fine, 
+                                         operator = &quot;+&quot;,
+                                         template = NULL)</code></pre>
+<p>We can compare the bias-adjusted course projections to the bias-adjusted spatially-disaggregated projections to see that the projections are similar but the latter is more granular.</p>
+<pre class="r"><code>spatialPlot(climatology(bc))
+spatialPlot(climatology(future.downscale.fine))</code></pre>
+</div>
+</div>
+</div>
+<div id="conclusions" class="section level3">
+<h3>Conclusions</h3>
+<p>This workflow has used observational station data to correct bias in global climate models to produce more accurate future projections. These projections were further interpolated to the fine scale through spatial disaggregation in which the temporal scaling factor was separated and then added back in after interpolation. The ultimate product is a bias-corrected spatially-disaggregated projection. This is a good example of leveraging publicly available data to produce complex projections that would not be possible with basic models; they require a sophisticated understanding of atmospheric dynamics and high-performance computing. In the next post, I will look at the next step in the reference paper’s methods, projecting Chinese population growth under a variety of urbanization dynamics.</p>
+</div>
+</div>

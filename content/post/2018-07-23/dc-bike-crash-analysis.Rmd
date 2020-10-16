@@ -4,14 +4,14 @@ author: Dan
 date: '2018-07-23'
 slug: dc-bike-crash-analysis
 categories: []
-tags: []
+tags: ['R']
 description: ''
 image: ''
 keywords: ''
 draft: no
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, eval=F}
 knitr::opts_chunk$set(echo = T,
                       message= F, 
                       warning = F)
@@ -44,7 +44,7 @@ All data was acquired from the DC government's [data portal](http://opendata.dc.
 This data was analyzed alongside DDOT's [Bicycle Lanes dataset](http://opendata.dc.gov/datasets/bicycle-lanes), which provides information on all existing and proposed bike lanes in DC. Bike lanes are reported with the year they were installed, starting in the year 1980, and then no occurrences reported until 2001, and then new reported entries occur every year thereafter. The [Street Centerlines dataset](http://opendata.dc.gov/datasets/street-centerlines?geometry=-77.824%2C38.707%2C-76.809%2C39.081) provides the geospatial location for all streets in DC, with attributes including the direction (one-way, two-way, etc.) and street classification (street, alley, freeway, etc.). These attributes will be important later for finding appropriate streets for comparison.
 Initial visualization was conducted in qGIS v2.18 for ease of use, while statistical analysis was conducted in R 3.4.4.
 
-```{r results = 'hide'}
+```{r results = 'hide', eval=F}
 # spatial tools 
 library(rgdal)
 library(maptools)
@@ -60,10 +60,10 @@ library(spdplyr)
 library(leaflet)
 
 ## read in the shapefiles
-lanes.shp.raw <- sf::st_read(dsn = "/home/dan/data/crash analysis/raw_data/bikelanes", 
+lanes.shp.raw <- sf::st_read(dsn = "./crash analysis/raw_data/bikelanes", 
                      layer = "Bicycle_Lanes")
 
-streets.shp.raw <- sf::st_read(dsn = "/home/dan/data/crash analysis/raw_data/dc_streets",
+streets.shp.raw <- sf::st_read(dsn = "./crash analysis/raw_data/dc_streets",
                        layer = "Street_Centerlines") %>% 
   # combine the two entries for one way roadways into one for purposes of matching
   mutate(directionality = case_when(DIRECTIONA == "Two way" ~ "Two way",
@@ -80,7 +80,7 @@ lanes <- lanes.shp.raw %>%
 
 With a limited number of roads with bike lanes, we need to find a fitting comparison set of roads without bike lanes that are similar in terms of variables that might impact the number of reported crashes. A 2012 paper from the American Journal of Public Health [identified](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3483943/) three useful covariates for matching to determine the impact of bike lanes: 1-way vs. 2-way roadways (directionality), divided vs. undivided roadways, and number of lanes on the road. The DC street centerlines dataset includes directionality, with four options ("Two way", "One way (digitizing direction)", "One way (against digitizing direction", "Unknown"). The two options denoting one way directionality were combined because the information about digitizing direction is irrelevant to this analysis. While the data does not include information on divided vs. undivided roadways or the number of lanes, I will also match on the length of the roads and the road type (street, alley, driveway, ramp, or service road).
 
-```{r results = 'hide'}
+```{r results = 'hide', eval=F}
 # data preparation for Propensity Score Matching
 join.df <- 
 # left join bike lanes data to streets data 
@@ -103,7 +103,7 @@ lane_status <- join.df %>%
 
 MatchIt implements Propensity Score Matching through the MatchIt function. After this pre-processing to match treatment observations with control observations, we can carry out any normal statistical analyses as you might with an unmatched dataset. 
 
-```{r echo = F}
+```{r echo = F, eval=F}
 # matchit uses a formula format, with the treatment as the output variable and the covariates in # the formula. ratio indicates how many control matches to identify per observation in the treatment group. 
 
 m.out <- matchit(bike_lane ~ ROADTYPE + directionality + SHAPELEN, 
@@ -112,7 +112,7 @@ m.out <- matchit(bike_lane ~ ROADTYPE + directionality + SHAPELEN,
 
 We can evaluate the quality of the matched pairs. For each variable used in the matching algorithm, the summary includes statistical distribution information for the full dataset, the matched dataset, and the percent improvement. 
 
-```{r}
+```{r, eval=F}
 summary(m.out)
 ```
 
@@ -129,13 +129,13 @@ Before we introduce the crash point data, we need to manipulate the matched trea
   The match matrix within the MatchIt object includes and n x ratio matrix where the row numbers are equivalent to the row indices of the treatment observations in the input data. While the input data does not include bike lane installation years (because MatchIt requires no missing data), we can use the row indices to link the match matrix to the bike lane installation year information (stored in "lane_status"). 
   
 
-```{r results = 'hide'}
+```{r results = 'hide', eval=F}
 # prepare the match matrix to merge the installation year of bike lanes to the matched control observations
 match.matr <- as.data.frame(m.out$match.matrix) %>% 
   mutate(rowid = row_number()) %>% 
   mutate(rowid = lane_status$rowid) %>% 
   rename("match_1" = `1`, "match_2" = `2`) %>% 
-  mutate_if(is.factor, function(x){as.integer(as.character(x))}) %>% 
+  mutate_if(is.factor, function(x){as.integer(as.character(x)), eval=F}) %>% 
   left_join(., lane_status, by = "rowid")
 
 join.match2 <-
@@ -162,18 +162,12 @@ With the data now matched and installation years linked between the treatment an
 
 To get a sense of the geographic distribution, here is all cyclist crashes in the dataset. 
 
-<style>
-.html-widget {
-    margin: auto;
-}
-</style>
-
-```{r, echo = F, fig.align="center"}
-raw.shp <- readOGR(dsn = "/home/dan/data/crash analysis/processed_data/processed_crash_bikes", 
+```{r, echo = F, fig.align="center", eval=F}
+raw.shp <- readOGR(dsn = "./crash analysis/processed_data/processed_crash_bikes", 
                    layer = "crash_bikes_processed") %>% 
   mutate(year = lubridate::year(lubridate::ymd_hms(REPORTD)))
 
-lanes.shp <- readOGR(dsn = "/home/dan/data/crash analysis/raw_data/bikelanes", 
+lanes.shp <- readOGR(dsn = "./crash analysis/raw_data/bikelanes", 
                      layer = "Bicycle_Lanes")
 
 lanes.fort <- ggplot2::fortify(lanes.shp)
@@ -191,8 +185,8 @@ leaflet(raw.shp) %>%
 
 Linking the street segments to geolocated crash data requires adding buffers to the crash data data points and then counting the number of points intersecting each line segment. 
 
-```{r results = 'hide'}
-crash_buffer <- st_read("/home/dan/data/crash analysis/processed_data/buffer_crash_bikes",
+```{r results = 'hide', eval=F}
+crash_buffer <- st_read("./crash analysis/processed_data/buffer_crash_bikes",
                  layer = "buffer_crash_bikes")
 
 ```
@@ -202,7 +196,7 @@ Geographic data points do not have any inherit size component; points must have 
 
 Counting the number of points intersecting each line segment is simple with the sf package's st_intersction function. 
 
-```{r results = 'hide'}
+```{r results = 'hide', eval=F}
 line_crash_intersect.df <- 
   join.match2 %>% 
  # filter(year_insta >= 2014) %>% 
@@ -229,7 +223,7 @@ line_crash_intersect.df <-
 
 We now summarize the segments by whether they have bike lanes (org_bk_) and then by aggregate total crashes before and after the installation year (bike_yr_occur). This summarization tells how how many crashes occurred before and after the nominal "installation year" understanding that the group with org_bk_ = 0 never had a bike lane and only adopted the value of the matching segment with a bike lane.
 
-```{r}
+```{r, eval=F}
 difference_of_differences <- 
   line_crash_intersect.df %>% 
   group_by(orig_year_insta, bike_yr_occur) %>%

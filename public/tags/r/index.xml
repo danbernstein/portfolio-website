@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>R on Data By Dan</title>
+    <link>https://danbernstein.netlify.app/tags/r/</link>
+    <description>Recent content in R on Data By Dan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
+    <lastBuildDate>Sun, 12 May 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://danbernstein.netlify.app/tags/r/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Scraping and Visualizing My Rideshare and Bicycling Activity</title>
+      <link>https://danbernstein.netlify.app/post/2019-05-12/visualizing-personal-transportation-use/</link>
+      <pubDate>Sun, 12 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2019-05-12/visualizing-personal-transportation-use/</guid>
+      <description>Summary: This small project started out with two goals: web scraping and visualizing movement data. As the project developed, I found that the web scraping took most of the time, and the visualization was best left to well-developed javascript frameworks, rather than developing it from scratch.
+Check out the final visualization.
+Webscraping Note: It is extremely important to read and understand the website user agreement for any website from which you might want to scrape data.</description>
+    </item>
+    
+    <item>
+      <title>Visualizing the Government Shutdown and the 2016 Election</title>
+      <link>https://danbernstein.netlify.app/post/2019-01-16/data-viz-government-shutdown-and-the-2016-election/</link>
+      <pubDate>Wed, 16 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2019-01-16/data-viz-government-shutdown-and-the-2016-election/</guid>
+      <description>In January 2019, Axios produced a data visualization to demonstrate how the partial government shutdown was impacting different states and how that related to the outcomes of the 2016 presidential election. The visualization is a little confusing because there are two color scales, one for states that went for Trump and another for Clinton. Because the scales are distinguished by the 2016 winner, but the shade on each scale is determined by the number of federal workers affected by the government shutdown, the visualization is a little confusing.</description>
+    </item>
+    
+    <item>
+      <title>Analyzing Cyclist Crash Data in New York City</title>
+      <link>https://danbernstein.netlify.app/post/2019-01-02/crash-analysis-nyc/</link>
+      <pubDate>Wed, 02 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2019-01-02/crash-analysis-nyc/</guid>
+      <description>In a previous post, I determined that there was not enough data available to assess the impact of bike lane installation on cyclist incident rates in Washington DC. The methodology I pursued in that post was based on a 2012 article in the American Journal of Public Health (AJPH) that conducted an analysis of New York City for bike lanes installed between 1996 and 2006, including limiting analysis to the five years before and two years following a bike lane installation to assess impact.</description>
+    </item>
+    
+    <item>
+      <title>Forecasting: Attributable Death</title>
+      <link>https://danbernstein.netlify.app/post/2018-10-30/forecasting-attributable-death/</link>
+      <pubDate>Tue, 30 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2018-10-30/forecasting-attributable-death/</guid>
+      <description>This is the fourth and final post in a series that seek to recreate the methods used in Future ozone-related acute excess mortality under climate and population change scenarios in China: A modeling study. All the posts build on my previous post on forecasting, by using data available from national and international research initatives to project future scenarios for complex systems including atmospheric chemistry, population dynamics, and mortality rate. This post focuses on combining the previous three projections to derive human health outcome metrics: attributable fraction and attributable daily death.</description>
+    </item>
+    
+    <item>
+      <title>Mortality Rate Projections</title>
+      <link>https://danbernstein.netlify.app/post/2018-10-22/mortality-rate-projections/</link>
+      <pubDate>Mon, 22 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2018-10-22/mortality-rate-projections/</guid>
+      <description>This is the third in a series of posts that seek to recreate the methods used in Future ozone-related acute excess mortality under climate and population change scenarios in China: A modeling study. All the posts build on my previous post on forecasting, by using data available from national and international research initatives to project future scenarios for complex systems including atmospheric chemistry, population dynamics, and mortality. This post focuses on the third projection: mortality rate.</description>
+    </item>
+    
+  </channel>
+</rss>

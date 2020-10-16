@@ -1,0 +1,83 @@
+---
+title: Commons Mistakes When Using the AWS Cloud Development Kit
+author: Dan
+date: '2020-10-16'
+slug: []
+categories: []
+tags:
+  - AWS
+  - python
+  - IaaS
+  - cloud computing
+description: ''
+lastmod: ''
+image: ''
+author_twitter: ''
+---
+
+The AWS Cloud Development Kit (CDK) is a set of tools that make it easy to write code to specify cloud infrastructure and deploy it using common scripting languages, like Python or Javascript. Previously, you had to use YAML or XML templates to deploy AWS cloud infrastructure using the CloudFormation service. The CDK is a wrapper around these templates that makes Infrastructure as a Service (IaaS) more accessible and allows you to take advantage of complex operations that you cannot accomplish in template files.
+
+Here are some of the exceptions I run across often when developing CDK scripts. These exceptions will likely be outdated because the AWS CDK is under constant development.
+
+**Error**
+```
+AttributeError: 'NoneType' object has no attribute 'vpc'
+```
+
+**Explanation**
+
+You did not pass the stack or construct as an argument. 
+
+The CDK makes it very easy for you to compartmentalize your cloud resources into logically separate files. You might have one file that defines your VPC, including subnets and permissions, and then have a separate file that defines an EC2 instance that you want to run inside that VPC. You simply pass the construct representing the VPC to the EC2 construct and you can then access all of the resources defined in the VPC construct. This would allow you to specify the right VPC ID when deploying the EC2 instance.
+
+
+**Error**
+
+```
+jsii.errors.JSIIError: this.handler.addPermission is not a function
+```
+
+**Explanation**
+
+You are not working with the right object. This error says that you tried to add permissions to a lambda function, but there is no property on 'this' resource to add permission to a lambda function handler. This might be because you are attempting to add permissions on a construct that contains a lambda function, rather than on the actual lambda function. You should specify "[CONSTRUCT].LambdaFn" to access the lambda function object contained in the construct.
+
+**Error**
+
+```
+jsii.errors.JSIIError: Expected a string, got {"$jsii.byref":"@aws-cdk/aws-iam.Role@10016"}
+
+jsii.errors.JSIIError: Expected object reference, got "${Token[TOKEN.76]}"
+
+```
+**Explanation**
+
+You did not provide the right representation of an object. Some CDK functions will accept an object representing a resource, while others expect string values, such as the VPC name or lambda function ARN. Make sure you follow the parameter specifications outlined in the [documentation](https://docs.aws.amazon.com/cdk/api/latest/) to know what representation is needed.
+
+In the first line above, we see that the function expected a string value ,but you provided a reference to an IAM role. In the second line, the function expected an object reference, but it received a token, which is a special value type that is resolved when you run the script. To learn more about the variety of data types in the CDK, check out the [Concepts](https://docs.aws.amazon.com/cdk/latest/guide/core_concepts.html).
+
+
+**Error**
+
+```
+ ❌  WebAppStack failed: Error: The stack named WebAppStack is in a failed state: UPDATE_ROLLBACK_COMPLETE
+
+```
+**Explanation**
+
+The stack you are trying to update is not ready to be updated. Wait a few minutes and try again.
+
+The CDK lets you run scripts that invoke APIs that make changes in your cloud environment. These changes are not immediate, many of them can take a couple minutes, especially when they involve configuring web resources, like API endpoints. When you receive this update, it is saying that the stack is rolling back to the most recent successful deployment state; thus is unavailable for updates at this time. 
+
+**Error**
+
+```
+Docker EB CLI
+ERROR   Each option setting in configuration file .ebextensions/securelistener-clb.config in application version app-200418_203121 must be a map. Update each option setting in the configuration file.
+
+```
+**Explanation**
+
+There is an issue in your Docker file that is preventing deployment via AWS Elastic Beanstalk. Confirm that your applications runs succesfully locally and resolve any issues. 
+
+
+

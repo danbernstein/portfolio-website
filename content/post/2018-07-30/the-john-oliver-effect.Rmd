@@ -5,15 +5,16 @@ date: '2018-07-30'
 slug: the-john-oliver-effect
 categories: []
 tags:
-  - Bibliometrics
-  - Network Analysis
+  - R
+  - bibliometrics
+  - network analysis
 description: ''
 image: ''
 keywords: ''
 draft: no
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, eval=F}
 knitr::opts_chunk$set(echo = T,
                       message= F, 
                       warning = F)
@@ -45,7 +46,7 @@ Tweets including the term *CRISPR* were collected using an automated R script ([
 
 While *crispr* is mentioned on a daily a basis, *John Oliver* only begins appearing in the same tweets on July 2, the day after the episode aired. References of *John Oliver* peaks with 207 mentions on the first day, July 2, and then quickly tapers off, with a short resurgence (46 mentions) around June 13. No John Oliver referencs appear past July 21. 
 
-```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+```{r eval=FALSE, echo = FALSE, fig.align = "center"}
 library(dplyr)
 library(tm)
 library(data.table)
@@ -75,7 +76,7 @@ tweets.df <-
   mutate(link = if_else(str_detect(link, ":"), str_replace(link,"\\:.*",""), link))
 ```
 
-```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+```{r eval=FALSE, echo = FALSE, fig.align = "center"}
 tweets.day.john <- 
   tweets.df %>% 
   mutate(john = if_else(john == "0", "CRISPR", "CRISPR & John Oliver")) %>%
@@ -94,7 +95,7 @@ ggplot(data = tweets.day.john, mapping = aes(x = Day, n, color = john)) +
 
 ##### In terms of original tweets vs. retweets
 
-```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+```{r eval=FALSE, echo = FALSE, fig.align = "center"}
 ## plot tweets and retweets
 tweets.content <-
   tweets.df %>% 
@@ -126,9 +127,9 @@ There are approximately 26,000 unique twitter users in the dataset, of which abo
 
 In the below plots, A indicates users who only mentioned CRISPR in conjunction with John Oliver, B indicates users who never mentioned John Oliver, and C indicates uers who mentioned CRISPR both in conjunction and others.
 
-```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+```{r eval=FALSE, echo = FALSE, fig.align = "center"}
 ## three group comparison
-twitter_user_bios <- read_csv("./markdown_data/john_oliver_effect/processed_data/twitter_users_info.csv")
+twitter_user_bios <- read_csv("./john_oliver_effect/processed_data/twitter_users_info.csv")
 
 users <- c(tweets.df$screenName)
 
@@ -170,7 +171,7 @@ bio_words_threegroup_plot <-
 bio_words_threegroup_plot
 ```
 
-```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+```{r eval=FALSE, echo = FALSE, fig.align = "center"}
 bio_words_threegroup_source %>% 
   group_by(ever_john) %>% 
   arrange(desc(n)) %>% 
@@ -189,7 +190,7 @@ Unfortunately, this wordcloud algorithm partitions the words so that each word o
 
 We can get a little bit more information on the group that never mentioned John Oliver by splitting the users into two groups: 1) mentioned John Oliver, regardless of other mentions of CRISPR, and 2) never mentioned John Oliver within tweets about CRISPR.
 
-```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+```{r eval=FALSE, echo = FALSE, fig.align = "center"}
 tweets.bios_twogroup <-
   tweets.df %>% 
   group_by(screenName) %>% 
@@ -210,7 +211,7 @@ bio_words_twogroup_source <-
   ungroup()
 ```
 
-```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+```{r eval=F, echo = FALSE, fig.align = "center"}
 bio_words_twogroup_source %>% 
   group_by(ever_john) %>% 
   top_n(10) %>%
@@ -225,7 +226,7 @@ bio_words_twogroup_source %>%
   coord_flip()
 ```
 
-```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+```{r eval=FALSE, echo = FALSE, fig.align = "center"}
 bio_words_twogroup_source %>% 
   acast(word ~ ever_john, value.var = "n", fill = 0) %>%
   comparison.cloud(colors = c("#F8766D", "#00BFC4"),
@@ -235,7 +236,7 @@ bio_words_twogroup_source %>%
 
 ## Among users who first tweeted about CRISPR in relation to John Oliver, who are they retweeting?
 
-```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+```{r eval=FALSE, echo = FALSE, fig.align = "center"}
 ## one and done (tweeted about CRISPR and John Oliver first)----
 users.firstjohn <-
   tweets.df %>% 
@@ -272,9 +273,9 @@ tweets.grouped_john %>%
   top_n(5)
 ```
 
-Among all retweets, the most common sources are The Rock (who starred in a fictional movie about CRISPR gone wrong), Sciences New (the news branch of Science Magazine), Scientific American, STAT news, and Nature Biotechnology. Beyond the first source, mayn of the sources are academic or professional organizations with a focus on health and technology. 
+Among all retweets, the most common sources are The Rock (who starred in a fictional movie about CRISPR gone wrong), Sciences New (the news branch of Science Magazine), Scientific American, STAT news, and Nature Biotechnology. Beyond the first source, most of the sources are academic or professional organizations with a focus on health and technology. 
 
-```{r eval=TRUE, echo = FALSE, fig.align = "center"}
+```{r eval=FALSE, echo = FALSE, fig.align = "center"}
 # retweet source of individual tweets for everyone
 firstjohn %>%  
   # use the john value of the whether the first tweet invokes John Oliver

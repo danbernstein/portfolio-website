@@ -1,25 +1,18 @@
 ---
-title: Climate Modeling
+title: "Forecasting: Climate Modeling"
 author: Dan
 date: '2018-09-30'
 slug: climate-modeling
 categories: []
 tags:
-  - data-wrangling
-  - Time Series Analysis
+  - analysis
+  - forecasting
   - R
 description: ''
 image: ''
 keywords: ''
 draft: no
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = T,
-                      message= F, 
-                      warning = F,
-                      fig.align = "center")
-```
 
 *This is the first in a series of posts that seek to recreate the methods used in [Future ozone-related acute excess mortality under climate and population change scenarios in China: A modeling study](https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002598#sec014). All the posts build on my previous post on [forecasting](https://danbernstein.netlify.com/post/learning-forecasting/), by using data available from national and international research initatives to project future scenarios for complex systems including atmospheric chemistry, population dynamics, and mortality. This post focuses on the first projection: future change in atmospheric ozone concentrations.*
 
@@ -51,7 +44,7 @@ To break down this excerpt into discrete steps:
 I have chosen to use the [climate4R package bundle](https://github.com/SantanderMetGroup), developed by the Santander Meteorology Group at the University of Cantabria in Spain. The bundle provides various functions for working with climate data packaged into aptly named packages (loadeR, transformeR, downscaleR, and visualizeR). The packages make it easy to manipulate, analyze, and visualize datasets that are common in climate modeling, such at NetCDF files. As we will see, we can manipulate more common geospatial datasets, such as vectors and rasters, into the appropriate format for the climate4R environment with a little work. 
 
 
-```{r load packages}
+```{r load packages, eval=FALSE}
 # these five packages make up the climate4R bundle
 library(loadeR)
 library(transformeR)
@@ -70,9 +63,9 @@ I will be comparing the observational data to simulated data that assume a certa
 
 The simulated historical and future datasets for ozone were collected from the Geophysical Fluid Dynamics Laboratory (GFDL) chemistry-climate model CM3 (GFDL-CM3). The [data portal](http://nomads.gfdl.noaa.gov:8080/DataPortal/cmip5.jsp) provides access to datafrom a range of experiments conducted under the Coupled Model Intercomparison Project (CMIP), an international collaboration to set standards in climate modeling. The simulated data under RCP4.5 in the CM3 experiment is taken from the intersecting [grid cell](http://nomads.gfdl.noaa.gov:8080/DataPortal/getModelExperDataByRealm.jsp?coupled_name=GFDL-CM3&exper_name=rcp45&exper_id=exper_id_5GjzEYkqOW&realiz_id=realiz_id_JDbdw5mxpa) on the data portal. After setting a few parameters, including the time period and the variable of interest ("tro3" for tri-oxygen), the portal produces the dataset for download as a netcdf (.nc) file. This process works for both the historical and future simulated data. 
 
-```{r load data}
+```{r load data, eval=FALSE}
 # load the global climate model for ozone in gridded format ----
-gcm.tro3.data <- "/home/dan/data/climate_tro3/raw_data/tro3/tro3_Amon_GFDL-CM3_rcp45_r1i1p1_201101-201512.nc"
+gcm.tro3.data <- "./climate_tro3/raw_data/tro3/tro3_Amon_GFDL-CM3_rcp45_r1i1p1_201101-201512.nc"
 str.gcm.tro3 <- dataInventory(gcm.tro3.data)
 
 gcm.tro3 <- loadeR::loadGridData(gcm.tro3.data, var = "tro3@60000",
@@ -83,7 +76,7 @@ spatialPlot(climatology(gcm.tro3), background = "countries")
 
 gcm.hist <- subsetYears(gcm.tro3, years = 2011)
 
-gcm.tro3.future.data <- "/home/dan/data/climate_tro3/raw_data/tro3_future/tro3_Amon_rcp45_r1i1p1_2051_2055.nc"
+gcm.tro3.future.data <- "./climate_tro3/raw_data/tro3_future/tro3_Amon_rcp45_r1i1p1_2051_2055.nc"
 gcm.tro3.future <- loadeR::loadGridData(gcm.tro3.future.data, var = "tro3@60000",
                                  years = 2051:2055, 
                                  lonLim = NULL, latLim = NULL)
@@ -97,7 +90,7 @@ gcm.tro3.future$Dates$end <- str_replace(gcm.tro3.future$Dates$end, "15", "16")
 
 It is worth exploring the structure of this data type to understand how the observational data will need to be transformed to work in the climate4R ecosystem. 
 
-```{r}
+```{r, eval=FALSE}
 str(gcm.tro3)
 ```
 
@@ -113,9 +106,9 @@ This dataset is a list of four items that provide the information for analyzing 
 Observational data was collected from the U.S. Environmental Protection Agency's Clean Air Status and Trends Network (CASTNET). The [data portal](https://java.epa.gov/castnet/clearsession.do) provides and easy click-through menu to filter for the data of interest. Here, I am interested in getting aggregate concentration data (monthly) for Ozone 8-hour daily maximum (MDA8) for the same time period as the historical simulated data (2011-2015). The data includes seven monitoring sites in California.  
 
 
-```{r load observational data in shapefile}
+```{r load observational data in shapefile, eval=FALSE}
 ## load observational data as a shapefile
-cali.shp <- readOGR("/home/dan/data/climate_tro3/processed_data/cali_eobs_shp", 
+cali.shp <- readOGR("./climate_tro3/processed_data/cali_eobs_shp", 
                     layer = "cali_eobs_shp", 
                     stringsAsFactors = F)
 
@@ -131,7 +124,7 @@ str(cali.shp)
 
 The observational data is stored as point data which has no inherent spatial dimensionality. To input the data into the climate4R ecosystem, the data will need to be split into separate datasets for any transformations to ensure only data within the same month is considered when aggregating, interpolating, etc. After splitting the data with the ```split()``` function, each data set is converted from point data, also called vector data, to a raster grid with 0.25 resolution in both the x and y direction. Within each 0.25 x 0.25 grid square, all data points in the same month are averaged to produce a raster of average spatially distributed ozone concentration.
 
-```{r}
+```{r, eval=FALSE}
 points_list <- split(cali.shp, as.numeric(lubridate::month(lubridate::mdy_hms(cali.shp$DDATE))))
 
 raster_list <- lapply(points_list, function(x){rasterize(x, raster(extent(x), resolution = 0.25, crs = crs(x)),
@@ -147,7 +140,7 @@ plot(raster_brick)
 
 To compare observational data with GFDL simulated data, I resample the observational data to the same resolution as the simulated data (2.5, 2) using a method called bilinear interpolation. According to the PLOS Medicine article, this allows for direct comparison between the datasets. 
 
-```{r resample observational data}
+```{r resample observational data, eval=FALSE}
 raster_brick_resample <-
   raster_brick %>% 
   raster::resample(x = .,
@@ -171,9 +164,9 @@ It is worth noting here that the way that the raster package interprets grids is
 
 With the data now at the appropriate resolution, I can input the data into the proper data structure to then conduct bias correction using the climate4R bundle. First, I copy the object for the ozone global climate model that is already in the appropriate data structure for climate4R, then replace various components of the object with the observational data: 1) change the $Data object to the observational array, 2) create the list called "locs" and fill it with the xy-coordinates information, setting the appropriate projection and resolutions as attributes, 3) setting the Dates object with start and end variables that match the global climate model dates (set to the 16th of each month in the year 2011). 
 
-*Note: as I mentioned earlier, the y-axis values have to be reversed (using the ```{r} rev()``` function to make the data compliant with climate4R).*
+*Note: as I mentioned earlier, the y-axis values have to be reversed (using the ```{r, eval=FALSE} rev()``` function to make the data compliant with climate4R).*
 
-```{r}
+```{r, eval=FALSE}
 cali.aperm <- gcm.tro3 # copy global climate model data to provide data structure
 cali.aperm$Data <- raster_aperm # fill data with properly structured cali observational data
 attr(cali.aperm$Data, "dimensions") <- c("time", "lat", "lon")
@@ -195,7 +188,7 @@ for (i in 1:12){
 
 We can see from the spatial plot that the object is in the proper format for visualization. Next we will see if it works for analysis. 
 
-```{r}
+```{r, eval=FALSE}
 spatialPlot(climatology(cali.aperm), backdrop.theme = "countries")
 ```
 
@@ -203,7 +196,7 @@ spatialPlot(climatology(cali.aperm), backdrop.theme = "countries")
 
 Bias correction uses three pieces of information to predict a fourth. We have information for historical observational data, historical simulated rcp4.5 data, and future simulated rcp4.5 data. Using these three data pieces, the ```biasCorrection()``` function identifies the trend in difference between the two historical datasets to adjust the future simulated dataset. This process produces a bias-adjusted future simulation that more closely relates to the observational data. Numerous methods are available for bias correction, here I use empirical quantile mapping ("eqm"). 
 
-```{r Bias Correction}
+```{r Bias Correction, eval=FALSE}
 bc <- biasCorrection(y = cali.aperm, 
                      x = gcm.hist,
                      newdata = gcm.tro3.future, 
@@ -212,7 +205,7 @@ bc <- biasCorrection(y = cali.aperm,
 
 
 We can see the output of bias correction at one location. The black lines are the historical and future simulated data, the blue is the historical observational data, and the red is the bias-adjusted future data. The historical observational data only contains one year's worth of data. 
-```{r bias correction plot}
+```{r bias correction plot, eval=FALSE}
 # plotting after bias correction ----
 historical.obs <- subsetGrid(cali.aperm, latLim = cali.aperm$xyCoords$y[3], 
                         lonLim = cali.aperm$xyCoords$x[1], outside = T) 
@@ -235,7 +228,7 @@ The bias-corrected future values are then converted from the course to the fine 
 
 ##### *Step 1: identifying and subtracting the temporal scaling factor (essentially the difference between the historical and the future spatial distribution, compared on a monthly mean)*
 
-```{r spatial disaggregation step 1}
+```{r spatial disaggregation step 1, eval=FALSE}
 # construct vector of mean monthly at course scale to subtract from bias-corrected future values
 matched.course <- vector(length = length(bc$Dates$start), mode = "numeric")
 match.x <- vector(length(bc$xyCoords$x), mode = "numeric")
@@ -273,7 +266,7 @@ spatialPlot(climatology(future.temporalscaling.course))
 
 ##### *Step 2: interpolating the remainder from 2.5 x 2.0 resolution to 0.25 x 0.25*
 
-```{r spatial disaggregation step 2}
+```{r spatial disaggregation step 2, eval=FALSE}
 # Step 2: interpolate course temporal scaling factor to fine
 future.temporalscaling.fine <- 
   future.temporalscaling.course %>% 
@@ -290,7 +283,7 @@ spatialPlot(climatology(future.temporalscaling.fine))
 
 ##### *Step 3: adding the temporal scaling factor back to the fine-scale values to produce a final bias-adjusted spatially-disaggregated simulations*
 
-```{r}
+```{r, eval=FALSE}
 # interpolate the historical data 
 cali.aperm.fine <- 
   cali.aperm %>% 
@@ -328,7 +321,7 @@ future.downscale.fine <- gridArithmetics(future.temporalscaling.fine,
 
 We can compare the bias-adjusted course projections to the bias-adjusted spatially-disaggregated projections to see that the projections are similar but the latter is more granular. 
 
-```{r bias adjusted spatially disaggregated plot}
+```{r bias adjusted spatially disaggregated plot, eval=FALSE}
 spatialPlot(climatology(bc))
 spatialPlot(climatology(future.downscale.fine))
 ```

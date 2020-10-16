@@ -1,0 +1,142 @@
+---
+title: 'Visualizing the Government Shutdown and the 2016 Election'
+author: Dan
+date: '2019-01-16'
+slug: data-viz-government-shutdown-and-the-2016-election
+categories: []
+tags:
+  - R
+  - visualization
+description: ''
+image: ''
+keywords: ''
+draft: no
+---
+
+
+
+<p>In January 2019, Axios produced a data visualization to demonstrate how the partial government shutdown was impacting different states and how that related to the outcomes of the 2016 presidential election. The visualization is a little confusing because there are two color scales, one for states that went for Trump and another for Clinton. Because the scales are distinguished by the 2016 winner, but the shade on each scale is determined by the number of federal workers affected by the government shutdown, the visualization is a little confusing.</p>
+<center>
+<img src="/post/2019-01-16/data-viz-government-shutdown-and-the-2016-election_files/axios_shutdown.png" width="400" height="400" />
+</center>
+<p>To break it down into each of the map aesthetics, the x and y components are taken up by geographic data for each state’s location, while the color scale is the 2016 winner and the position on each scale is the number of federal employees affected. The interactive map was allowed the user to see the number of employees affected as a raw number and a proportion of all workers in each state, as well as the margin of victory in the 2016 election. It becomes hard to compare states in the two different color scales and those that are geographically distant because you have to use the interactive feature.</p>
+<p>I decided to change the mapping aesthetics, instead of using geographic information, I used the margin of victory on the X axis, the Y axis is the number of workers affected by the shutdown, and the size of each dot is the percent of all workers in the state affected. I believe these changes still clearly highlight the states that are disproportionately affected, while also allowing better comparison. The major downside is that once you move away from the geographic map layout, the visualization becomes more difficult to immediately grasp the units (the state level) and you cannot label every state, so only the highlighted ones are identified. Additionally, there is substantial white space my visualization, which is not very appealing.</p>
+<center>
+<img src="/post/2019-01-16/data-viz-government-shutdown-and-the-2016-election_files/axios_shutdown_remade.png" width="600" height="400" />
+</center>
+<div id="code" class="section level3">
+<h3>Code</h3>
+<pre class="r"><code>library(tidyverse)
+library(ggrepel)
+library(extrafont)
+
+
+# read data
+fed_jobs_cabinet &lt;- openxlsx::read.xlsx(&quot;raw_data/fed_jobs_cabinetagencies.xlsx&quot;,
+                                        startRow = 3)
+
+fed_jobs_smallagencies &lt;- openxlsx::read.xlsx(&quot;raw_data/fed_jobs_smallagencies.xlsx&quot;,
+                                              startRow = 3)
+
+all_jobs &lt;- openxlsx::read.xlsx(&quot;raw_data/all_jobs.xlsx&quot;)
+
+
+results_2016 &lt;- openxlsx::read.xlsx(&quot;raw_data/federalelections2016.xlsx&quot;,
+                                    sheet = &quot;Table 2. Electoral &amp;  Pop Vote&quot;,
+                                    startRow = 4)
+
+# merge data
+
+# still missing FDA, IHS
+shutdown_agencies &lt;- c(&#39;Homeland Security&#39;, &#39;Housing and Urban Development&#39;, &#39;Commerce&#39;, &#39;Interior&#39;, 
+                       &#39;Transportation&#39;, &#39;State&#39;, &#39;Agriculture&#39;, &#39;Justice&#39;, 
+                       &#39;Treasury&#39;, &#39;Environmental Protection Agency&#39;, &#39;Food and Drug Administration&#39;, &#39;Indian Health Services&#39;, 
+                       &#39;National Aeronautics and Space Administration&#39;, &#39;Small Business Administration&#39;)
+
+fed_jobs_proc &lt;-
+  bind_rows(fed_jobs_cabinet, fed_jobs_smallagencies) %&gt;% 
+  rename(Agency = Employment.as.values) %&gt;% 
+  mutate(Agency = tolower(str_remove_all(Agency, pattern = &quot;.*-|DEPARTMENT OF |THE &quot;))) %&gt;% 
+  filter(Agency != &quot;Cabinet Level Agencies|Large Independent Agencies (1000 or more Employees)&quot;) %&gt;% 
+  gather(2:54, key = &quot;State&quot;, value = &#39;fed_jobs&#39;) %&gt;% 
+  spread(key = Agency, value = fed_jobs) %&gt;% 
+  mutate(State = str_remove_all(tolower(State), pattern = &quot;.*-&quot;)) %&gt;% 
+  mutate(State = str_replace_all(State, pattern = &quot;\\.&quot;, replacement = &quot; &quot;)) %&gt;% 
+  select(State, one_of(tolower(shutdown_agencies))) %&gt;% 
+  gather(key = &quot;Agency&quot;, value = &quot;fed_jobs&quot;, -State) %&gt;% 
+  group_by(State) %&gt;% 
+  mutate(tot_fed_jobs = sum(fed_jobs, na.rm = T)) %&gt;% 
+  ungroup() %&gt;% 
+  select(-Agency, -fed_jobs) %&gt;% 
+  unique() %&gt;% 
+  slice(1:51)
+
+
+all_jobs_proc &lt;-
+  all_jobs %&gt;% 
+  mutate(State = tolower(State)) %&gt;% 
+  select(State, total_jobs = `June&amp;#10;2018`) %&gt;% 
+  slice(1:51)
+
+results_2016_proc &lt;-
+  results_2016 %&gt;% 
+  mutate(trump_perc = `Trump.(R)` * 100 / Total.Vote,
+         clinton_perc = `Clinton.(D)` * 100 / Total.Vote,
+         dif_perc = trump_perc - clinton_perc,
+         sign = if_else(dif_perc &gt; 0, &quot;positive&quot;, &quot;negative&quot;)) %&gt;% 
+  select(State = X1, dif_perc, sign) %&gt;% 
+  slice(1:51)
+
+
+states_data &lt;- 
+  left_join(fed_jobs_proc, all_jobs_proc, by = &quot;State&quot;) %&gt;% 
+  bind_cols(., results_2016_proc) %&gt;% 
+  mutate(perc_fed_jobs = tot_fed_jobs / (total_jobs * 1000) * 10000)
+
+
+# visualize data
+
+p &lt;-
+  ggplot(states_data,
+         aes(x = dif_perc, y = perc_fed_jobs, size = tot_fed_jobs,
+             text = paste(&#39;State:&#39;, State,
+                          &#39;&lt;br&gt;Number of jobs affected per 10,000 people:&#39;, round(perc_fed_jobs, 1),
+                          &#39;&lt;br&gt;Total number of jobs affected: &#39;, round(tot_fed_jobs, 1),
+                          &#39;&lt;br&gt;2016 Margin of victory: &#39;, abs(round(dif_perc, 1)))))+
+  geom_text_repel(
+    data = subset(subset(states_data, perc_fed_jobs &gt; 100)),
+    aes(label = State), 
+    size = 4,
+    segment.color = &quot;black&quot;,
+    box.padding = unit(0.65, &quot;lines&quot;),
+    family=&quot;Comic Sans MS&quot;)+
+  geom_point()+
+  geom_segment(aes(x = 0, xend = 0, y=0, yend=Inf), linetype = 2, size = 0.5, colour = &quot;grey&quot;)+
+  geom_segment(aes(x = -2, xend = -12, y=1000, yend=1000),  
+               lineend = &#39;round&#39;, linejoin = &#39;mitre&#39;,
+               arrow = arrow(length = unit(0.02, &quot;npc&quot;),
+                             type=&quot;closed&quot;),
+               size = 1, colour = &quot;blue&quot;)+
+  annotate(&quot;text&quot;, x = -20, y = 1000, label = &quot;clinton&quot;, colour = &quot;blue&quot;, size = 6)+
+  geom_segment(aes(x = 2, xend = 12, y=1000, yend=1000),  
+               lineend = &#39;round&#39;, linejoin = &#39;mitre&#39;,
+               arrow = arrow(length = unit(0.02, &quot;npc&quot;),
+                             type=&quot;closed&quot;),
+               size = 1, colour = &quot;red&quot;)+
+  annotate(&quot;text&quot;, x = 20, y = 1000, label = &quot;trump&quot;, colour = &quot;red&quot;, size = 6)+  
+  geom_point(aes(colour = sign))+
+  scale_colour_manual(values = c(&quot;positive&quot; = &quot;#E91D0E&quot;, &quot;negative&quot; = &quot;#3333FF&quot;))+
+  theme_minimal()+
+  geom_hline(yintercept=0)+
+  theme(axis.line = element_blank(), panel.border = element_blank(),
+        legend.position = &quot;none&quot;,
+        panel.grid = element_blank(),
+        text = element_text(family=&quot;Comic Sans MS&quot;),
+        axis.text.x = element_text(margin=margin(-15,0,0,0)),
+        title = element_text(face = &quot;bold&quot;))+
+  labs(x = &quot;margin of victory in 2016 election (% popular vote)&quot;, 
+       y = &quot;Federal Jobs Affected (per 10,000 workers)&quot;,
+       title = &quot;DC is in a league of its own&quot;,
+       subtitle = &quot;size is the total number of furloughed employees&quot;)+
+  ylim(0, 1000)</code></pre>
+</div>

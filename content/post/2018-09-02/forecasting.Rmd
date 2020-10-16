@@ -6,15 +6,15 @@ slug: learning-forecasting
 categories: []
 tags:
   - R
-  - Regression Analysis
-  - Time Series Analysis
+  - analysis
+  - forecasting
 description: ''
 image: ''
 keywords: ''
 draft: no
 ---
 
-```{r, echo = F, message= F}
+```{r, eval=F, echo = F, message= F}
 library(readr)
 library(dplyr)
 
@@ -41,7 +41,7 @@ I will walk through the development of improved models to mirror the logical flo
 
 The fpp2 package is associated with the *Forecasting* ebook and it loads a number of datasets used through the book. The package also requires a number of relevant packages for fitting and analyzing time series models. 
 
-```{r}
+```{r, eval=FALSE}
 library(fpp2)
 ```
 
@@ -53,8 +53,8 @@ Capital Bikeshare ridership is released quarterly, with information about date a
 
 #### Cleaning
 
-```{r, message=F}
-raw <- read_csv("/home/dan/data/time_series/processed_data/count_byyearandmonth_casual_member_total.csv")
+```{r, message=F, eval=F}
+raw <- read_csv("./time_series/processed_data/count_byyearandmonth_casual_member_total.csv")
 
 head(raw)
 ```
@@ -69,7 +69,7 @@ While the month and year are useful when importing new data, those columns are n
 
 The output object does not look very different from the raw data, but the structure of the object is a multivariate time series ("mts") where all three variables are outcome variables that we want to model. Later on, we will multivariate time series that include predictor variables that intend to refine model accuracy. 
 
-```{r}
+```{r, eval=FALSE}
 raw.ts <- 
   raw %>% 
   slice(-1) %>% 
@@ -81,7 +81,7 @@ head(raw.ts)
 #### Descriptive patterns
 
 We can use the time plot to determine the features of the time series to inform model building. 
-```{r, fig.align = "center"}
+```{r, eval=F, fig.align = "center"}
 raw.ts[,3] %>% 
   autoplot(., series = "Total") +
   autolayer(raw.ts[,1], series = "Casual") +
@@ -93,7 +93,7 @@ The time series all have a general upward trend over the eight years. The  time 
 On a more technical note, the seasonal and trend evident in the plot indicate that the time series are non-stationary. The Unit Root test confirms this; the test-statistic is higher than the 1 percent critical value, so the null hypothesis is rejected and the observed data is non-stationary. I will need to convert the data to a stationary format before proceeding. 
 
 
-```{r}
+```{r, eval=FALSE}
 library(urca)
 
 raw.ts[,3] %>% ur.kpss() %>% summary()
@@ -104,7 +104,7 @@ nsdiffs(raw.ts[,3])
 ```
 
 The ndiffs() function indicates that one differencing operation will be suitable to create a stationary time series. After taking the logarithm (to stablise the mean) and differencing once (to stablize the mean), the output does pass the Unit Root Test. The large initial value is surprising, but we will move on for now. 
-```{r, fig.align = "center"}
+```{r, fig.align = "center", eval=F}
 total.diff <-
   raw.ts[,3] %>% 
   log() %>% 
@@ -123,7 +123,7 @@ ARIMA models and Exponential Smoothing (ES) are the two most common methods for 
 
 For now, we will only work with the time series for the total ridership. The training set includes monthly counts through the end of 2016. The test set and prediction horizon will be the time period beyond the training data, from the first quarter of 2017 through the end of the first quarter of 2018. 
 
-```{r}
+```{r, eval=FALSE}
 total.ts <- raw.ts[,3]
 
 train <- window(total.ts, end=c(2017, 1))
@@ -133,7 +133,7 @@ h <- length(total.ts) - length(train)
 
 The ARIMA model chooses a ARIMA model with 0 autoregressive terms, 1 differences, and 3 lagged forecast error terms, with an additional seasonal component (2,1,1)[12]. Because this model was created with a Box-Cox Transformation and bias adjustment, the point prediction for the test data assumes a larger increasing trend in comparison to the simple optimized model chosen by auto.arima() without those parameters. The test data does not follow the increasing trend in the arima.lambda model, so the automated arima model is more accurate for the test data according to root mean squared error (RMSE), a common metric for comparing models because it is agnostic to scale and differencing.
 
-```{r ARIMA,, fig.align = "center"} 
+```{r ARIMA,, fig.align = "center", eval=F} 
 arima.lambda <- 
   train %>% 
   auto.arima(., lambda=0, biasadj=T) %>% 
@@ -156,7 +156,7 @@ accuracy(arima.lambda, total.ts)['Test set', 'RMSE']
 ### Building and comparing multiple models
 
 ets() will fit the exponential smoothing model (the function name stands for error trend season to convey that it looks for the trend patterns emblematic of exponential smoothing). A third method 
-```{r fit multiple models, fig.align = "center"}
+```{r fit multiple models, fig.align = "center", eval=F}
 models <- list()
 
 models$arima.auto <- arima.auto
@@ -181,7 +181,7 @@ lapply(models, function(x){accuracy(x, total.ts)['Test set', 'RMSE']})
 
 It appears that the ETS method performed the best among these four. Unfortunately, all models violate the residual assumptions; the model residuals are distinguishable from white noise and do not fully capture the dynamics of the observed data. Only the ARIMA model with a box-cox transformation passes the Ljung-Box test. This does not mean the other models are not worthwhile, all of them outperformed the transformed ARIMA model in terms of accuracy, but they are not fully utilizing patterns in the data because there is still autocorrelation between data points.
 
-```{r}
+```{r, eval=FALSE}
 lapply(models, function(x){checkresiduals(x, plot = F)})
 ```
 
@@ -189,7 +189,7 @@ lapply(models, function(x){checkresiduals(x, plot = F)})
 
 As a form of ensemble modeling, averaging the point predictions from multiple models often improves model accuracy. In this case, the test set RMSE is better than any individual model when we combined three models, STLF.lambda, ETS, and TBATS. Adding a fourth model that performs well individually, such as STLF or ETS.lambda, both increase the aggregated RMSE, so they are left out. The reason that adding another form a model already in the averaged value does not improve the accuracy is likely that both models are from the same statistical equation, it seems that there is less to be gained by averaging. From this I infer that combining two ETS models is not advantageous, whereas averaging two models that have different approaches to detecting patterns, such as ETS and STLF, would complement each other and improve performance. Using the three models is better than only the two top performing models. 
 
-```{r, fig.align = "center"}
+```{r, fig.align = "center", eval=F}
 Combination <- (models$STLF.lambda[["mean"]] + models$ETS[["mean"]] + models$TBATS[["mean"]])/3
 
 accuracy(Combination, total.ts)['Test set', 'RMSE']
@@ -213,7 +213,7 @@ total.ts %>%
 
 Another potential model is a neural network (nn) model which is based on non-linear relationships between predictor and outcome variables. The nn model predicts a more rapid increase in ridership after 2018 begins, while the observed data lags behind. 
 
-```{r, fig.align = "center"}
+```{r, fig.align = "center", eval=F}
 nn.fit <- nnetar(train, lambda = 0)
 
 total.ts %>% 
@@ -231,7 +231,7 @@ The models presented up to this point only use patterns in the ridership count i
 
 The National Weather Service has monthly average temperature and precipitation for Washington, DC going back to 1871. These records likely come from a single or a few monitoring sites, but they will give a rough estimate of how these variables affects ridership. The tabulizer package provides the function to extract a table from a pdf, and then it is easy to wrangle that data into a table of the pertinent range (2010-2018).
 
-```{r TEMPERATURE}
+```{r TEMPERATURE, eval=F}
 library(tabulizer)
 
 temp.table <- extract_tables("https://www.weather.gov/media/lwx/climate/dcatemps.pdf")
@@ -252,7 +252,7 @@ ts.temp <-
 
 ```
 
-```{r PRECIPITATION}
+```{r PRECIPITATION, eval=F}
 precip.table <- extract_tables("https://www.weather.gov/media/lwx/climate/dcaprecip.pdf")
 
 ts.precip <-  
@@ -265,9 +265,9 @@ ts.precip <-
   ts(start = c(2010, 09), end = c(2018, 02), frequency = 12) 
 ```
 
-```{r bicycle availability, message= F}
+```{r bicycle availability, message= F, eval=F}
 
-stations <- read_csv("/home/dan/data/data-website/content/post/markdown_data/learning_forecasting/station_firstuse_latlon.csv")
+stations <- read_csv("./learning_forecasting/station_firstuse_latlon.csv")
 
 ts.stations <-
   stations %>% 
@@ -282,7 +282,7 @@ ts.stations <-
 ```
 
 #### Dynamic Regression Model
-```{r, fig.align="center"}
+```{r, fig.align="center", eval=F}
 covars <- cbind(ts.temp, ts.precip, ts.stations) %>% 
   window(end = c(2018, 2))
 
@@ -317,7 +317,7 @@ predictors <- function(ts, var, lags){
 
 ```
 
-```{r}
+```{r, eval=FALSE}
 lagpreds.mult <- cbind(predictors(covars, "ts.temp", c(1,2,3)),
                        predictors(covars, "ts.stations", c(1,2,3)))
 

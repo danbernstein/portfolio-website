@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+  
+    
+      
+
+
+
+
+
+
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Visualizing the Government Shutdown and the 2016 Election | Data By Dan</title>
+<meta name="title" content="Visualizing the Government Shutdown and the 2016 Election | Data By Dan" />
+<meta name="description" content="In January 2019, Axios produced a data visualization to demonstrate how the partial government shutdown was impacting different states and how that related to the outcomes of the 2016 presidential election. The visualization is a little confusing because there are two color scales, one for states that went for Trump and another for Clinton. Because the scales are distinguished by the 2016 winner, but the shade on each scale is determined by the number of federal workers affected by the government shutdown, the visualization is a little confusing."> 
+
+
+<link rel="canonical" href="https://danbernstein.netlify.app/post/2019-01-16/data-viz-government-shutdown-and-the-2016-election/" />
+
+
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:description" content="" /> 
+  <meta name="twitter:title" content="Visualizing the Government Shutdown and the 2016 Election | Data By Dan" />
+  <meta name="twitter:url" content="https://danbernstein.netlify.app/post/2019-01-16/data-viz-government-shutdown-and-the-2016-election/" />
+  <meta name="twitter:site" content="@Softorage" /> 
+  <meta name="twitter:creator" content="@Softorage" /> 
+   
+
+
+
+  
+  <meta property="og:title" content="Visualizing the Government Shutdown and the 2016 Election | Data By Dan" />
+  <meta property="og:description" content="" /> 
+  <meta property="og:site_name" content="Data By Dan" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://danbernstein.netlify.app/post/2019-01-16/data-viz-government-shutdown-and-the-2016-election/" />
+  
+   
+
+
+
+<meta property="article:published_time" content="2019-01-16 00:00:00 &#43;0000 UTC" />
+
+
+  
+  
+  <script type="application/ld+json">
+      { 
+          "@context": "http://schema.org", 
+          "@type": "BlogPosting",
+          "headline": "Visualizing the Government Shutdown and the 2016 Election",
+          
+          "url": "https://danbernstein.netlify.app/",
+          
+          "datePublished": "2019-01-16T00:00:00Z",
+          
+          
+          "dateModified": "2019-01-16T00:00:00Z",
+          
+          "description": ,
+          
+          
+          "author": {
+              "@type": "Person",
+              "name": "Dan"
+          },
+          
+          "publisher": {
+            "@type": "Organization",
+            "name": "Dan Bernstein",
+            "logo": {
+              "@type": "ImageObject",
+              "url": ""
+            }
+          },
+          
+          "sameAs" : [
+            
+            
+              "https://github.com/danbernstein",  
+            
+              "https://twitter.com/danbernstein18"
+            ]
+          
+        }
+      </script>
+  
+
+
+    
+    <meta name="generator" content="Hugo 0.76.4" />
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/assets/css/main.min.9a551348bb4a6a2c0bc4401302fe04a74b1507276ba1d0aca4b2308afb7f452e.css" integrity="sha256-mlUTSLtKaiwLxEATAv4Ep0sVBydrodCspLIwivt/RS4=" crossorigin="anonymous">
+  
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+  
+  <link rel=apple-touch-icon sizes=180x180 href=https://danbernstein.netlify.app//assets/favicon/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://danbernstein.netlify.app//assets/favicon/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=https://danbernstein.netlify.app//assets/favicon/favicon-16x16.png><link rel=manifest href=https://danbernstein.netlify.app//assets/favicon/site.webmanifest><link rel=mask-icon href=https://danbernstein.netlify.app//assets/favicon/safari-pinned-tab.svg color=#7817c4><link rel=icon href=https://danbernstein.netlify.app//assets/favicon/favicon.ico type=image/x-icon><link rel="shortcut icon" href=https://danbernstein.netlify.app//assets/favicon/favicon.ico type=image/x-icon><meta name=apple-mobile-web-app-title content="Vibrant Shadows Theme"><meta name=application-name content="Vibrant Shadows Theme"><meta name=msapplication-TileColor content="#ffffff"><meta name=theme-color content="#ffffff">
+  
+  
+  
+  <meta name="theme-color" content="#fff6f8">
+  
+  <meta name="msapplication-navbutton-color" content="#fff6f8">
+  
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  
+</head>
+<body><header>
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top flex-column">
+    <div class="container-fluid">
+      
+      <a class="navbar-brand rounded px-3" href="https://danbernstein.netlify.app/"><span class="text-nav"><span class="brand">&nbsp;&nbsp;Data By Dan</span></span></a>
+      
+      
+        <a class="navbar-toggler border-0 bg-nav p-2" role="button" href="#" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="text-clr2">&#9776;</span>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-md-auto">
+             
+            
+              
+                <li class="nav-item mx-1 my-2">
+                  <a class="btn bg-nav text-clr1" href="/about-dan/">About Dan</a>
+                </li>
+              
+            
+          </ul>
+          
+            
+          
+        </div>
+      
+    </div>
+    
+  </nav>
+</header>
+<div id="content">
+<div class="container-fluid bg-clr1 text-nav text-center pb-3 pt-4 position-relative shadow">
+  <div style="height:3.5rem;"></div>
+  <h1>Visualizing the Government Shutdown and the 2016 Election</h1>
+  <p class="description"></p>
+</div>
+<div class="container-fluid bg-nav p-4">  
+  <div class="row">
+ 
+    <div class="col-md-auto">
+ 
+        
+      
+      <div class="py-1">
+        <div class="d-inline mr-auto small text-muted post-meta"></span>
+        
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        By Dan &#183; 6 min read &#183; <span class=''>Last updated: January 16, 2019</div>
+        
+        
+        
+        <div class="d-inline ml-auto float-right">
+          Share on:&nbsp;&nbsp;
+          <span class="lead">
+            
+              <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2019-01-16%2fdata-viz-government-shutdown-and-the-2016-election%2f&quote=Visualizing%20the%20Government%20Shutdown%20and%20the%202016%20Election" rel="noreferrer nofollow" target="_blank" title="Share on Facebook" aria-label="Share on Facebook"><span class="fab fa-facebook"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2019-01-16%2fdata-viz-government-shutdown-and-the-2016-election%2f&text=Visualizing%20the%20Government%20Shutdown%20and%20the%202016%20Election:%0Ahttps%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2019-01-16%2fdata-viz-government-shutdown-and-the-2016-election%2f" rel="noreferrer nofollow" target="_blank" title="Share on Twitter" aria-label="Share on Twitter"><span class="fab fa-twitter"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2019-01-16%2fdata-viz-government-shutdown-and-the-2016-election%2f&title=Visualizing%20the%20Government%20Shutdown%20and%20the%202016%20Election&summary=&source=Data%20By%20Dan" rel="noreferrer nofollow" target="_blank" title="Share on LinkedIn" aria-label="Share on LinkedIn"><span class="fab fa-linkedin"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://t.me/share/url?url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2019-01-16%2fdata-viz-government-shutdown-and-the-2016-election%2f&text=Visualizing%20the%20Government%20Shutdown%20and%20the%202016%20Election" rel="noreferrer nofollow" target="_blank" title="Share on Telegram" aria-label="Share on Telegram"><span class="fab fa-telegram"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="whatsapp://send?text=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2019-01-16%2fdata-viz-government-shutdown-and-the-2016-election%2f%0A%0AVisualizing%20the%20Government%20Shutdown%20and%20the%202016%20Election" data-text="Visualizing the Government Shutdown and the 2016 Election" data-href="https://danbernstein.netlify.app/post/2019-01-16/data-viz-government-shutdown-and-the-2016-election/" rel="noreferrer nofollow" target="_blank" title="Share on Whatsapp" aria-label="Share on Whatsapp"><span class="fab fa-whatsapp"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://reddit.com/submit?url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2019-01-16%2fdata-viz-government-shutdown-and-the-2016-election%2f&title=Visualizing%20the%20Government%20Shutdown%20and%20the%202016%20Election" rel="noreferrer nofollow" target="_blank" title="Share on Reddit" aria-label="Share on Reddit"><span class="fab fa-reddit"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="mailto:?subject=Visualizing%20the%20Government%20Shutdown%20and%20the%202016%20Election&body=%0A%0Ahttps%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2019-01-16%2fdata-viz-government-shutdown-and-the-2016-election%2f" target="_blank" title="Share via email" aria-label="Share via email"><span class="fas fa-envelope"></span></a>
+            
+          </span>
+        </div>
+        
+        
+        
+        
+      </div>
+      
+      
+      <div class="py-3">
+      
+
+
+<p>In January 2019, Axios produced a data visualization to demonstrate how the partial government shutdown was impacting different states and how that related to the outcomes of the 2016 presidential election. The visualization is a little confusing because there are two color scales, one for states that went for Trump and another for Clinton. Because the scales are distinguished by the 2016 winner, but the shade on each scale is determined by the number of federal workers affected by the government shutdown, the visualization is a little confusing.</p>
+<center>
+<img src="/post/2019-01-16/data-viz-government-shutdown-and-the-2016-election_files/axios_shutdown.png" width="400" height="400" />
+</center>
+<p>To break it down into each of the map aesthetics, the x and y components are taken up by geographic data for each state’s location, while the color scale is the 2016 winner and the position on each scale is the number of federal employees affected. The interactive map was allowed the user to see the number of employees affected as a raw number and a proportion of all workers in each state, as well as the margin of victory in the 2016 election. It becomes hard to compare states in the two different color scales and those that are geographically distant because you have to use the interactive feature.</p>
+<p>I decided to change the mapping aesthetics, instead of using geographic information, I used the margin of victory on the X axis, the Y axis is the number of workers affected by the shutdown, and the size of each dot is the percent of all workers in the state affected. I believe these changes still clearly highlight the states that are disproportionately affected, while also allowing better comparison. The major downside is that once you move away from the geographic map layout, the visualization becomes more difficult to immediately grasp the units (the state level) and you cannot label every state, so only the highlighted ones are identified. Additionally, there is substantial white space my visualization, which is not very appealing.</p>
+<center>
+<img src="/post/2019-01-16/data-viz-government-shutdown-and-the-2016-election_files/axios_shutdown_remade.png" width="600" height="400" />
+</center>
+<div id="code" class="section level3">
+<h3>Code</h3>
+<pre class="r"><code>library(tidyverse)
+library(ggrepel)
+library(extrafont)
+
+
+# read data
+fed_jobs_cabinet &lt;- openxlsx::read.xlsx(&quot;raw_data/fed_jobs_cabinetagencies.xlsx&quot;,
+                                        startRow = 3)
+
+fed_jobs_smallagencies &lt;- openxlsx::read.xlsx(&quot;raw_data/fed_jobs_smallagencies.xlsx&quot;,
+                                              startRow = 3)
+
+all_jobs &lt;- openxlsx::read.xlsx(&quot;raw_data/all_jobs.xlsx&quot;)
+
+
+results_2016 &lt;- openxlsx::read.xlsx(&quot;raw_data/federalelections2016.xlsx&quot;,
+                                    sheet = &quot;Table 2. Electoral &amp;  Pop Vote&quot;,
+                                    startRow = 4)
+
+# merge data
+
+# still missing FDA, IHS
+shutdown_agencies &lt;- c(&#39;Homeland Security&#39;, &#39;Housing and Urban Development&#39;, &#39;Commerce&#39;, &#39;Interior&#39;, 
+                       &#39;Transportation&#39;, &#39;State&#39;, &#39;Agriculture&#39;, &#39;Justice&#39;, 
+                       &#39;Treasury&#39;, &#39;Environmental Protection Agency&#39;, &#39;Food and Drug Administration&#39;, &#39;Indian Health Services&#39;, 
+                       &#39;National Aeronautics and Space Administration&#39;, &#39;Small Business Administration&#39;)
+
+fed_jobs_proc &lt;-
+  bind_rows(fed_jobs_cabinet, fed_jobs_smallagencies) %&gt;% 
+  rename(Agency = Employment.as.values) %&gt;% 
+  mutate(Agency = tolower(str_remove_all(Agency, pattern = &quot;.*-|DEPARTMENT OF |THE &quot;))) %&gt;% 
+  filter(Agency != &quot;Cabinet Level Agencies|Large Independent Agencies (1000 or more Employees)&quot;) %&gt;% 
+  gather(2:54, key = &quot;State&quot;, value = &#39;fed_jobs&#39;) %&gt;% 
+  spread(key = Agency, value = fed_jobs) %&gt;% 
+  mutate(State = str_remove_all(tolower(State), pattern = &quot;.*-&quot;)) %&gt;% 
+  mutate(State = str_replace_all(State, pattern = &quot;\\.&quot;, replacement = &quot; &quot;)) %&gt;% 
+  select(State, one_of(tolower(shutdown_agencies))) %&gt;% 
+  gather(key = &quot;Agency&quot;, value = &quot;fed_jobs&quot;, -State) %&gt;% 
+  group_by(State) %&gt;% 
+  mutate(tot_fed_jobs = sum(fed_jobs, na.rm = T)) %&gt;% 
+  ungroup() %&gt;% 
+  select(-Agency, -fed_jobs) %&gt;% 
+  unique() %&gt;% 
+  slice(1:51)
+
+
+all_jobs_proc &lt;-
+  all_jobs %&gt;% 
+  mutate(State = tolower(State)) %&gt;% 
+  select(State, total_jobs = `June&amp;#10;2018`) %&gt;% 
+  slice(1:51)
+
+results_2016_proc &lt;-
+  results_2016 %&gt;% 
+  mutate(trump_perc = `Trump.(R)` * 100 / Total.Vote,
+         clinton_perc = `Clinton.(D)` * 100 / Total.Vote,
+         dif_perc = trump_perc - clinton_perc,
+         sign = if_else(dif_perc &gt; 0, &quot;positive&quot;, &quot;negative&quot;)) %&gt;% 
+  select(State = X1, dif_perc, sign) %&gt;% 
+  slice(1:51)
+
+
+states_data &lt;- 
+  left_join(fed_jobs_proc, all_jobs_proc, by = &quot;State&quot;) %&gt;% 
+  bind_cols(., results_2016_proc) %&gt;% 
+  mutate(perc_fed_jobs = tot_fed_jobs / (total_jobs * 1000) * 10000)
+
+
+# visualize data
+
+p &lt;-
+  ggplot(states_data,
+         aes(x = dif_perc, y = perc_fed_jobs, size = tot_fed_jobs,
+             text = paste(&#39;State:&#39;, State,
+                          &#39;&lt;br&gt;Number of jobs affected per 10,000 people:&#39;, round(perc_fed_jobs, 1),
+                          &#39;&lt;br&gt;Total number of jobs affected: &#39;, round(tot_fed_jobs, 1),
+                          &#39;&lt;br&gt;2016 Margin of victory: &#39;, abs(round(dif_perc, 1)))))+
+  geom_text_repel(
+    data = subset(subset(states_data, perc_fed_jobs &gt; 100)),
+    aes(label = State), 
+    size = 4,
+    segment.color = &quot;black&quot;,
+    box.padding = unit(0.65, &quot;lines&quot;),
+    family=&quot;Comic Sans MS&quot;)+
+  geom_point()+
+  geom_segment(aes(x = 0, xend = 0, y=0, yend=Inf), linetype = 2, size = 0.5, colour = &quot;grey&quot;)+
+  geom_segment(aes(x = -2, xend = -12, y=1000, yend=1000),  
+               lineend = &#39;round&#39;, linejoin = &#39;mitre&#39;,
+               arrow = arrow(length = unit(0.02, &quot;npc&quot;),
+                             type=&quot;closed&quot;),
+               size = 1, colour = &quot;blue&quot;)+
+  annotate(&quot;text&quot;, x = -20, y = 1000, label = &quot;clinton&quot;, colour = &quot;blue&quot;, size = 6)+
+  geom_segment(aes(x = 2, xend = 12, y=1000, yend=1000),  
+               lineend = &#39;round&#39;, linejoin = &#39;mitre&#39;,
+               arrow = arrow(length = unit(0.02, &quot;npc&quot;),
+                             type=&quot;closed&quot;),
+               size = 1, colour = &quot;red&quot;)+
+  annotate(&quot;text&quot;, x = 20, y = 1000, label = &quot;trump&quot;, colour = &quot;red&quot;, size = 6)+  
+  geom_point(aes(colour = sign))+
+  scale_colour_manual(values = c(&quot;positive&quot; = &quot;#E91D0E&quot;, &quot;negative&quot; = &quot;#3333FF&quot;))+
+  theme_minimal()+
+  geom_hline(yintercept=0)+
+  theme(axis.line = element_blank(), panel.border = element_blank(),
+        legend.position = &quot;none&quot;,
+        panel.grid = element_blank(),
+        text = element_text(family=&quot;Comic Sans MS&quot;),
+        axis.text.x = element_text(margin=margin(-15,0,0,0)),
+        title = element_text(face = &quot;bold&quot;))+
+  labs(x = &quot;margin of victory in 2016 election (% popular vote)&quot;, 
+       y = &quot;Federal Jobs Affected (per 10,000 workers)&quot;,
+       title = &quot;DC is in a league of its own&quot;,
+       subtitle = &quot;size is the total number of furloughed employees&quot;)+
+  ylim(0, 1000)</code></pre>
+</div>
+
+      </div>
+      
+      
+      
+      <div class="pt-4 mt-2 border-top">
+        <div class="d-inline mr-auto small text-muted post-meta mb-1">
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        </div>
+        
+        
+        
+      
+      
+      
+      
+      
+        <div class="mt-3">
+        <span class="">Tags:</span>&nbsp;&nbsp;&nbsp;<a href="/tags/r"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">R</span></a><a href="/tags/visualization"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">VISUALIZATION</span></a></div>
+      
+      
+      </div>
+      
+    </div>
+  </div>
+  
+  
+  
+</div>
+
+    </div><footer class="text-center p-2 text-muted footer">
+  
+    
+    <div class="py-2 lead">
+      
+        
+          <a class="ml-2" href="https://github.com/danbernstein"><span class="fab fa-github" aria-label="Join us on Github"></span></a>
+        
+      
+        
+          <a class="ml-2" href="https://twitter.com/danbernstein18"><span class="fab fa-twitter" aria-label="Join us on Twitter"></span></a>
+        
+      
+    </div>
+    
+  
+
+  
+
+  <div class="py-2 copyright">
+    <small>Copyright &#169; 2020 Dan Bernstein <b>&#183;</b> Content license: CC-BY-SA-3.0 <b>&#183;</b> Powered by <a class="font-weight-bold text-reset text-decoration-none" href="https://gohugo.io">Hugo</a> <b>&#183;</b> Theme <a class="font-weight-bold text-reset text-decoration-none" href="">Shadows</a> by <span class="softorage"><a class="font-weight-bold text-reset" href="https://softorage.com">Softorage</a></span></small>
+  </div>
+</footer>
+
+    
+    
+    
+    <script src="/assets/js/main.min.6ff0d57b7558f0225c80bade926a349330bc25d85e7ceff50d911f1156023c3e.js" integrity="sha256-b/DVe3VY8CJcgLrekmo0kzC8JdhefO/1DZEfEVYCPD4=" crossorigin="anonymous"></script>
+    <script src="/assets/js/custom.min.c8274a0cac0477f854e63f09626cc63858bb2bc9db8faecbb2834846952c7fd6.js" integrity="sha256-yCdKDKwEd/hU5j8JYmzGOFi7K8nbj67LsoNIRpUsf9Y=" crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Lato&display=swap" rel="stylesheet">
+    
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+  </body>
+</html>

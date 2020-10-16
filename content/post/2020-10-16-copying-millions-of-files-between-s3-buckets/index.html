@@ -1,0 +1,124 @@
+---
+title: Copying Millions of Files Between S3 Buckets Without Managing Servers
+author: Dan
+date: '2020-10-16'
+slug: []
+categories: []
+tags:
+  - tips
+  - AWS
+  - python
+description: ''
+lastmod: ''
+image: ''
+author_twitter: ''
+---
+
+
+
+<p>Issue: I need to copy thousands or millions of files between S3 buckets. This might be because you regularly move data between a test and a production environments or your data architecture has changed and the new bucket names make more sense. Whether you are doing it once or regularly, there are multiple options for moving a large number of files between buckets, and the choice might come down to your familiarity with different AWS computing services, such as Lambda, EC2, and EMR.</p>
+<p>Solution: If there is no need to change the S3 key, I would recommend using EMR (Elastic Map Reduce) to copy a large number of files because the large number of objects can be distributed across multiple worker nodes. If you are familiar with java, you could also use EMR to change the s3 key during the copying operation. However, if you are more comfortable with scripting languages, like Python and Javascript, you can use a single lambda function and leverage concurrency to scale up to as much as 1,000 functions running in parallel. The weakness in this second option is that you need to send a list of s3 objects to the lambda function; you will either need to locally list the objects, which can be time consuming, or prepare a manifest file, which is an added step.</p>
+<p>Here I provide a simple command-line script that leverages EMR to accomplish this task without having to worry about managing the server running the distributed computing.</p>
+<p>EMR provides a helpful tool, <a href="https://docs.aws.amazon.com/emr/latest/ReleaseGuide/UsingEMR_s3distcp.html">s3-dist-cp</a>, that executes the listing, copying, and deleting of all files in a single S3 path in one command:</p>
+<pre><code>s3-dist-cp --src args.src --dest args.dest --deleteOnSuccess</code></pre>
+<p>EMR provides ‘job flows’ as a serverless option that will manage start a cluster, run your code, and terminate the cluster for you. This means you will only pay for the time the cluster is running and you do not need to worry about managing the underlying computing resources.</p>
+<p>Using the Python SDK, we can write a simple script that accepts the source and destination S3 path and the profile you would like to use for permissions. This script is adapted from a <a href="https://medium.com/@kulasangar/create-an-emr-cluster-and-submit-a-job-using-boto3-c34134ef68a0">great blog post</a>.</p>
+<p>I have adapted the code to be more accessible to anyone. This code should work without adjustment because:
+* I did not prepare a custom JAR file, which is a compressed java file that contains the instructions for running java code (JAR stands for “Java ARchive”). I am using a JAR file that comes pre-installed on all EMR instances called ‘command-runner.jar’. This JAR file contains a handful of common commands that users might execute on an EMR cluster, including S3DistCp.
+* I have added the ‘–deleteOnSuccess’ option, so that all the files are deleted from the source bucket after they are successfully copied.
+* I removed other parameters from the <code>run_job_flow()</code> function that are specific to a user, such as the ec2 key pair and the subnet ID.</p>
+<pre><code>&quot;&quot;&quot;
+Script to run an EMR job to copy s3 files with a given prefix between buckets.
+
+Adapted from: https://github.com/Kulasangar/CopyFile-Between-S3Buckets
+Blog Post: https://medium.com/@kulasangar/create-an-emr-cluster-and-submit-a-job-using-boto3-c34134ef68a0
+&quot;&quot;&quot;
+
+
+import boto3
+import argparse
+
+copy_args = argparse.ArgumentParser(prog=&#39;copy&#39;,
+                                    description=&#39;requires user inputs to run s3 batch operations&#39;)
+
+copy_args.add_argument(&#39;--src&#39;, action=&#39;store&#39;, required=True,
+                       help=&#39;source path&#39;)
+copy_args.add_argument(&#39;--dest&#39;, action=&#39;store&#39;, required=True,
+                       help=&#39;destination path&#39;)
+copy_args.add_argument(&#39;--profile&#39;, action=&#39;store&#39;, required=True,
+                       help=&#39;aws profile&#39;)
+copy_args.add_argument(&#39;--name&#39;, action=&#39;store&#39;, required=False,
+                       help=&#39;job name&#39;)
+copy_args.add_argument(&#39;--worker_nodes&#39;, action=&#39;store&#39;, required=False,
+                       help=&#39;the number of worker nodes to distribute the work across&#39;)
+copy_args.add_argument(&#39;--log_uri&#39;, action=&#39;store&#39;, required=False,
+                       help=&#39;log URI to store logs&#39;)
+
+args = copy_args.parse_args()
+
+session = boto3.Session(profile_name=args.profile, region_name=&#39;us-east-1&#39;)
+
+if not args.name:
+  args.name = &#39;copy_job&#39;
+  
+if not args.worker_nodes:
+  worker_nodes = 5
+
+emr_client = session.client(&#39;emr&#39;)
+
+cluster_id = emr_client.run_job_flow(
+    Name=args.name,
+    LogUri=args.log_uri,
+    ReleaseLabel=&#39;emr-5.30.1&#39;,
+    Applications=[
+        {&#39;Name&#39;: &#39;Hadoop&#39;},
+        {&#39;Name&#39;: &#39;Hive&#39;},
+        {&#39;Name&#39;: &#39;Hue&#39;},
+        {&#39;Name&#39;: &#39;Mahout&#39;},
+        {&#39;Name&#39;: &#39;Pig&#39;},
+        {&#39;Name&#39;: &#39;Tez&#39;},
+    ],
+    Instances={
+        &#39;InstanceGroups&#39;: [
+            {
+                &#39;Name&#39;: &quot;Main nodes&quot;,
+                &#39;Market&#39;: &#39;ON_DEMAND&#39;,
+                &#39;InstanceRole&#39;: &#39;MASTER&#39;,
+                &#39;InstanceType&#39;: &#39;m5.xlarge&#39;,
+                &#39;InstanceCount&#39;: 1,
+            },
+            {
+                &#39;Name&#39;: &quot;Worker nodes&quot;,
+                &#39;Market&#39;: &#39;ON_DEMAND&#39;,
+                &#39;InstanceRole&#39;: &#39;CORE&#39;,
+                &#39;InstanceType&#39;: &#39;m5.xlarge&#39;,
+                &#39;InstanceCount&#39;: worker_nodes,
+            }
+        ],
+        &#39;KeepJobFlowAliveWhenNoSteps&#39;: False,
+        &#39;TerminationProtected&#39;: False,
+    },
+    Steps=[
+        {
+            &#39;Name&#39;: &#39;file-copy-step&#39;,
+                    &#39;ActionOnFailure&#39;: &#39;CONTINUE&#39;,
+                    &#39;HadoopJarStep&#39;: {
+                        &#39;Jar&#39;:
+                            &#39;command-runner.jar&#39;,
+                        &#39;Args&#39;: [
+                            &#39;s3-dist-cp&#39;,
+                            &#39;--src&#39;,
+                            args.src,
+                            &#39;--dest&#39;,
+                            args.dest,
+                            &#39;--deleteOnSuccess&#39;
+                        ]
+                    }
+        }
+    ],
+    VisibleToAllUsers=True,
+    JobFlowRole=&#39;EMR_EC2_DefaultRole&#39;,
+    ServiceRole=&#39;EMR_DefaultRole&#39;,
+)
+
+print (&#39;cluster created with the step...&#39;, cluster_id[&#39;JobFlowId&#39;])</code></pre>

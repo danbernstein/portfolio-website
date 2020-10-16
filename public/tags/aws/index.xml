@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>AWS on Data By Dan</title>
+    <link>https://danbernstein.netlify.app/tags/aws/</link>
+    <description>Recent content in AWS on Data By Dan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
+    <lastBuildDate>Sun, 13 Sep 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://danbernstein.netlify.app/tags/aws/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>A Simple Way to Understand AWS Services</title>
+      <link>https://danbernstein.netlify.app/post/2020-09-13-a-simple-way-to-understand-aws-services/</link>
+      <pubDate>Sun, 13 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2020-09-13-a-simple-way-to-understand-aws-services/</guid>
+      <description>A quick glance at the list of services available on AWS can be overwhelming. As of September 2020, there are over 160 AWS services, some of which have informative names, such as simple storage service (S3), and others which are incredibly obtuse, like Neptune and Greengrass. The number and variety of services has even inspired catchy songs. Looking at the list, you might start to think, “do I need to use all of those to build my application?</description>
+    </item>
+    
+  </channel>
+</rss>

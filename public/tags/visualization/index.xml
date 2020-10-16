@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>visualization on Data By Dan</title>
+    <link>https://danbernstein.netlify.app/tags/visualization/</link>
+    <description>Recent content in visualization on Data By Dan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
+    <lastBuildDate>Wed, 16 Jan 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://danbernstein.netlify.app/tags/visualization/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Visualizing the Government Shutdown and the 2016 Election</title>
+      <link>https://danbernstein.netlify.app/post/2019-01-16/data-viz-government-shutdown-and-the-2016-election/</link>
+      <pubDate>Wed, 16 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2019-01-16/data-viz-government-shutdown-and-the-2016-election/</guid>
+      <description>In January 2019, Axios produced a data visualization to demonstrate how the partial government shutdown was impacting different states and how that related to the outcomes of the 2016 presidential election. The visualization is a little confusing because there are two color scales, one for states that went for Trump and another for Clinton. Because the scales are distinguished by the 2016 winner, but the shade on each scale is determined by the number of federal workers affected by the government shutdown, the visualization is a little confusing.</description>
+    </item>
+    
+  </channel>
+</rss>

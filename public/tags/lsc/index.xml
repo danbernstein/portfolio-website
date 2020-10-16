@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>lsc on Data By Dan</title>
+    <link>https://danbernstein.netlify.app/tags/lsc/</link>
+    <description>Recent content in lsc on Data By Dan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
+    <lastBuildDate>Fri, 02 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://danbernstein.netlify.app/tags/lsc/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tennessee Evictions Summit</title>
+      <link>https://danbernstein.netlify.app/talks/2020-10-02-tennessee-evictions-summit/</link>
+      <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/talks/2020-10-02-tennessee-evictions-summit/</guid>
+      <description>  
+ </description>
+    </item>
+    
+    <item>
+      <title>CSV, conf, v5</title>
+      <link>https://danbernstein.netlify.app/talks/2020-05-13-csv-conf-v5/</link>
+      <pubDate>Wed, 13 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/talks/2020-05-13-csv-conf-v5/</guid>
+      <description>  
+ </description>
+    </item>
+    
+    <item>
+      <title>Self-Represented Litigants Network Conference</title>
+      <link>https://danbernstein.netlify.app/talks/2020-03-06-2020-srln/</link>
+      <pubDate>Fri, 06 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/talks/2020-03-06-2020-srln/</guid>
+      <description>  
+ </description>
+    </item>
+    
+    <item>
+      <title>2020 Innovations in Technology Conference</title>
+      <link>https://danbernstein.netlify.app/talks/2020-01-11-2020-innovations-in-technology-conference/</link>
+      <pubDate>Sat, 11 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/talks/2020-01-11-2020-innovations-in-technology-conference/</guid>
+      <description>  
+ </description>
+    </item>
+    
+  </channel>
+</rss>

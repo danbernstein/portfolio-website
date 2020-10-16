@@ -1,12 +1,13 @@
 ---
-title: Mortality Rate Projections
+title: "Forecasting: Mortality Rate Projections"
 author: Dan
 date: '2018-10-22'
 slug: mortality-rate-projections
 categories: []
 tags:
   - R
-  - Time Series Analysis
+  - forecasting
+  - analysis
 description: ''
 image: ''
 keywords: ''
@@ -107,7 +108,7 @@ We see that the mortality rates in China are all greatly reduced between 2015-20
 pred.plot.data <- 
 pred$female$mx %>% 
   cbind(age_group = row.names(.)) %>% 
-  as_data_frame() %>% 
+  as_tibble() %>% 
   gather(key = year, value = mort.rate, -age_group) %>% 
   mutate(year = as.numeric(stringr::str_replace(year, "-.*", ""))) %>% 
   mutate(mort.rate = round(as.numeric(mort.rate), 5),

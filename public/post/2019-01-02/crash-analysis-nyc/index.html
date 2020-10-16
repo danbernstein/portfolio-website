@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+  
+    
+      
+
+
+
+
+
+
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Analyzing Cyclist Crash Data in New York City | Data By Dan</title>
+<meta name="title" content="Analyzing Cyclist Crash Data in New York City | Data By Dan" />
+<meta name="description" content="In a previous post, I determined that there was not enough data available to assess the impact of bike lane installation on cyclist incident rates in Washington DC. The methodology I pursued in that post was based on a 2012 article in the American Journal of Public Health (AJPH) that conducted an analysis of New York City for bike lanes installed between 1996 and 2006, including limiting analysis to the five years before and two years following a bike lane installation to assess impact."> 
+
+
+<link rel="canonical" href="https://danbernstein.netlify.app/post/2019-01-02/crash-analysis-nyc/" />
+
+
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:description" content="" /> 
+  <meta name="twitter:title" content="Analyzing Cyclist Crash Data in New York City | Data By Dan" />
+  <meta name="twitter:url" content="https://danbernstein.netlify.app/post/2019-01-02/crash-analysis-nyc/" />
+  <meta name="twitter:site" content="@Softorage" /> 
+  <meta name="twitter:creator" content="@Softorage" /> 
+   
+
+
+
+  
+  <meta property="og:title" content="Analyzing Cyclist Crash Data in New York City | Data By Dan" />
+  <meta property="og:description" content="" /> 
+  <meta property="og:site_name" content="Data By Dan" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://danbernstein.netlify.app/post/2019-01-02/crash-analysis-nyc/" />
+  
+   
+
+
+
+<meta property="article:published_time" content="2019-01-02 00:00:00 &#43;0000 UTC" />
+
+
+  
+  
+  <script type="application/ld+json">
+      { 
+          "@context": "http://schema.org", 
+          "@type": "BlogPosting",
+          "headline": "Analyzing Cyclist Crash Data in New York City",
+          
+          "url": "https://danbernstein.netlify.app/",
+          
+          "datePublished": "2019-01-02T00:00:00Z",
+          
+          
+          "dateModified": "2019-01-02T00:00:00Z",
+          
+          "description": ,
+          
+          
+          "author": {
+              "@type": "Person",
+              "name": "Dan"
+          },
+          
+          "publisher": {
+            "@type": "Organization",
+            "name": "Dan Bernstein",
+            "logo": {
+              "@type": "ImageObject",
+              "url": ""
+            }
+          },
+          
+          "sameAs" : [
+            
+            
+              "https://github.com/danbernstein",  
+            
+              "https://twitter.com/danbernstein18"
+            ]
+          
+        }
+      </script>
+  
+
+
+    
+    <meta name="generator" content="Hugo 0.76.4" />
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/assets/css/main.min.9a551348bb4a6a2c0bc4401302fe04a74b1507276ba1d0aca4b2308afb7f452e.css" integrity="sha256-mlUTSLtKaiwLxEATAv4Ep0sVBydrodCspLIwivt/RS4=" crossorigin="anonymous">
+  
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+  
+  <link rel=apple-touch-icon sizes=180x180 href=https://danbernstein.netlify.app//assets/favicon/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://danbernstein.netlify.app//assets/favicon/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=https://danbernstein.netlify.app//assets/favicon/favicon-16x16.png><link rel=manifest href=https://danbernstein.netlify.app//assets/favicon/site.webmanifest><link rel=mask-icon href=https://danbernstein.netlify.app//assets/favicon/safari-pinned-tab.svg color=#7817c4><link rel=icon href=https://danbernstein.netlify.app//assets/favicon/favicon.ico type=image/x-icon><link rel="shortcut icon" href=https://danbernstein.netlify.app//assets/favicon/favicon.ico type=image/x-icon><meta name=apple-mobile-web-app-title content="Vibrant Shadows Theme"><meta name=application-name content="Vibrant Shadows Theme"><meta name=msapplication-TileColor content="#ffffff"><meta name=theme-color content="#ffffff">
+  
+  
+  
+  <meta name="theme-color" content="#fff6f8">
+  
+  <meta name="msapplication-navbutton-color" content="#fff6f8">
+  
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  
+</head>
+<body><header>
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top flex-column">
+    <div class="container-fluid">
+      
+      <a class="navbar-brand rounded px-3" href="https://danbernstein.netlify.app/"><span class="text-nav"><span class="brand">&nbsp;&nbsp;Data By Dan</span></span></a>
+      
+      
+        <a class="navbar-toggler border-0 bg-nav p-2" role="button" href="#" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="text-clr2">&#9776;</span>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-md-auto">
+             
+            
+              
+                <li class="nav-item mx-1 my-2">
+                  <a class="btn bg-nav text-clr1" href="/about-dan/">About Dan</a>
+                </li>
+              
+            
+          </ul>
+          
+            
+          
+        </div>
+      
+    </div>
+    
+  </nav>
+</header>
+<div id="content">
+<div class="container-fluid bg-clr1 text-nav text-center pb-3 pt-4 position-relative shadow">
+  <div style="height:3.5rem;"></div>
+  <h1>Analyzing Cyclist Crash Data in New York City</h1>
+  <p class="description"></p>
+</div>
+<div class="container-fluid bg-nav p-4">  
+  <div class="row">
+ 
+    <div class="col-md-auto">
+ 
+        
+      
+      <div class="py-1">
+        <div class="d-inline mr-auto small text-muted post-meta"></span>
+        
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        By Dan &#183; 2 min read &#183; <span class=''>Last updated: January 2, 2019</div>
+        
+        
+        
+        <div class="d-inline ml-auto float-right">
+          Share on:&nbsp;&nbsp;
+          <span class="lead">
+            
+              <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2019-01-02%2fcrash-analysis-nyc%2f&quote=Analyzing%20Cyclist%20Crash%20Data%20in%20New%20York%20City" rel="noreferrer nofollow" target="_blank" title="Share on Facebook" aria-label="Share on Facebook"><span class="fab fa-facebook"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2019-01-02%2fcrash-analysis-nyc%2f&text=Analyzing%20Cyclist%20Crash%20Data%20in%20New%20York%20City:%0Ahttps%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2019-01-02%2fcrash-analysis-nyc%2f" rel="noreferrer nofollow" target="_blank" title="Share on Twitter" aria-label="Share on Twitter"><span class="fab fa-twitter"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2019-01-02%2fcrash-analysis-nyc%2f&title=Analyzing%20Cyclist%20Crash%20Data%20in%20New%20York%20City&summary=&source=Data%20By%20Dan" rel="noreferrer nofollow" target="_blank" title="Share on LinkedIn" aria-label="Share on LinkedIn"><span class="fab fa-linkedin"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://t.me/share/url?url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2019-01-02%2fcrash-analysis-nyc%2f&text=Analyzing%20Cyclist%20Crash%20Data%20in%20New%20York%20City" rel="noreferrer nofollow" target="_blank" title="Share on Telegram" aria-label="Share on Telegram"><span class="fab fa-telegram"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="whatsapp://send?text=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2019-01-02%2fcrash-analysis-nyc%2f%0A%0AAnalyzing%20Cyclist%20Crash%20Data%20in%20New%20York%20City" data-text="Analyzing Cyclist Crash Data in New York City" data-href="https://danbernstein.netlify.app/post/2019-01-02/crash-analysis-nyc/" rel="noreferrer nofollow" target="_blank" title="Share on Whatsapp" aria-label="Share on Whatsapp"><span class="fab fa-whatsapp"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://reddit.com/submit?url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2019-01-02%2fcrash-analysis-nyc%2f&title=Analyzing%20Cyclist%20Crash%20Data%20in%20New%20York%20City" rel="noreferrer nofollow" target="_blank" title="Share on Reddit" aria-label="Share on Reddit"><span class="fab fa-reddit"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="mailto:?subject=Analyzing%20Cyclist%20Crash%20Data%20in%20New%20York%20City&body=%0A%0Ahttps%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2019-01-02%2fcrash-analysis-nyc%2f" target="_blank" title="Share via email" aria-label="Share via email"><span class="fas fa-envelope"></span></a>
+            
+          </span>
+        </div>
+        
+        
+        
+        
+      </div>
+      
+      
+      <div class="py-3">
+      
+
+
+<p>In a previous post, I determined that there was not enough data available to assess the impact of bike lane installation on cyclist incident rates in Washington DC. The methodology I pursued in that post was based on a 2012 article in the American Journal of Public Health (AJPH) that conducted an analysis of New York City for bike lanes installed between 1996 and 2006, including limiting analysis to the five years before and two years following a bike lane installation to assess impact. That article used a five year pre-installation period to better capture trends over time, and only a two year post-installation period to include a greater number of street segments in the analysis. The authors concluded that bike lanes did not improve safety in any crash category and noted that confounding factors, such as changes in bicyclist volume associated with bike lane installation, might help explain the patterns observed.</p>
+<p>In this post, I will provide an update to the AJPH article analysis, including assessing new bike lanes installed from 2006 to 2016, and assessing whether the incident rates change if you extend the two-year post-installation window further. I hypothesize that in the longer post-installation period, we might see reductions as people adjust to bike lanes on their streets. I will also attempt to integrate changes in bicyclist volume to capture the confounding factors that the original authors noted.</p>
+<div id="methods" class="section level2">
+<h2>Methods:</h2>
+<p>the AJPH article conducted a two-stage design approach. To break down this task into discrete steps:</p>
+<div id="stage-1-identify-comparison-group" class="section level4">
+<h4>Stage 1: Identify comparison group</h4>
+<ul>
+<li>gather the appropriate data</li>
+<li>load the appropriate packages</li>
+<li>apply frequency-matching techniques to identify comparison for each treatment element at the segment and intersection-level</li>
+<li>calculate number of pre and post-installation incidents for five categories of crashes (“total crashes, multiple-vehicle crashes (crashes involving multiple vehicles but no bicyclists or pedestrians), bicyclist crashes (e.g., vehicle—bicycle collisions), pedestrian crashes (vehicle—pedestrian collisions), and injurious or fatal crashes (crashes that caused at least one injury or fatality).”)</li>
+<li>organize the covariates and calculated values into a useful format</li>
+</ul>
+</div>
+<div id="stage-2-model-the-impact-of-bike-lane-installation" class="section level4">
+<h4>Stage 2: Model the impact of bike lane installation</h4>
+<ul>
+<li>use generalized estimating equation (GEE) methodology to apply Poisson and negative binomial
+regression models to the data set consisting of the treatment and comparison goups</li>
+</ul>
+</div>
+</div>
+
+      </div>
+      
+      
+      
+      <div class="pt-4 mt-2 border-top">
+        <div class="d-inline mr-auto small text-muted post-meta mb-1">
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        </div>
+        
+        
+        
+      
+      
+      
+      
+      
+        <div class="mt-3">
+        <span class="">Tags:</span>&nbsp;&nbsp;&nbsp;<a href="/tags/r"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">R</span></a><a href="/tags/gis"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">G I S</span></a><a href="/tags/geospatial"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">GEOSPATIAL</span></a></div>
+      
+      
+      </div>
+      
+    </div>
+  </div>
+  
+  
+  
+</div>
+
+    </div><footer class="text-center p-2 text-muted footer">
+  
+    
+    <div class="py-2 lead">
+      
+        
+          <a class="ml-2" href="https://github.com/danbernstein"><span class="fab fa-github" aria-label="Join us on Github"></span></a>
+        
+      
+        
+          <a class="ml-2" href="https://twitter.com/danbernstein18"><span class="fab fa-twitter" aria-label="Join us on Twitter"></span></a>
+        
+      
+    </div>
+    
+  
+
+  
+
+  <div class="py-2 copyright">
+    <small>Copyright &#169; 2020 Dan Bernstein <b>&#183;</b> Content license: CC-BY-SA-3.0 <b>&#183;</b> Powered by <a class="font-weight-bold text-reset text-decoration-none" href="https://gohugo.io">Hugo</a> <b>&#183;</b> Theme <a class="font-weight-bold text-reset text-decoration-none" href="">Shadows</a> by <span class="softorage"><a class="font-weight-bold text-reset" href="https://softorage.com">Softorage</a></span></small>
+  </div>
+</footer>
+
+    
+    
+    
+    <script src="/assets/js/main.min.6ff0d57b7558f0225c80bade926a349330bc25d85e7ceff50d911f1156023c3e.js" integrity="sha256-b/DVe3VY8CJcgLrekmo0kzC8JdhefO/1DZEfEVYCPD4=" crossorigin="anonymous"></script>
+    <script src="/assets/js/custom.min.c8274a0cac0477f854e63f09626cc63858bb2bc9db8faecbb2834846952c7fd6.js" integrity="sha256-yCdKDKwEd/hU5j8JYmzGOFi7K8nbj67LsoNIRpUsf9Y=" crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Lato&display=swap" rel="stylesheet">
+    
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+  </body>
+</html>

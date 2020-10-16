@@ -1,0 +1,36 @@
+---
+title: Sets Are Your Friend
+author: Dan
+date: '2020-10-16'
+slug: []
+categories: []
+tags:
+  - python
+  - tips
+description: ''
+lastmod: ''
+image: ''
+author_twitter: ''
+---
+
+
+
+<p>Issue: When working with thousands or millions of files, you will often find discrepancies in number of files and will need to find a quick way to identify where the discrepancies come from. In these situations, the logical solution is a for loop or list comprehension because they both iterate over a list of values, compute something, and return a value. In some situations, these options are not the most efficient because they require each element to be evaluated individually. Using sets are preferable when you want to determine which values in one group are present or missing in another group.</p>
+<p>When the number of elements in the lists is small, there will not be an advantage to using set substraction, but when the number of elements grows to the thousands or millions, you will be thankful for the time you save with this trick.</p>
+<p>To find the values in one list that are missing in another, here is a simple drop-in replacement:</p>
+<pre><code>list_a = [1, 2, 3]
+list_b = [2, 3 ,4]
+
+missing_values = []
+
+# for loop
+for value in list_a:
+  if value not in list_b:
+    missing_values.append(value)
+    
+    
+# list comprehension
+missing_values = [value for value in list_a if value not in list_b]
+
+# set substraction
+missing_values = list(set(list_a) - set(list_b))</code></pre>

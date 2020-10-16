@@ -15,6 +15,8 @@
         <h2>
           <a class="card-title text-reset" href="{{ .Permalink }}"> {{ .Title }}</a>
         </h2>
+            <span class=''><b>Last modified: {{ .Lastmod.Format "January 2, 2006" }} </b></span>
+
         <div class="card-text">
          <!-- <div class="font-weight-bold small post-meta"> {{ .WordCount }} Words </div> -->
           <p>{{ .Summary }}</p>

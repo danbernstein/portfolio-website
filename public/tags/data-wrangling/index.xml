@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>data wrangling on Data By Dan</title>
+    <link>https://danbernstein.netlify.app/tags/data-wrangling/</link>
+    <description>Recent content in data wrangling on Data By Dan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
+    <lastBuildDate>Sun, 12 May 2019 00:00:00 +0000</lastBuildDate><atom:link href="https://danbernstein.netlify.app/tags/data-wrangling/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Scraping and Visualizing My Rideshare and Bicycling Activity</title>
+      <link>https://danbernstein.netlify.app/post/2019-05-12/visualizing-personal-transportation-use/</link>
+      <pubDate>Sun, 12 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2019-05-12/visualizing-personal-transportation-use/</guid>
+      <description>Summary: This small project started out with two goals: web scraping and visualizing movement data. As the project developed, I found that the web scraping took most of the time, and the visualization was best left to well-developed javascript frameworks, rather than developing it from scratch.
+Check out the final visualization.
+Webscraping Note: It is extremely important to read and understand the website user agreement for any website from which you might want to scrape data.</description>
+    </item>
+    
+  </channel>
+</rss>

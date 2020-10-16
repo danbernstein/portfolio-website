@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+  
+    
+      
+
+
+
+
+
+
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Computer Vision and Deep Learning to Identify Bikelane Hazards | Data By Dan</title>
+<meta name="title" content="Computer Vision and Deep Learning to Identify Bikelane Hazards | Data By Dan" />
+<meta name="description" content="At a meeting of the Transportation Techies Meet Up in early 2018, another Techie announced that he had gathered images from traffic cameras around Arlington, VA at intersections with bike lanes. The data is available at here. He suggested that this data would likely be well-suited for computer vision (CV) to automate the process of classifying the images based on whether the bike lane was blocked or not.
+I recently decided to learn about computer vision to tackle this challenge."> 
+
+
+<link rel="canonical" href="https://danbernstein.netlify.app/post/2018-12-12/deep-learning-for-image-classification/" />
+
+
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:description" content="" /> 
+  <meta name="twitter:title" content="Computer Vision and Deep Learning to Identify Bikelane Hazards | Data By Dan" />
+  <meta name="twitter:url" content="https://danbernstein.netlify.app/post/2018-12-12/deep-learning-for-image-classification/" />
+  <meta name="twitter:site" content="@Softorage" /> 
+  <meta name="twitter:creator" content="@Softorage" /> 
+   
+
+
+
+  
+  <meta property="og:title" content="Computer Vision and Deep Learning to Identify Bikelane Hazards | Data By Dan" />
+  <meta property="og:description" content="" /> 
+  <meta property="og:site_name" content="Data By Dan" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://danbernstein.netlify.app/post/2018-12-12/deep-learning-for-image-classification/" />
+  
+   
+
+
+
+<meta property="article:published_time" content="2018-12-12 00:00:00 &#43;0000 UTC" />
+
+
+  
+  
+  <script type="application/ld+json">
+      { 
+          "@context": "http://schema.org", 
+          "@type": "BlogPosting",
+          "headline": "Computer Vision and Deep Learning to Identify Bikelane Hazards",
+          
+          "url": "https://danbernstein.netlify.app/",
+          
+          "datePublished": "2018-12-12T00:00:00Z",
+          
+          
+          "dateModified": "2018-12-12T00:00:00Z",
+          
+          "description": ,
+          
+          
+          "publisher": {
+            "@type": "Organization",
+            "name": "Dan Bernstein",
+            "logo": {
+              "@type": "ImageObject",
+              "url": ""
+            }
+          },
+          
+          "sameAs" : [
+            
+            
+              "https://github.com/danbernstein",  
+            
+              "https://twitter.com/danbernstein18"
+            ]
+          
+        }
+      </script>
+  
+
+
+    
+    <meta name="generator" content="Hugo 0.76.4" />
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/assets/css/main.min.9a551348bb4a6a2c0bc4401302fe04a74b1507276ba1d0aca4b2308afb7f452e.css" integrity="sha256-mlUTSLtKaiwLxEATAv4Ep0sVBydrodCspLIwivt/RS4=" crossorigin="anonymous">
+  
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+  
+  <link rel=apple-touch-icon sizes=180x180 href=https://danbernstein.netlify.app//assets/favicon/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://danbernstein.netlify.app//assets/favicon/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=https://danbernstein.netlify.app//assets/favicon/favicon-16x16.png><link rel=manifest href=https://danbernstein.netlify.app//assets/favicon/site.webmanifest><link rel=mask-icon href=https://danbernstein.netlify.app//assets/favicon/safari-pinned-tab.svg color=#7817c4><link rel=icon href=https://danbernstein.netlify.app//assets/favicon/favicon.ico type=image/x-icon><link rel="shortcut icon" href=https://danbernstein.netlify.app//assets/favicon/favicon.ico type=image/x-icon><meta name=apple-mobile-web-app-title content="Vibrant Shadows Theme"><meta name=application-name content="Vibrant Shadows Theme"><meta name=msapplication-TileColor content="#ffffff"><meta name=theme-color content="#ffffff">
+  
+  
+  
+  <meta name="theme-color" content="#fff6f8">
+  
+  <meta name="msapplication-navbutton-color" content="#fff6f8">
+  
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  
+</head>
+<body><header>
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top flex-column">
+    <div class="container-fluid">
+      
+      <a class="navbar-brand rounded px-3" href="https://danbernstein.netlify.app/"><span class="text-nav"><span class="brand">&nbsp;&nbsp;Data By Dan</span></span></a>
+      
+      
+        <a class="navbar-toggler border-0 bg-nav p-2" role="button" href="#" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="text-clr2">&#9776;</span>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-md-auto">
+             
+            
+              
+                <li class="nav-item mx-1 my-2">
+                  <a class="btn bg-nav text-clr1" href="/about-dan/">About Dan</a>
+                </li>
+              
+            
+          </ul>
+          
+            
+          
+        </div>
+      
+    </div>
+    
+  </nav>
+</header>
+<div id="content">
+<div class="container-fluid bg-clr1 text-nav text-center pb-3 pt-4 position-relative shadow">
+  <div style="height:3.5rem;"></div>
+  <h1>Computer Vision and Deep Learning to Identify Bikelane Hazards</h1>
+  <p class="description"></p>
+</div>
+<div class="container-fluid bg-nav p-4">  
+  <div class="row">
+ 
+    <div class="col-md-auto">
+ 
+        
+      
+      <div class="py-1">
+        <div class="d-inline mr-auto small text-muted post-meta"></span>
+        
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        By Dan Bernstein &#183; 6 min read &#183; <span class=''>Last updated: December 12, 2018</div>
+        
+        
+        
+        <div class="d-inline ml-auto float-right">
+          Share on:&nbsp;&nbsp;
+          <span class="lead">
+            
+              <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-12-12%2fdeep-learning-for-image-classification%2f&quote=Computer%20Vision%20and%20Deep%20Learning%20to%20Identify%20Bikelane%20Hazards" rel="noreferrer nofollow" target="_blank" title="Share on Facebook" aria-label="Share on Facebook"><span class="fab fa-facebook"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-12-12%2fdeep-learning-for-image-classification%2f&text=Computer%20Vision%20and%20Deep%20Learning%20to%20Identify%20Bikelane%20Hazards:%0Ahttps%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-12-12%2fdeep-learning-for-image-classification%2f" rel="noreferrer nofollow" target="_blank" title="Share on Twitter" aria-label="Share on Twitter"><span class="fab fa-twitter"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-12-12%2fdeep-learning-for-image-classification%2f&title=Computer%20Vision%20and%20Deep%20Learning%20to%20Identify%20Bikelane%20Hazards&summary=&source=Data%20By%20Dan" rel="noreferrer nofollow" target="_blank" title="Share on LinkedIn" aria-label="Share on LinkedIn"><span class="fab fa-linkedin"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://t.me/share/url?url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-12-12%2fdeep-learning-for-image-classification%2f&text=Computer%20Vision%20and%20Deep%20Learning%20to%20Identify%20Bikelane%20Hazards" rel="noreferrer nofollow" target="_blank" title="Share on Telegram" aria-label="Share on Telegram"><span class="fab fa-telegram"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="whatsapp://send?text=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-12-12%2fdeep-learning-for-image-classification%2f%0A%0AComputer%20Vision%20and%20Deep%20Learning%20to%20Identify%20Bikelane%20Hazards" data-text="Computer Vision and Deep Learning to Identify Bikelane Hazards" data-href="https://danbernstein.netlify.app/post/2018-12-12/deep-learning-for-image-classification/" rel="noreferrer nofollow" target="_blank" title="Share on Whatsapp" aria-label="Share on Whatsapp"><span class="fab fa-whatsapp"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://reddit.com/submit?url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-12-12%2fdeep-learning-for-image-classification%2f&title=Computer%20Vision%20and%20Deep%20Learning%20to%20Identify%20Bikelane%20Hazards" rel="noreferrer nofollow" target="_blank" title="Share on Reddit" aria-label="Share on Reddit"><span class="fab fa-reddit"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="mailto:?subject=Computer%20Vision%20and%20Deep%20Learning%20to%20Identify%20Bikelane%20Hazards&body=%0A%0Ahttps%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-12-12%2fdeep-learning-for-image-classification%2f" target="_blank" title="Share via email" aria-label="Share via email"><span class="fas fa-envelope"></span></a>
+            
+          </span>
+        </div>
+        
+        
+        
+        
+      </div>
+      
+      
+      <div class="py-3">
+      
+
+
+<p>At a meeting of the Transportation Techies Meet Up in early 2018, another Techie announced that he had gathered images from traffic cameras around Arlington, VA at intersections with bike lanes. The data is available at <a href="http://parkingdirty.com/">here</a>. He suggested that this data would likely be well-suited for computer vision (CV) to automate the process of classifying the images based on whether the bike lane was blocked or not.</p>
+<p>I recently decided to learn about computer vision to tackle this challenge. Recognizing that CV is not well-implemented in R, I read up on the major differences between R and Python, and then worked through the following texts:</p>
+<ul>
+<li><p><a href="http://programmingcomputervision.com/downloads/ProgrammingComputerVision_CCdraft.pdf">Programming Computer Vision with Python</a></p></li>
+<li><p><a href="https://www.manning.com/books/deep-learning-with-python">Deep Learning with Python</a></p></li>
+</ul>
+<p>While the first text gave a good conceptual understanding of computer vision, this task requires a more advanced analytical approach to annotate images and greater computational strength to power it. Another Techie has worked through this same problem using deep learning algorithms powered by Google’s Colaboratory cloud environment to achieve good results. Using his work as a guide, I will develop similar algorithms with more of a focus on discussing how various techniques can be used to improve deep learning model results. You can see my work <a href="https://colab.research.google.com/drive/1x15ai4nwfp0xxY1sfvX8UB0EHRcKXhU8#scrollTo=fPx3kopWDTIT">here</a>.</p>
+<p>In working through this problem, I am guided by the “typical machine learning workflow” that Francois Chollet outlines in the second text:</p>
+<ul>
+<li><p>First, define the problem: what data is available, and what are you trying to predict? Will you need to collect more data, to hire people to manually label a dataset?</p></li>
+<li><p>Identify a way to reliably measure success on your goal. For simple tasks, this may be prediction accuracy, but in many cases it will require sophisticated domain-specific metrics.</p></li>
+<li><p>Prepare the validation process that you will use to evaluate your models. In particular, you should define a training set, validation set, and test set. Your validation and test set labels should not “leak” into your training data: for instance, with temporal prediction, the validation and test data should be posterior to the training data.</p></li>
+<li><p>Vectorize your data, by turning it into vectors and preprocessing it in a way that makes it more easily approachable by a neural network (normalization, etc).</p></li>
+<li><p>Develop a first model that beats a trivial common-sense baseline—thus demonstrating that machine learning can work on your problem. This might not always be the case!</p></li>
+<li><p>Gradually refine your model architecture by tuning hyperparameters and adding regularization. Make changes based on your performance on the validation data only, not the test data nor the training data. Remember that you should manage to get your model to overfit (thus identifying a model capacity level that is above that you need), and only then start adding regularization or start downsizing your model.</p></li>
+<li><p>Mind “validation set overfitting” when turning hyperparameters, i.e. the fact that your hyperparameters might end up being over-specialized to your validation set. Avoiding this is precisely the purpose of having a separate test set!</p></li>
+</ul>
+<p>Updates:</p>
+<p>Deep Learning Neural Network Approach: My first approach was to use deep learning through Keras to recognize blocked bike lanes and properly classify them. It was difficult to improve the <a href="https://colab.research.google.com/drive/1vl_O_MEP_8OQz4R9IW9wPK2hmcfj5b-C">model</a> from a baseline performance of about 60% accuracy, despite hyperparameter tuning, which can often provide small boosts in performance. I then attempted to better understand what patterns the model was detecting through the pattern detection stage (convolutional neural network layers) and the classification stage (fully-connected layers), this <a href="https://colab.research.google.com/drive/1bGtPaoHXuaaAfP0wwwIdxcYo6hwspbNa">work</a> determined that the model was activating appropriately in the presence or absence of a bike lane obstacle.</p>
+<p>Object Detection Approach: This image classification problem is very complex; it seems difficult to image that a computer to come to recognize the relative position of cars within bike lanes at different camera image depths. For this reason, I have tried a different approach that leverages the TensorFlow objection detection API to automatically identify objects within an image. After doing so, I take the resulting bounding boxes (see image) and tried to find a reliable and simple method for determining when an object is obstructing the bike lane. Due to the camera angle, objects can appear to “block” the bike lane when they are just sitting in the car lane but the perspective gives the appearance of the object being in the bike lane. To investigate this, I tried three methods for classifying an object that blocked the bike lane: 1) if the center of the bounding box was inside the bike lane polygon, 2) whether the overlapping area between the bounding box and the bike lane was at least 30% of the total object area, and 3) whether the overlapping area was greater than 50% of the total object area. From the results in the <a href="https://colab.research.google.com/drive/1pUPt1-d1__sb09zjxlPN_mWIuNP-knVu">colab script</a>, we can see that the first two approaches performed better than the last; the 50% approach gave many false negatives, failing to identify an object obstructing a bike lane when present. The other two approaches both correctly identified blocked bike lanes in approximately 3100 out of 3800 training images, over 80%. This approach outperforms the best results from the deep learning neural network approach; though there is no reason why a neural network could not outperform object detection with proper training and fine tuning.</p>
+<center>
+<img width="40%" src="../markdown_data/parking_dirty/2016-09-28 180455 cam135.png"/>
+<img width="40%" src="../markdown_data/parking_dirty/2016-09-28 180455 cam135_labeled.png"/>
+</center>
+
+      </div>
+      
+      
+      
+      <div class="pt-4 mt-2 border-top">
+        <div class="d-inline mr-auto small text-muted post-meta mb-1">
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        </div>
+        
+        
+        
+      
+      
+      
+      
+      
+        <div class="mt-3">
+        <span class="">Tags:</span>&nbsp;&nbsp;&nbsp;<a href="/tags/python"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">PYTHON</span></a><a href="/tags/computer-vision"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">COMPUTER VISION</span></a><a href="/tags/tools"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">TOOLS</span></a></div>
+      
+      
+      </div>
+      
+    </div>
+  </div>
+  
+  
+  
+</div>
+
+    </div><footer class="text-center p-2 text-muted footer">
+  
+    
+    <div class="py-2 lead">
+      
+        
+          <a class="ml-2" href="https://github.com/danbernstein"><span class="fab fa-github" aria-label="Join us on Github"></span></a>
+        
+      
+        
+          <a class="ml-2" href="https://twitter.com/danbernstein18"><span class="fab fa-twitter" aria-label="Join us on Twitter"></span></a>
+        
+      
+    </div>
+    
+  
+
+  
+
+  <div class="py-2 copyright">
+    <small>Copyright &#169; 2020 Dan Bernstein <b>&#183;</b> Content license: CC-BY-SA-3.0 <b>&#183;</b> Powered by <a class="font-weight-bold text-reset text-decoration-none" href="https://gohugo.io">Hugo</a> <b>&#183;</b> Theme <a class="font-weight-bold text-reset text-decoration-none" href="">Shadows</a> by <span class="softorage"><a class="font-weight-bold text-reset" href="https://softorage.com">Softorage</a></span></small>
+  </div>
+</footer>
+
+    
+    
+    
+    <script src="/assets/js/main.min.6ff0d57b7558f0225c80bade926a349330bc25d85e7ceff50d911f1156023c3e.js" integrity="sha256-b/DVe3VY8CJcgLrekmo0kzC8JdhefO/1DZEfEVYCPD4=" crossorigin="anonymous"></script>
+    <script src="/assets/js/custom.min.c8274a0cac0477f854e63f09626cc63858bb2bc9db8faecbb2834846952c7fd6.js" integrity="sha256-yCdKDKwEd/hU5j8JYmzGOFi7K8nbj67LsoNIRpUsf9Y=" crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Lato&display=swap" rel="stylesheet">
+    
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+  </body>
+</html>

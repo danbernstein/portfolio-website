@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+  
+    
+      
+
+
+
+
+
+
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Mortality Rate Projections | Data By Dan</title>
+<meta name="title" content="Mortality Rate Projections | Data By Dan" />
+<meta name="description" content="This is the third in a series of posts that seek to recreate the methods used in Future ozone-related acute excess mortality under climate and population change scenarios in China: A modeling study. All the posts build on my previous post on forecasting, by using data available from national and international research initatives to project future scenarios for complex systems including atmospheric chemistry, population dynamics, and mortality. This post focuses on the third projection: mortality rate."> 
+
+
+<link rel="canonical" href="https://danbernstein.netlify.app/post/2018-10-22/mortality-rate-projections/" />
+
+
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:description" content="" /> 
+  <meta name="twitter:title" content="Mortality Rate Projections | Data By Dan" />
+  <meta name="twitter:url" content="https://danbernstein.netlify.app/post/2018-10-22/mortality-rate-projections/" />
+  <meta name="twitter:site" content="@Softorage" /> 
+  <meta name="twitter:creator" content="@Softorage" /> 
+   
+
+
+
+  
+  <meta property="og:title" content="Mortality Rate Projections | Data By Dan" />
+  <meta property="og:description" content="" /> 
+  <meta property="og:site_name" content="Data By Dan" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://danbernstein.netlify.app/post/2018-10-22/mortality-rate-projections/" />
+  
+   
+
+
+
+<meta property="article:published_time" content="2018-10-22 00:00:00 &#43;0000 UTC" />
+
+
+  
+  
+  <script type="application/ld+json">
+      { 
+          "@context": "http://schema.org", 
+          "@type": "BlogPosting",
+          "headline": "Mortality Rate Projections",
+          
+          "url": "https://danbernstein.netlify.app/",
+          
+          "datePublished": "2018-10-22T00:00:00Z",
+          
+          
+          "dateModified": "2018-10-22T00:00:00Z",
+          
+          "description": ,
+          
+          
+          "author": {
+              "@type": "Person",
+              "name": "Dan"
+          },
+          
+          "publisher": {
+            "@type": "Organization",
+            "name": "Dan Bernstein",
+            "logo": {
+              "@type": "ImageObject",
+              "url": ""
+            }
+          },
+          
+          "sameAs" : [
+            
+            
+              "https://github.com/danbernstein",  
+            
+              "https://twitter.com/danbernstein18"
+            ]
+          
+        }
+      </script>
+  
+
+
+    
+    <meta name="generator" content="Hugo 0.76.4" />
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/assets/css/main.min.9a551348bb4a6a2c0bc4401302fe04a74b1507276ba1d0aca4b2308afb7f452e.css" integrity="sha256-mlUTSLtKaiwLxEATAv4Ep0sVBydrodCspLIwivt/RS4=" crossorigin="anonymous">
+  
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+  
+  <link rel=apple-touch-icon sizes=180x180 href=https://danbernstein.netlify.app//assets/favicon/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://danbernstein.netlify.app//assets/favicon/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=https://danbernstein.netlify.app//assets/favicon/favicon-16x16.png><link rel=manifest href=https://danbernstein.netlify.app//assets/favicon/site.webmanifest><link rel=mask-icon href=https://danbernstein.netlify.app//assets/favicon/safari-pinned-tab.svg color=#7817c4><link rel=icon href=https://danbernstein.netlify.app//assets/favicon/favicon.ico type=image/x-icon><link rel="shortcut icon" href=https://danbernstein.netlify.app//assets/favicon/favicon.ico type=image/x-icon><meta name=apple-mobile-web-app-title content="Vibrant Shadows Theme"><meta name=application-name content="Vibrant Shadows Theme"><meta name=msapplication-TileColor content="#ffffff"><meta name=theme-color content="#ffffff">
+  
+  
+  
+  <meta name="theme-color" content="#fff6f8">
+  
+  <meta name="msapplication-navbutton-color" content="#fff6f8">
+  
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  
+</head>
+<body><header>
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top flex-column">
+    <div class="container-fluid">
+      
+      <a class="navbar-brand rounded px-3" href="https://danbernstein.netlify.app/"><span class="text-nav"><span class="brand">&nbsp;&nbsp;Data By Dan</span></span></a>
+      
+      
+        <a class="navbar-toggler border-0 bg-nav p-2" role="button" href="#" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="text-clr2">&#9776;</span>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-md-auto">
+             
+            
+              
+                <li class="nav-item mx-1 my-2">
+                  <a class="btn bg-nav text-clr1" href="/about-dan/">About Dan</a>
+                </li>
+              
+            
+          </ul>
+          
+            
+          
+        </div>
+      
+    </div>
+    
+  </nav>
+</header>
+<div id="content">
+<div class="container-fluid bg-clr1 text-nav text-center pb-3 pt-4 position-relative shadow">
+  <div style="height:3.5rem;"></div>
+  <h1>Mortality Rate Projections</h1>
+  <p class="description"></p>
+</div>
+<div class="container-fluid bg-nav p-4">  
+  <div class="row">
+ 
+    <div class="col-md-auto">
+ 
+        
+      
+      <div class="py-1">
+        <div class="d-inline mr-auto small text-muted post-meta"></span>
+        
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        By Dan &#183; 11 min read &#183; <span class=''>Last updated: October 22, 2018</div>
+        
+        
+        
+        <div class="d-inline ml-auto float-right">
+          Share on:&nbsp;&nbsp;
+          <span class="lead">
+            
+              <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-10-22%2fmortality-rate-projections%2f&quote=Mortality%20Rate%20Projections" rel="noreferrer nofollow" target="_blank" title="Share on Facebook" aria-label="Share on Facebook"><span class="fab fa-facebook"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-10-22%2fmortality-rate-projections%2f&text=Mortality%20Rate%20Projections:%0Ahttps%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-10-22%2fmortality-rate-projections%2f" rel="noreferrer nofollow" target="_blank" title="Share on Twitter" aria-label="Share on Twitter"><span class="fab fa-twitter"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-10-22%2fmortality-rate-projections%2f&title=Mortality%20Rate%20Projections&summary=&source=Data%20By%20Dan" rel="noreferrer nofollow" target="_blank" title="Share on LinkedIn" aria-label="Share on LinkedIn"><span class="fab fa-linkedin"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://t.me/share/url?url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-10-22%2fmortality-rate-projections%2f&text=Mortality%20Rate%20Projections" rel="noreferrer nofollow" target="_blank" title="Share on Telegram" aria-label="Share on Telegram"><span class="fab fa-telegram"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="whatsapp://send?text=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-10-22%2fmortality-rate-projections%2f%0A%0AMortality%20Rate%20Projections" data-text="Mortality Rate Projections" data-href="https://danbernstein.netlify.app/post/2018-10-22/mortality-rate-projections/" rel="noreferrer nofollow" target="_blank" title="Share on Whatsapp" aria-label="Share on Whatsapp"><span class="fab fa-whatsapp"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://reddit.com/submit?url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-10-22%2fmortality-rate-projections%2f&title=Mortality%20Rate%20Projections" rel="noreferrer nofollow" target="_blank" title="Share on Reddit" aria-label="Share on Reddit"><span class="fab fa-reddit"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="mailto:?subject=Mortality%20Rate%20Projections&body=%0A%0Ahttps%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-10-22%2fmortality-rate-projections%2f" target="_blank" title="Share via email" aria-label="Share via email"><span class="fas fa-envelope"></span></a>
+            
+          </span>
+        </div>
+        
+        
+        
+        
+      </div>
+      
+      
+      <div class="py-3">
+      
+
+
+<p><em>This is the third in a series of posts that seek to recreate the methods used in <a href="https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002598#sec014">Future ozone-related acute excess mortality under climate and population change scenarios in China: A modeling study</a>. All the posts build on my previous post on <a href="https://danbernstein.netlify.com/post/learning-forecasting/">forecasting</a>, by using data available from national and international research initatives to project future scenarios for complex systems including atmospheric chemistry, population dynamics, and mortality. This post focuses on the third projection: mortality rate.</em></p>
+<p>The previous two posts discussed projecting future ozone concentrations using global climate models and projecting population dynamics to understand the size and age structure of future demographic scenarios. This post will describe methods for projecting national mortality rates to adjust epidemiological mortality counts collected at the city level. In the next post, the three preceding projections will be brought together to estimate the future excess mortality attributable to ozone concentration change.</p>
+<div id="methods-projecting-national-mortality-rates-for-city-level-adjustments" class="section level2">
+<h2>Methods: Projecting National Mortality Rates for City-Level Adjustments</h2>
+<div id="overview-of-analysis" class="section level3">
+<h3><em>Overview of Analysis</em></h3>
+<p>The workflow for this analysis involves recreating the methods used in the PLOS Medicine article.</p>
+<p>"<em>City-level baseline cause-specific, age-group-specific, and seasonal mortality counts were also obtained from the previous publication [46]. Future changes in age-group-specific mortality rates and their 95% probability intervals (PIs) in 2050–2055 versus 2010–2015 were obtained using data from the United Nation’s 2017 World Population Prospects [49] and the MortCast package, which projects age-specific mortality rates using the Kannisto, Lee–Carter, and related methods as described in Ševčíková et al. [50].</em></p>
+<p><em>The calculated changing ratios of mortality rates in 2050–2055 versus 2010–2015 in China were 0.68 (95% PI: 0.35–1.02) for individuals aged 5–64 years, 0.50 (95% PI: 0.26–0.73) for individuals aged 65–74 years, and 0.83 (95% PI: 0.61–1.05) for individuals aged ≥75 years. Because no projection data for city-level cause-specific and seasonal mortality rates were available in China, we assumed constant daily mortality counts for each city in the future when estimating future cause-specific and seasonal ozone-related acute excess mortality.</em>"</p>
+<p>To break down this excerpt into discrete steps:</p>
+<ul>
+<li>load the appropriate packages</li>
+<li>Use life expectancies and mathematical parameters to estimate mortality rates</li>
+<li>Aggregate mortality rates into age brackets (5-64, 65-74, ≥75)</li>
+<li>Calculate mortality rate changing ratios to adjust mortality counts for future scenarios</li>
+</ul>
+</div>
+</div>
+<div id="analysis" class="section level2">
+<h2>Analysis</h2>
+<p>As the excerpt notes, the <a href="https://cran.r-project.org/web/packages/MortCast/MortCast.pdf">MortCast package</a> provides the data and algorithms for projecting life expectancies and mortality rates. The package vignette provides an easy step-by-step process for projecting life expectancies and mortality rates.</p>
+<p>MortCast loads the <a href="https://cran.r-project.org/web/packages/wpp2017/wpp2017.pdf">wpp2017</a> package as a dependency, meaning the wpp2017 package will load whenever MortCast is loaded, and the data available in wpp2017 will be available for analysis. wpp2017 is the 2017 revision of the World Population Prospects available from the United Nations Population Division. The datasets historical and future mortality rates for men and women (mxM and mxF, respectively), historic life expectancies with one entry per country (e0M an e0F), and projected life expectancies (e0Mproj and e0Fproj). The projected data also includes lower and upper 80 and 95% confidence values denoted by a number, 80 or 95, and a letter, u or l (i.e. e0Fproj80l for the lower 80% confidence interval).</p>
+<p>A quick look at the mxM dataset shows that each row denotes a separate age group within a given geographic area, either a country, region, or globally. The following columns indicate the mortality rates from 1950 through 2095 in five-year increments.</p>
+<pre class="r"><code>library(MortCast)
+library(tidyverse)
+
+data(mxM, mxF, e0F, e0M, e0Fproj, e0Mproj, package = &quot;wpp2017&quot;)
+
+head(mxM)[,1:6]</code></pre>
+<pre><code>##   country_code age  name   1950-1955   1955-1960   1960-1965
+## 1          900   0 WORLD 0.165328131 0.150482547 0.139673526
+## 2          900   1 WORLD 0.021953698 0.019297510 0.017989641
+## 3          900   5 WORLD 0.006525011 0.005604632 0.005010102
+## 4          900  10 WORLD 0.003927849 0.003301526 0.003042159
+## 5          900  15 WORLD 0.004791867 0.004196964 0.003711798
+## 6          900  20 WORLD 0.005960807 0.005232142 0.004545673</code></pre>
+<p>The mortality rate datasets can be subset for a specific country (“United States of America”), and then extrapolated into higher age brackets using the Coherent Kannisto method.</p>
+<pre class="r"><code>country &lt;- &quot;United States of America&quot;
+mxm &lt;- subset(mxM, name == country)[,4:16] %&gt;% 
+  slice(-2)
+mxf &lt;- subset(mxF, name == country)[,4:16] %&gt;% 
+  slice(-2)
+rownames(mxm) &lt;- rownames(mxf) &lt;- c(0, seq(5, 100, by=5))</code></pre>
+<pre class="r"><code># Step 1: extrapolate from 100+ to 130+ using Coherent Kannisto
+mx.cokannisto &lt;- cokannisto(mxm, mxf, proj.ages = seq(100, 130, by = 5))</code></pre>
+<p>The projected mortality rates serve as the input for estimating the Coherent Lee-Carter parameters.</p>
+<pre class="r"><code># Steps 2-5: estimate coherent Lee-Carter parameters
+lc.est &lt;- lileecarter.estimate(mx.cokannisto$male, mx.cokannisto$female, 
+                               ax.index = ncol(mx.cokannisto$male), ax.smooth = TRUE)</code></pre>
+<p>The projected mortality rates and Lee-Carter parameters then serve to predict future mortality rates.</p>
+<pre class="r"><code># Steps 6-9: project future mortality rates based on future 
+# life expectancies from WPP2017
+
+# add 2010-2015 from E0F and E0M to the projections, which start with 2015-2020
+e0f &lt;- as.numeric(cbind(subset(e0F, name == country)[,ncol(e0F)], subset(e0Fproj, name == country)[-(1:2)]))
+e0m &lt;- as.numeric(cbind(subset(e0M, name == country)[,ncol(e0M)], subset(e0Mproj, name == country)[-(1:2)]))
+names(e0f) &lt;- names(e0m) &lt;- c(&quot;2010-2015&quot;, colnames(e0Fproj)[-(1:2)])
+
+# output: predict age-specific mortality rates
+# input: future life expectancies for male and female (e0m and e0f) projected using CR Lee-Carter parameters
+pred &lt;- mortcast(e0m, e0f, lc.est) 
+
+pred$female$mx[,1:8]</code></pre>
+<pre><code>##        2010-2015    2015-2020    2020-2025    2025-2030    2030-2035
+## 0   1.727865e-03 1.454915e-03 1.243351e-03 1.081951e-03 9.504432e-04
+## 5   1.872370e-04 1.794287e-04 1.699460e-04 1.582135e-04 1.465218e-04
+## 10  5.174517e-05 4.549989e-05 4.024617e-05 3.582261e-05 3.203014e-05
+## 15  7.145375e-05 6.103565e-05 5.275868e-05 4.625510e-05 4.087172e-05
+## 20  2.142758e-04 1.960232e-04 1.789339e-04 1.625921e-04 1.477484e-04
+## 25  4.304136e-04 4.115805e-04 3.891644e-04 3.618923e-04 3.348557e-04
+## 30  5.636836e-04 5.375073e-04 5.070990e-04 4.708712e-04 4.351934e-04
+## 35  6.925988e-04 6.495049e-04 6.046831e-04 5.566140e-04 5.109450e-04
+## 40  9.506549e-04 8.816279e-04 8.135491e-04 7.445344e-04 6.803447e-04
+## 45  1.457305e-03 1.349826e-03 1.244374e-03 1.138080e-03 1.039438e-03
+## 50  2.204266e-03 2.039974e-03 1.879343e-03 1.718052e-03 1.568600e-03
+## 55  3.176847e-03 2.934189e-03 2.698850e-03 2.464652e-03 2.248416e-03
+## 60  4.347429e-03 3.978109e-03 3.632026e-03 3.300754e-03 2.999724e-03
+## 65  6.473885e-03 5.910431e-03 5.386472e-03 4.889359e-03 4.439313e-03
+## 70  1.025731e-02 9.368684e-03 8.541980e-03 7.757275e-03 7.046534e-03
+## 75  1.758108e-02 1.615121e-02 1.481319e-02 1.353546e-02 1.237102e-02
+## 80  3.250012e-02 3.016524e-02 2.795754e-02 2.582666e-02 2.386344e-02
+## 85  6.481210e-02 6.115268e-02 5.763470e-02 5.418056e-02 5.094214e-02
+## 90  1.323046e-01 1.276102e-01 1.229959e-01 1.183604e-01 1.139118e-01
+## 95  2.488257e-01 2.449055e-01 2.409727e-01 2.369377e-01 2.329811e-01
+## 100 4.078917e-01 4.068321e-01 4.057547e-01 4.046339e-01 4.035193e-01
+## 105 5.634965e-01 5.627641e-01 5.620185e-01 5.612417e-01 5.604682e-01
+## 110 7.085975e-01 7.081369e-01 7.076676e-01 7.071784e-01 7.066909e-01
+## 115 8.217117e-01 8.214446e-01 8.211724e-01 8.208885e-01 8.206055e-01
+## 120 8.971328e-01 8.969870e-01 8.968383e-01 8.966833e-01 8.965287e-01
+## 125 9.427325e-01 9.426559e-01 9.425778e-01 9.424963e-01 9.424151e-01
+## 130 9.728245e-01 9.727850e-01 9.727447e-01 9.727027e-01 9.726607e-01
+##        2035-2040    2040-2045    2045-2050
+## 0   8.429618e-04 7.473769e-04 6.611234e-04
+## 5   1.349762e-04 1.234396e-04 1.121889e-04
+## 10  2.877118e-05 2.577503e-05 2.300796e-05
+## 15  3.640256e-05 3.238600e-05 2.873451e-05
+## 20  1.342653e-04 1.214303e-04 1.092958e-04
+## 25  3.082758e-04 2.817821e-04 2.559847e-04
+## 30  4.003191e-04 3.656688e-04 3.319963e-04
+## 35  4.677056e-04 4.255167e-04 3.849865e-04
+## 40  6.207383e-04 5.632391e-04 5.084044e-04
+## 45  9.480277e-04 8.599575e-04 7.760356e-04
+## 50  1.430300e-03 1.297165e-03 1.170370e-03
+## 55  2.048976e-03 1.857363e-03 1.675108e-03
+## 60  2.726180e-03 2.465722e-03 2.219439e-03
+## 65  4.031797e-03 3.644608e-03 3.279012e-03
+## 70  6.402661e-03 5.790612e-03 5.212407e-03
+## 75  1.130966e-02 1.029441e-02 9.328979e-03
+## 80  2.205440e-02 2.030461e-02 1.862119e-02
+## 85  4.790567e-02 4.491593e-02 4.198548e-02
+## 90  1.096422e-01 1.053371e-01 1.010108e-01
+## 95  2.291016e-01 2.251030e-01 2.209913e-01
+## 100 4.024110e-01 4.012520e-01 4.000422e-01
+## 105 5.596979e-01 5.588914e-01 5.580482e-01
+## 110 7.062051e-01 7.056961e-01 7.051636e-01
+## 115 8.203234e-01 8.200277e-01 8.197183e-01
+## 120 8.963746e-01 8.962130e-01 8.960439e-01
+## 125 9.423340e-01 9.422491e-01 9.421602e-01
+## 130 9.726189e-01 9.725751e-01 9.725292e-01</code></pre>
+<p>We see that the mortality rates in China are all greatly reduced between 2015-2095 (bear in mind that the plot uses a log scale to allow all the age groups to be plotted concurrently).</p>
+<pre class="r"><code>pred.plot.data &lt;- 
+pred$female$mx %&gt;% 
+  cbind(age_group = row.names(.)) %&gt;% 
+  as_tibble() %&gt;% 
+  gather(key = year, value = mort.rate, -age_group) %&gt;% 
+  mutate(year = as.numeric(stringr::str_replace(year, &quot;-.*&quot;, &quot;&quot;))) %&gt;% 
+  mutate(mort.rate = round(as.numeric(mort.rate), 5),
+         age_group = as.numeric(age_group)) 
+
+
+library(directlabels)
+
+pred.plot.data %&gt;% 
+  ggplot(., aes(x = year, y = mort.rate, group = age_group, color = age_group)) +
+  theme(legend.title = element_text(&quot;Age Group&quot;))+
+  labs(title = &quot;Projected Mortality Rates (2015-2095)&quot;,
+       y = &quot;Mortality Rate&quot;)+
+  scale_color_gradient(low = &quot;red&quot;, high = &quot;blue&quot;)+
+  scale_y_log10()+
+  geom_line()  +
+  geom_dl(aes(label = age_group), method = list(dl.combine(&quot;last.points&quot;), cex = 0.8)) +
+  guides(color=FALSE)</code></pre>
+<p><img src="/post/2018-10-22/mortality-rate-projections_files/figure-html/unnamed-chunk-6-1.png" width="672" style="display: block; margin: auto;" /></p>
+<p>The ultimate purposes of the projected mortality rates is to determine the ratio of future to present mortality rates within age groups in 2050-2055 versus 2010-2015. I have attempted to reproduce these results in many ways: using the wpp2017 data by itself, weighting the projected mortality rates by the population projections under the five shared socioeconomic projections, and through age-group standardization relative to a single population projection scenario. Unfortunately, I have been unable to produce the results exactly. I suspect that the issues arise either becaue the article uses mortality rates that are directly related to the Chinese mortality counts (this data is unavailable publicly) or the exact weighting or projections are not clear.</p>
+<p>Update: The co-authors were willing to share the code snippet with me and I have reproduced the article’s mortality rate ratios. The co-authors used the upper and lower 95% confidence interval datasets in the wpp2017 package to produce the median values and also aggregate the age bands using the accompanying population projection datasets. Because I did not produce the analysis, I will not share the code, however I am sure the co-authors would be willing to share it with other enthusiasts.</p>
+</div>
+
+      </div>
+      
+      
+      
+      <div class="pt-4 mt-2 border-top">
+        <div class="d-inline mr-auto small text-muted post-meta mb-1">
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        </div>
+        
+        
+        
+      
+      
+      
+      
+      
+        <div class="mt-3">
+        <span class="">Tags:</span>&nbsp;&nbsp;&nbsp;<a href="/tags/r"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">R</span></a><a href="/tags/forecasting"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">FORECASTING</span></a><a href="/tags/analysis"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">ANALYSIS</span></a></div>
+      
+      
+      </div>
+      
+    </div>
+  </div>
+  
+  
+  
+</div>
+
+    </div><footer class="text-center p-2 text-muted footer">
+  
+    
+    <div class="py-2 lead">
+      
+        
+          <a class="ml-2" href="https://github.com/danbernstein"><span class="fab fa-github" aria-label="Join us on Github"></span></a>
+        
+      
+        
+          <a class="ml-2" href="https://twitter.com/danbernstein18"><span class="fab fa-twitter" aria-label="Join us on Twitter"></span></a>
+        
+      
+    </div>
+    
+  
+
+  
+
+  <div class="py-2 copyright">
+    <small>Copyright &#169; 2020 Dan Bernstein <b>&#183;</b> Content license: CC-BY-SA-3.0 <b>&#183;</b> Powered by <a class="font-weight-bold text-reset text-decoration-none" href="https://gohugo.io">Hugo</a> <b>&#183;</b> Theme <a class="font-weight-bold text-reset text-decoration-none" href="">Shadows</a> by <span class="softorage"><a class="font-weight-bold text-reset" href="https://softorage.com">Softorage</a></span></small>
+  </div>
+</footer>
+
+    
+    
+    
+    <script src="/assets/js/main.min.6ff0d57b7558f0225c80bade926a349330bc25d85e7ceff50d911f1156023c3e.js" integrity="sha256-b/DVe3VY8CJcgLrekmo0kzC8JdhefO/1DZEfEVYCPD4=" crossorigin="anonymous"></script>
+    <script src="/assets/js/custom.min.c8274a0cac0477f854e63f09626cc63858bb2bc9db8faecbb2834846952c7fd6.js" integrity="sha256-yCdKDKwEd/hU5j8JYmzGOFi7K8nbj67LsoNIRpUsf9Y=" crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Lato&display=swap" rel="stylesheet">
+    
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+  </body>
+</html>
