@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+  
+    
+      
+
+
+
+
+
+
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Forecasting: Population Projections | Data By Dan</title>
+<meta name="title" content="Forecasting: Population Projections | Data By Dan" />
+<meta name="description" content="This is the second in a series of posts that seek to recreate the methods used in Future ozone-related acute excess mortality under climate and population change scenarios in China: A modeling study. All the posts build on my previous post on forecasting, by using data available from national and international research initatives to project future scenarios for complex systems including atmospheric chemistry, population dynamics, and mortality. This post focuses on the second projection: population dynamics."> 
+
+
+<link rel="canonical" href="https://danbernstein.netlify.app/post/2018-10-09-forecasting-population-projects/" />
+
+
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:description" content="" /> 
+  <meta name="twitter:title" content="Forecasting: Population Projections | Data By Dan" />
+  <meta name="twitter:url" content="https://danbernstein.netlify.app/post/2018-10-09-forecasting-population-projects/" />
+  <meta name="twitter:site" content="@Softorage" /> 
+  <meta name="twitter:creator" content="@Softorage" /> 
+   
+
+
+
+  
+  <meta property="og:title" content="Forecasting: Population Projections | Data By Dan" />
+  <meta property="og:description" content="" /> 
+  <meta property="og:site_name" content="Data By Dan" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://danbernstein.netlify.app/post/2018-10-09-forecasting-population-projects/" />
+  
+   
+
+
+
+<meta property="article:published_time" content="2018-10-09 00:00:00 &#43;0000 UTC" />
+
+
+  
+  
+  <script type="application/ld+json">
+      { 
+          "@context": "http://schema.org", 
+          "@type": "BlogPosting",
+          "headline": "Forecasting: Population Projections",
+          
+          "url": "https://danbernstein.netlify.app/",
+          
+          "datePublished": "2018-10-09T00:00:00Z",
+          
+          
+          "dateModified": "2018-10-09T00:00:00Z",
+          
+          "description": ,
+          
+          
+          "author": {
+              "@type": "Person",
+              "name": "Dan"
+          },
+          
+          "publisher": {
+            "@type": "Organization",
+            "name": "Dan Bernstein",
+            "logo": {
+              "@type": "ImageObject",
+              "url": ""
+            }
+          },
+          
+          "sameAs" : [
+            
+            
+              "https://github.com/danbernstein",  
+            
+              "https://twitter.com/danbernstein18"
+            ]
+          
+        }
+      </script>
+  
+
+
+    
+    <meta name="generator" content="Hugo 0.76.4" />
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/assets/css/main.min.640c7db3aa8bb5e109570ad983be6a38ed5af9bb464dd329d1a91e14ff9f331e.css" integrity="sha256-ZAx9s6qLteEJVwrZg75qOO1a&#43;btGTdMp0akeFP&#43;fMx4=" crossorigin="anonymous">
+  
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+  
+  <link rel=apple-touch-icon sizes=180x180 href=https://danbernstein.netlify.app//assets/favicon/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://danbernstein.netlify.app//assets/favicon/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=https://danbernstein.netlify.app//assets/favicon/favicon-16x16.png><link rel=manifest href=https://danbernstein.netlify.app//assets/favicon/site.webmanifest><link rel=mask-icon href=https://danbernstein.netlify.app//assets/favicon/safari-pinned-tab.svg color=#7817c4><link rel=icon href=https://danbernstein.netlify.app//assets/favicon/favicon.ico type=image/x-icon><link rel="shortcut icon" href=https://danbernstein.netlify.app//assets/favicon/favicon.ico type=image/x-icon><meta name=apple-mobile-web-app-title content="Vibrant Shadows Theme"><meta name=application-name content="Vibrant Shadows Theme"><meta name=msapplication-TileColor content="#ffffff"><meta name=theme-color content="#ffffff">
+  
+  
+  
+  <meta name="theme-color" content="#fff6f8">
+  
+  <meta name="msapplication-navbutton-color" content="#fff6f8">
+  
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  
+</head>
+<body><header>
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top flex-column">
+    <div class="container-fluid">
+      
+      <a class="navbar-brand rounded px-3" href="https://danbernstein.netlify.app/"><span class="text-nav"><span class="brand">&nbsp;&nbsp;Data By Dan</span></span></a>
+      
+      
+        <a class="navbar-toggler border-0 bg-nav p-2" role="button" href="#" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="text-clr2">&#9776;</span>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-md-auto">
+             
+            
+              
+                <li class="nav-item mx-1 my-2">
+                  <a class="btn bg-nav text-clr1" href="/menu/about-dan/">About Dan</a>
+                </li>
+              
+            
+              
+                <li class="nav-item mx-1 my-2">
+                  <a class="btn bg-nav text-clr1" href="/menu/what-i-m-reading">What I Am Reading</a>
+                </li>
+              
+            
+          </ul>
+          
+            
+          
+        </div>
+      
+    </div>
+    
+  </nav>
+</header>
+<div id="content">
+<div class="container-fluid bg-clr1 text-nav text-center pb-3 pt-4 position-relative shadow">
+  <div style="height:3.5rem;"></div>
+  <h1>Forecasting: Population Projections</h1>
+  <p class="description"></p>
+</div>
+<div class="container-fluid bg-nav p-4">  
+  <div class="row">
+ 
+    <div class="col-md-auto">
+ 
+        
+      
+      <div class="py-1">
+        <div class="d-inline mr-auto small text-muted post-meta"></span>
+        
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        By Dan &#183; 9 min read &#183; <span class=''>Last updated: October 9, 2018</div>
+        
+        
+        
+        <div class="d-inline ml-auto float-right">
+          Share on:&nbsp;&nbsp;
+          <span class="lead">
+            
+              <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-10-09-forecasting-population-projects%2f&quote=Forecasting%3a%20Population%20Projections" rel="noreferrer nofollow" target="_blank" title="Share on Facebook" aria-label="Share on Facebook"><span class="fab fa-facebook"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-10-09-forecasting-population-projects%2f&text=Forecasting%3a%20Population%20Projections:%0Ahttps%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-10-09-forecasting-population-projects%2f" rel="noreferrer nofollow" target="_blank" title="Share on Twitter" aria-label="Share on Twitter"><span class="fab fa-twitter"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-10-09-forecasting-population-projects%2f&title=Forecasting%3a%20Population%20Projections&summary=&source=Data%20By%20Dan" rel="noreferrer nofollow" target="_blank" title="Share on LinkedIn" aria-label="Share on LinkedIn"><span class="fab fa-linkedin"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://t.me/share/url?url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-10-09-forecasting-population-projects%2f&text=Forecasting%3a%20Population%20Projections" rel="noreferrer nofollow" target="_blank" title="Share on Telegram" aria-label="Share on Telegram"><span class="fab fa-telegram"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="whatsapp://send?text=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-10-09-forecasting-population-projects%2f%0A%0AForecasting%3a%20Population%20Projections" data-text="Forecasting: Population Projections" data-href="https://danbernstein.netlify.app/post/2018-10-09-forecasting-population-projects/" rel="noreferrer nofollow" target="_blank" title="Share on Whatsapp" aria-label="Share on Whatsapp"><span class="fab fa-whatsapp"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://reddit.com/submit?url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-10-09-forecasting-population-projects%2f&title=Forecasting%3a%20Population%20Projections" rel="noreferrer nofollow" target="_blank" title="Share on Reddit" aria-label="Share on Reddit"><span class="fab fa-reddit"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="mailto:?subject=Forecasting%3a%20Population%20Projections&body=%0A%0Ahttps%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-10-09-forecasting-population-projects%2f" target="_blank" title="Share via email" aria-label="Share via email"><span class="fas fa-envelope"></span></a>
+            
+          </span>
+        </div>
+        
+        
+        
+          <div class="pt-2 pb-3">
+          <span class="">Tags:</span>&nbsp;&nbsp;&nbsp;<a href="/tags/r"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">R</span></a><a href="/tags/forecasting"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">FORECASTING</span></a><a href="/tags/analysis"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">ANALYSIS</span></a></div>
+        
+        
+      </div>
+      
+      
+      <div class="py-3">
+      <p><em>This is the second in a series of posts that seek to recreate the methods used in <a href="https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002598#sec014">Future ozone-related acute excess mortality under climate and population change scenarios in China: A modeling study</a>. All the posts build on my previous post on <a href="https://danbernstein.netlify.com/post/learning-forecasting/">forecasting</a>, by using data available from national and international research initatives to project future scenarios for complex systems including <a href="https://danbernstein.netlify.com/post/climate-modeling/">atmospheric chemistry</a>, <a href="https://danbernstein.netlify.com/post/population-projections/">population dynamics</a>, and mortality. This post focuses on the second projection: population dynamics.</em></p>
+<p>The previous post discussed how to project future ozone concentrations using global climate models of historical and future climate scnearios and observational monitoring data. This post will describe methods for projecting future population dynamics. In the next post, the population projections will be related to age-specific mortality rates, which will ultimately be attributed to various causes to identify the number of additional deaths due to projected ozone concentration changes.</p>
+<h2 id="methods-projecting-future-population-dynamics-under-various-scenarios">Methods: Projecting Future Population Dynamics under Various Scenarios</h2>
+<h3 id="overview-of-analysis"><em>Overview of Analysis</em></h3>
+<p>The workflow for this analysis involves recreating the methods used in the PLOS Medicine article.</p>
+<p><em>&ldquo;Chinese population size projections between 2010 and 2050 for all ages under the 5 SSPs at 0.125° × 0.125° resolution were extracted from the global projections [44]. City-level population projections were then calculated by summing the populations of each grid cell that fell within a certain city boundary. Chinese population age structure changes between 2010 and 2050 under the 5 SSPs were obtained from the SSP Database (<a href="https://tntcat.iiasa.ac.at/SspDb).%22">https://tntcat.iiasa.ac.at/SspDb).&quot;</a></em></p>
+<p>Shared socioeconomic pathways (SSPs) are agreed-upon assumptions concerning future changes in societal characteristics, such as migration, demographics, etc. The referenced article focuses on urban populations, thus the authors used a collection of SSPs that consider varying levels of fertility, mortality, migration, education, and urbanization.</p>
+<p>To break down this excerpt into discrete steps:</p>
+<h4 id="for-city-population-projections">For city population projections:</h4>
+<ul>
+<li>load the appropriate packages</li>
+<li>Collect population size projection data for the 5 SSPs at 0.125 resolution</li>
+<li>Overlay the population projection data with city geographic extent data to sum the projected city population</li>
+</ul>
+<h4 id="for-national-population-age-structure-projections">For national population age structure projections:</h4>
+<ul>
+<li>Collect age structure data for the 5 SSPs from SSP Database</li>
+</ul>
+<h2 id="analysis---city-population-projections">Analysis - City Population Projections</h2>
+<p>This post is less about analysis and more about finding the appropriate dataset and processing it in an efficient manner. Concerning city population projections, there are five files within the downloaded data (available from the National Center for Atmospheric Research <a href="http://www.cgd.ucar.edu/iam/modeling/spatial-population-scenarios.html">here</a>) which represent the 5 SSPs. Within each SSP file, there are population projections for urban, rural, and total population; in this situation, we are interested in total population because we will filter the data geospatially.</p>
+<pre><code class="language-{r" data-lang="{r">
+library(tidyverse)
+library(raster) # to load NetCDF (.nc) files
+library(spdplyr) # to process spatial* data with the tools in dplyr
+
+# the path to main directory 
+data.path &lt;- &quot;/home/dan/data/climate_tro3/raw_data/NCAR_population/NetCDF&quot;
+
+list.files(data.path)
+</code></pre><p>Following the file path for one of these SSPs yields more files, there is one file for each ten-year dataset; in this case, ten files for the years 2010-2100. Between the five SSPs and the ten time points within each SSP, there are 50 separate projections to consider and analyze.</p>
+<pre><code class="language-{r," data-lang="{r,">
+data.path.ssp &lt;- &quot;/home/dan/data/climate_tro3/raw_data/NCAR_population/NetCDF/SSP1_NetCDF/total/NetCDF&quot;
+
+list.files(data.path.ssp)
+</code></pre><p>Understanding the file structure and which ones are of interest, I can filter the listed files for only those that are .nc files and contain the total population projection, rather than urban or rural alone.</p>
+<pre><code class="language-{r," data-lang="{r,"># prepare data frame of files to loop across
+files &lt;- list.files(data.path, all.files = T, recursive = T,
+                    full.names = T,
+                    pattern = &quot;.nc&quot;) %&gt;% 
+  tibble() %&gt;% 
+  set_names(c(&quot;file.path&quot;)) %&gt;% 
+  filter(grepl(&quot;total&quot;, file.path) == TRUE,
+         grepl(&quot;aux.xml&quot;, file.path) == FALSE)
+
+head(files)
+</code></pre><p>I can then prepare a data frame containing the name of each projection (SSP number and year time point) which will soon be populated by the populations contained in the population projection files.</p>
+<pre><code class="language-{r" data-lang="{r">file.names &lt;- str_extract(string = files$file.path, 
+                          pattern = &quot;(?&lt;=total/NetCDF/).*(?=.nc)&quot;) %&gt;% 
+  data_frame(&quot;ssp&quot; = ., &quot;pop&quot; = vector(mode = &quot;numeric&quot;, length = 50))
+
+
+head(file.names)
+</code></pre><p>I created a function <code>getPop()</code> which takes in the name of a city and will take the geographic coordinates from a <a href="https://geo.nyu.edu/catalog/stanford-yk247bg4748">shapefile</a> of world urban areas at 1:10 million scale (available from the <a href="https://geo.nyu.edu/">NYU spatial data repository</a>). The function loads the urban areas shapefile if it does not already exist, and then filters for the city of interest. This filtered shapefile is then looped through the 50 NetCDF files to extract the sum of the grid cells that fall within the shapefile&rsquo;s geographic coordinates. The final dataframe (&ldquo;city.return&rdquo;) contains the 50 scenarios and the associated population that was extracted at each time point.</p>
+<pre><code class="language-{r" data-lang="{r">getPop &lt;- function(city){
+  require(spdplyr)
+
+  if (!exists(&quot;urban_areas&quot;, where = -1)) {
+    urban_areas &lt;- raster::shapefile(&quot;/home/dan/data/climate_tro3/raw_data/NCAR_population/urban_area_global_nyu/ne_10m_urban_areas_landscan&quot;)
+    } else {
+      urban_areas &lt;- get(&quot;urban_areas&quot;)
+      }
+  
+  loc &lt;- filter(urban_areas, name_conve == city)
+  ssp.pop &lt;- file.names
+  
+  for (i in 1:nrow(files)){
+    # read in each raster
+    pop &lt;- raster(files$file.path[i])
+    
+    # retrieve the total population within the geospatial locations of the city
+    ssp.pop$pop[i] &lt;- extract(pop, loc, fun=sum, na.rm=TRUE)
+    
+    # remove the raster of the ssp to preserve memory
+    remove(pop)
+  }
+  
+  return(ssp.pop)
+}
+
+city.return &lt;- getPop(city = &quot;New York&quot;)
+
+print(city.return)
+</code></pre><p>We can plot the five population projections in ggplot, with an additional horizontal line that represents no population change. Clearly SSP5 includes large population growth, while SSP3 and SSP4 show the population of New York City peaking at 2050 and 2075, respectively, and then declining. The other scenarios assume a plateau effect.</p>
+<pre><code class="language-{r" data-lang="{r">city.return %&gt;% 
+  separate(ssp, c(&quot;ssp&quot;, &quot;year&quot;), sep = &quot;_&quot;, convert = T) %&gt;% 
+  ggplot(., aes(x = year, y = pop, colour = ssp))+
+  ylab(&quot;population&quot;)+
+  geom_line()+
+  geom_segment(aes(x=min(year),xend=max(year),y=pop[1],yend=pop[1]),
+               colour = &quot;red&quot;)
+</code></pre><h2 id="analysis---national-age-structure-projections">Analysis - National Age Structure Projections</h2>
+<p>Data for national age structure projections are readily available from the SSP Database. While the website provides a great, user-friendly interface for filtering the data before you download a subset, in this instances, we want to get data for every age bracket for every SSP at once, rather than downloading numerous files. To do so, we navigate to the &ldquo;Download&rdquo; tab and download the country-level csv zip file &ldquo;SspDb_country_data_2013-06-12.csv.zip&rdquo;.</p>
+<pre><code class="language-{r," data-lang="{r,">agestr &lt;- read_csv(&quot;/home/dan/data/climate_tro3/raw_data/NCAR_population/china_agestructure/SspDb_country_data_2013-06-12.csv&quot;)
+
+</code></pre><p>With a little data wrangling, I have cleaned up the data including: filtering for the United States (&ldquo;USA&rdquo;), cleaning the SSP names, and filtering the rows for only those that pertain to age brackets.</p>
+<pre><code class="language-{r," data-lang="{r,">agestr.country &lt;- 
+  agestr %&gt;% 
+  filter(REGION == &quot;USA&quot;) %&gt;% 
+  # reduce ssp names to SSP1-5 (also remove one instance where the letter &quot;d&quot; is appended)
+  mutate(ssp = str_replace_all(SCENARIO, &quot;\\_[a-z,0-9]*|d&quot;, &quot;&quot;)) %&gt;% 
+  # select relevant variables and only years with future population projections
+  dplyr::select(REGION, VARIABLE, UNIT, ssp,
+    one_of(as.character(seq(2010, 2100, by = 5)))) %&gt;% 
+  # filter rows with age bracket projections
+  filter(str_detect(VARIABLE, &quot;Aged&quot;),
+          !str_detect(VARIABLE, &quot;Education|PPP|Share&quot;)) %&gt;% 
+  # clean up variable names
+  mutate(VARIABLE = str_remove_all(VARIABLE, &quot;Population\\||Aged&quot;)) %&gt;% 
+  separate(VARIABLE, c(&quot;gender&quot;, &quot;age_group&quot;), sep = &quot;\\|&quot;) %&gt;% 
+  gather(key = year, value = population, -c(REGION, gender, age_group, UNIT, ssp))
+
+
+head(agestr.country)
+</code></pre><p>We can visualize the population dynamics for women for every age bracket under all five SSP scenarios using <code>facet_grid()</code>. Similar to the results from the urban population projections, SSP5 shows large population growth in most age brackets, while SSP3 and SSP4 shows a peak and then a decline for most age brackets.</p>
+<pre><code class="language-{r," data-lang="{r,">agestr.country %&gt;% 
+  filter(gender == &quot;Female&quot;) %&gt;% 
+  ggplot(., aes(x = year, y = population, group = age_group, colour = age_group)) +
+  theme(axis.text.x = element_blank(),
+        legend.title = element_text(&quot;Age Group&quot;))+
+  labs(title = &quot;Population Change by Age Group Under 5 Shared Socioeconomic Pathways&quot;,
+       color = &quot;Age Group&quot;)+
+  geom_line() +
+  facet_grid(vars(ssp))
+</code></pre>
+      </div>
+      
+      
+      
+    </div>
+  </div>
+  
+  
+  
+</div>
+
+    </div><footer class="text-center p-2 text-muted footer">
+  
+    
+    <div class="py-2 lead">
+      
+        
+          <a class="ml-2" href="https://github.com/danbernstein"><span class="fab fa-github" aria-label="Join us on Github"></span></a>
+        
+      
+        
+          <a class="ml-2" href="https://twitter.com/danbernstein18"><span class="fab fa-twitter" aria-label="Join us on Twitter"></span></a>
+        
+      
+    </div>
+    
+  
+
+  
+
+  <div class="py-2 copyright">
+    <small>Copyright &#169; 2020 Dan Bernstein <b>&#183;</b> Content license: CC-BY-SA-3.0 <b>&#183;</b> Powered by <a class="font-weight-bold text-reset text-decoration-none" href="https://gohugo.io">Hugo</a> <b>&#183;</b> Theme <a class="font-weight-bold text-reset text-decoration-none" href="">Shadows</a> by <span class="softorage"><a class="font-weight-bold text-reset" href="https://softorage.com">Softorage</a></span></small>
+  </div>
+</footer>
+
+    
+    
+    
+    <script src="/assets/js/main.min.6ff0d57b7558f0225c80bade926a349330bc25d85e7ceff50d911f1156023c3e.js" integrity="sha256-b/DVe3VY8CJcgLrekmo0kzC8JdhefO/1DZEfEVYCPD4=" crossorigin="anonymous"></script>
+    <script src="/assets/js/custom.min.c8274a0cac0477f854e63f09626cc63858bb2bc9db8faecbb2834846952c7fd6.js" integrity="sha256-yCdKDKwEd/hU5j8JYmzGOFi7K8nbj67LsoNIRpUsf9Y=" crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Lato&display=swap" rel="stylesheet">
+    
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+  </body>
+</html>

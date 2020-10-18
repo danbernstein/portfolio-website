@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Menus on Data By Dan</title>
+    <link>https://danbernstein.netlify.app/menu/</link>
+    <description>Recent content in Menus on Data By Dan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
+    <lastBuildDate>Sat, 17 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://danbernstein.netlify.app/menu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What I Am Reading</title>
+      <link>https://danbernstein.netlify.app/menu/what-i-m-reading/</link>
+      <pubDate>Sat, 17 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/menu/what-i-m-reading/</guid>
+      <description>Table 1: Currently Reading    Title  Author  Date Started      State Tectonics (The Centenal Cycle, #3)  Malka Ann Older  October 18, 2020    Saving Capitalism: For the Many, Not the Few  Robert B. Reich  October 18, 2020    The Elephant Keepers’ Children  Peter Høeg  October 18, 2020      Table 2: Recently Read    Title  Author  Date Started  Date Finished      The Future of Another Timeline  Annalee Newitz  –  –    Automating Inequality: How High-Tech Tools Profile, Police, and Punish the Poor  Virginia Eubanks  –  –    Strangers in Their Own Land: Anger and Mourning on the American Right  Arlie Russell Hochschild  –  –    The Bright Hour: A Memoir of Living and Dying  Nina Riggs  –  –    Trick Mirror: Reflections on Self-Delusion  Jia Tolentino  –  –    Dark Data: Why What You Don’t Know Matters  David J.</description>
+    </item>
+    
+    <item>
+      <title>About Dan</title>
+      <link>https://danbernstein.netlify.app/menu/about-dan/</link>
+      <pubDate>Mon, 14 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/menu/about-dan/</guid>
+      <description>I want to improve our social systems – social services, public health, environment, transportation – to make them more efficient and impactful for those in need. I like to create and explore new data sources to generate insights and draw conclusions about the world. I have experience collaborating with non-profits to make data more accessible for non-technical audiences.</description>
+    </item>
+    
+  </channel>
+</rss>

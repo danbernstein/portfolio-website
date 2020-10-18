@@ -18,12 +18,50 @@
     </item>
     
     <item>
-      <title>Mortality Rate Projections</title>
+      <title>Forecasting: Mortality Rate Projections</title>
       <link>https://danbernstein.netlify.app/post/2018-10-22/mortality-rate-projections/</link>
       <pubDate>Mon, 22 Oct 2018 00:00:00 +0000</pubDate>
       
       <guid>https://danbernstein.netlify.app/post/2018-10-22/mortality-rate-projections/</guid>
       <description>This is the third in a series of posts that seek to recreate the methods used in Future ozone-related acute excess mortality under climate and population change scenarios in China: A modeling study. All the posts build on my previous post on forecasting, by using data available from national and international research initatives to project future scenarios for complex systems including atmospheric chemistry, population dynamics, and mortality. This post focuses on the third projection: mortality rate.</description>
+    </item>
+    
+    <item>
+      <title>Forecasting: Population Projections</title>
+      <link>https://danbernstein.netlify.app/post/2018-10-09-forecasting-population-projects/</link>
+      <pubDate>Tue, 09 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2018-10-09-forecasting-population-projects/</guid>
+      <description>This is the second in a series of posts that seek to recreate the methods used in Future ozone-related acute excess mortality under climate and population change scenarios in China: A modeling study. All the posts build on my previous post on forecasting, by using data available from national and international research initatives to project future scenarios for complex systems including atmospheric chemistry, population dynamics, and mortality. This post focuses on the second projection: population dynamics.</description>
+    </item>
+    
+    <item>
+      <title>Forecasting: Climate Modeling</title>
+      <link>https://danbernstein.netlify.app/post/2018-09-30/climate-modeling/</link>
+      <pubDate>Sun, 30 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2018-09-30/climate-modeling/</guid>
+      <description>This is the first in a series of posts that seek to recreate the methods used in Future ozone-related acute excess mortality under climate and population change scenarios in China: A modeling study. All the posts build on my previous post on forecasting, by using data available from national and international research initatives to project future scenarios for complex systems including atmospheric chemistry, population dynamics, and mortality. This post focuses on the first projection: future change in atmospheric ozone concentrations.</description>
+    </item>
+    
+    <item>
+      <title>Forecasting</title>
+      <link>https://danbernstein.netlify.app/post/2018-09-02/learning-forecasting/</link>
+      <pubDate>Sun, 02 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2018-09-02/learning-forecasting/</guid>
+      <description>Introduction I looked into a number of resources to learn how to handle time series data and conduct educated statistical forecasting. Many of these resources jumped right into the equations and lacked a comprehensive introduction and discussion to faciliate learning. I found that a combination of two resources provided the right introduction to the self-learner, such as myself:
+Introduction to Time Series Analysis is a website available from the National Institute of Standards and Technology (NIST) Information Technology Library.</description>
+    </item>
+    
+    <item>
+      <title>Stacked Ensemble Modeling</title>
+      <link>https://danbernstein.netlify.app/post/2018-06-30/kaggle-advanced-regression/</link>
+      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2018-06-30/kaggle-advanced-regression/</guid>
+      <description>Summary I looked to Kaggle to further practice building predictive models. After optimizing single and ensemble regression techniques, I uncovered ensemble stacking as a method for building a strong predictive model from a collection of weak learners. The outcome is drastic improvements in predictive accuracy. This post will provide an overview of:
+the basics of automating data preparation using caret building stacked ensemble modelling using caretEnsemble reason through how the various models that I used improve the ensemble predictions  This post will deal less with the specifics of the dataset, and rather provide an overview of how these packages provide easy, flexible, and powerful methods for developing strong predictive models.</description>
     </item>
     
   </channel>

@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+  
+    
+      
+
+
+
+
+
+
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>The John Oliver Effect | Data By Dan</title>
+<meta name="title" content="The John Oliver Effect | Data By Dan" />
+<meta name="description" content="Background John Oliver recently discussed genetic editing on Last Week Tonight. Luckily by chance I have had an automated R script running everyday that collects all tweets that mention the term CRISPR, the leading method of genetic editing at this time. Bringing these two events together, I am interested to see how John Oliver discussing genetic editing might impact the level of social media activity surrounding the topic, represented by the tweets captured mentioned CRISPR."> 
+
+
+<link rel="canonical" href="https://danbernstein.netlify.app/post/2018-07-30/the-john-oliver-effect/" />
+
+
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:description" content="" /> 
+  <meta name="twitter:title" content="The John Oliver Effect | Data By Dan" />
+  <meta name="twitter:url" content="https://danbernstein.netlify.app/post/2018-07-30/the-john-oliver-effect/" />
+  <meta name="twitter:site" content="@Softorage" /> 
+  <meta name="twitter:creator" content="@Softorage" /> 
+   
+
+
+
+  
+  <meta property="og:title" content="The John Oliver Effect | Data By Dan" />
+  <meta property="og:description" content="" /> 
+  <meta property="og:site_name" content="Data By Dan" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://danbernstein.netlify.app/post/2018-07-30/the-john-oliver-effect/" />
+  
+   
+
+
+
+<meta property="article:published_time" content="2018-07-30 00:00:00 &#43;0000 UTC" />
+
+
+  
+  
+  <script type="application/ld+json">
+      { 
+          "@context": "http://schema.org", 
+          "@type": "BlogPosting",
+          "headline": "The John Oliver Effect",
+          
+          "url": "https://danbernstein.netlify.app/",
+          
+          "datePublished": "2018-07-30T00:00:00Z",
+          
+          
+          "dateModified": "2018-07-30T00:00:00Z",
+          
+          "description": ,
+          
+          
+          "author": {
+              "@type": "Person",
+              "name": "Dan"
+          },
+          
+          "publisher": {
+            "@type": "Organization",
+            "name": "Dan Bernstein",
+            "logo": {
+              "@type": "ImageObject",
+              "url": ""
+            }
+          },
+          
+          "sameAs" : [
+            
+            
+              "https://github.com/danbernstein",  
+            
+              "https://twitter.com/danbernstein18"
+            ]
+          
+        }
+      </script>
+  
+
+
+    
+    <meta name="generator" content="Hugo 0.76.4" />
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/assets/css/main.min.640c7db3aa8bb5e109570ad983be6a38ed5af9bb464dd329d1a91e14ff9f331e.css" integrity="sha256-ZAx9s6qLteEJVwrZg75qOO1a&#43;btGTdMp0akeFP&#43;fMx4=" crossorigin="anonymous">
+  
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+  
+  <link rel=apple-touch-icon sizes=180x180 href=https://danbernstein.netlify.app//assets/favicon/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://danbernstein.netlify.app//assets/favicon/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=https://danbernstein.netlify.app//assets/favicon/favicon-16x16.png><link rel=manifest href=https://danbernstein.netlify.app//assets/favicon/site.webmanifest><link rel=mask-icon href=https://danbernstein.netlify.app//assets/favicon/safari-pinned-tab.svg color=#7817c4><link rel=icon href=https://danbernstein.netlify.app//assets/favicon/favicon.ico type=image/x-icon><link rel="shortcut icon" href=https://danbernstein.netlify.app//assets/favicon/favicon.ico type=image/x-icon><meta name=apple-mobile-web-app-title content="Vibrant Shadows Theme"><meta name=application-name content="Vibrant Shadows Theme"><meta name=msapplication-TileColor content="#ffffff"><meta name=theme-color content="#ffffff">
+  
+  
+  
+  <meta name="theme-color" content="#fff6f8">
+  
+  <meta name="msapplication-navbutton-color" content="#fff6f8">
+  
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  
+</head>
+<body><header>
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top flex-column">
+    <div class="container-fluid">
+      
+      <a class="navbar-brand rounded px-3" href="https://danbernstein.netlify.app/"><span class="text-nav"><span class="brand">&nbsp;&nbsp;Data By Dan</span></span></a>
+      
+      
+        <a class="navbar-toggler border-0 bg-nav p-2" role="button" href="#" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="text-clr2">&#9776;</span>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-md-auto">
+             
+            
+              
+                <li class="nav-item mx-1 my-2">
+                  <a class="btn bg-nav text-clr1" href="/menu/about-dan/">About Dan</a>
+                </li>
+              
+            
+              
+                <li class="nav-item mx-1 my-2">
+                  <a class="btn bg-nav text-clr1" href="/menu/what-i-m-reading">What I Am Reading</a>
+                </li>
+              
+            
+          </ul>
+          
+            
+          
+        </div>
+      
+    </div>
+    
+  </nav>
+</header>
+<div id="content">
+<div class="container-fluid bg-clr1 text-nav text-center pb-3 pt-4 position-relative shadow">
+  <div style="height:3.5rem;"></div>
+  <h1>The John Oliver Effect</h1>
+  <p class="description"></p>
+</div>
+<div class="container-fluid bg-nav p-4">  
+  <div class="row">
+ 
+    <div class="col-md-auto">
+ 
+        
+      
+      <div class="py-1">
+        <div class="d-inline mr-auto small text-muted post-meta"></span>
+        
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        By Dan &#183; 7 min read &#183; <span class=''>Last updated: July 30, 2018</div>
+        
+        
+        
+        <div class="d-inline ml-auto float-right">
+          Share on:&nbsp;&nbsp;
+          <span class="lead">
+            
+              <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-07-30%2fthe-john-oliver-effect%2f&quote=The%20John%20Oliver%20Effect" rel="noreferrer nofollow" target="_blank" title="Share on Facebook" aria-label="Share on Facebook"><span class="fab fa-facebook"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-07-30%2fthe-john-oliver-effect%2f&text=The%20John%20Oliver%20Effect:%0Ahttps%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-07-30%2fthe-john-oliver-effect%2f" rel="noreferrer nofollow" target="_blank" title="Share on Twitter" aria-label="Share on Twitter"><span class="fab fa-twitter"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-07-30%2fthe-john-oliver-effect%2f&title=The%20John%20Oliver%20Effect&summary=&source=Data%20By%20Dan" rel="noreferrer nofollow" target="_blank" title="Share on LinkedIn" aria-label="Share on LinkedIn"><span class="fab fa-linkedin"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://t.me/share/url?url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-07-30%2fthe-john-oliver-effect%2f&text=The%20John%20Oliver%20Effect" rel="noreferrer nofollow" target="_blank" title="Share on Telegram" aria-label="Share on Telegram"><span class="fab fa-telegram"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="whatsapp://send?text=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-07-30%2fthe-john-oliver-effect%2f%0A%0AThe%20John%20Oliver%20Effect" data-text="The John Oliver Effect" data-href="https://danbernstein.netlify.app/post/2018-07-30/the-john-oliver-effect/" rel="noreferrer nofollow" target="_blank" title="Share on Whatsapp" aria-label="Share on Whatsapp"><span class="fab fa-whatsapp"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://reddit.com/submit?url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-07-30%2fthe-john-oliver-effect%2f&title=The%20John%20Oliver%20Effect" rel="noreferrer nofollow" target="_blank" title="Share on Reddit" aria-label="Share on Reddit"><span class="fab fa-reddit"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="mailto:?subject=The%20John%20Oliver%20Effect&body=%0A%0Ahttps%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-07-30%2fthe-john-oliver-effect%2f" target="_blank" title="Share via email" aria-label="Share via email"><span class="fas fa-envelope"></span></a>
+            
+          </span>
+        </div>
+        
+        
+        
+          <div class="pt-2 pb-3">
+          <span class="">Tags:</span>&nbsp;&nbsp;&nbsp;<a href="/tags/r"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">R</span></a><a href="/tags/bibliometrics"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">BIBLIOMETRICS</span></a><a href="/tags/network-analysis"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">NETWORK ANALYSIS</span></a></div>
+        
+        
+      </div>
+      
+      
+      <div class="py-3">
+      
+
+
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>John Oliver recently discussed genetic editing on <em>Last Week Tonight</em>. Luckily by chance I have had an automated R script running everyday that collects all tweets that mention the term <em>CRISPR</em>, the leading method of genetic editing at this time. Bringing these two events together, I am interested to see how John Oliver discussing genetic editing might impact the level of social media activity surrounding the topic, represented by the tweets captured mentioned CRISPR.</p>
+</div>
+<div id="questions" class="section level2">
+<h2>Questions</h2>
+<p>All of the following questions are concerned with how the twitter data changes after John Oliver’s episode first aired at 11 PM EST on Sunday, July 1, 2018. Descriptions of the scope of each question are briefly outlined here, and further described below.</p>
+<ol style="list-style-type: decimal">
+<li><p>How does the magnitude of twitter activity change?</p></li>
+<li><p>How does the composition of tweets change in terms of the number of original tweets vs. retweets?</p></li>
+<li><p>How does the composition of twitter users engaged change in terms of the personal bios describing the twitter users?</p></li>
+</ol>
+</div>
+<div id="methods" class="section level2">
+<h2>Methods</h2>
+<p>Tweets including the term <em>CRISPR</em> were collected using an automated R script (<a href="https://cran.r-project.org/web/packages/twitteR/twitteR.pdf">twitteR</a> package) between June 9 and July 26, 2018. Unforunately tweets were not collected every day because the computer was not active on every day, though attempts were made to recollect missed days when possible. All collection and analysis was conducted in R 3.4.4.</p>
+</div>
+<div id="results" class="section level2">
+<h2>Results</h2>
+<div id="how-does-the-magnitude-of-twitter-activity-change" class="section level4">
+<h4>1. How does the magnitude of twitter activity change?</h4>
+<p>While <em>crispr</em> is mentioned on a daily a basis, <em>John Oliver</em> only begins appearing in the same tweets on July 2, the day after the episode aired. References of <em>John Oliver</em> peaks with 207 mentions on the first day, July 2, and then quickly tapers off, with a short resurgence (46 mentions) around June 13. No John Oliver referencs appear past July 21.</p>
+</div>
+<div id="how-does-the-composition-of-tweets-change" class="section level4">
+<h4>2. How does the composition of tweets change?</h4>
+<div id="in-terms-of-original-tweets-vs.-retweets" class="section level5">
+<h5>In terms of original tweets vs. retweets</h5>
+</div>
+</div>
+<div id="how-does-the-composition-of-twitter-users-engaged-change" class="section level4">
+<h4>3. How does the composition of twitter users engaged change?</h4>
+<p>Teasing out the characteristics of the twitter users is the most interesting aspect of this analysis, in my opinion. We can quickly rather the twitter biographies of the users in the tweet dataset:</p>
+<pre class="r"><code>twitter_bios &lt;- twitteR::lookupUsers(users) %&gt;% 
+  twListToDF()</code></pre>
+<p>The lookupUsers function provides a number of individual-level features that might be useful in various contexts, including the number of followers and favorites the user has, the date the account was created, and a self-provided biographic description and location, if available. For now, we will first look at the self-provided descriptions to see if those who tweeted in response to John Oliver are different in their personal descriptions than other users who tweet about CRISPR, and then look at the geographic distributions.</p>
+<div id="in-terms-of-the-personal-bios-describing-the-twitter-users" class="section level5">
+<h5>In terms of the personal bios describing the twitter users</h5>
+<p>There are approximately 26,000 unique twitter users in the dataset, of which about 3000 did not have a bio description as of August 2018. The users were classified into three groups for comparison: 1) tweeted about crispr only in conjunction with John Oliver (~300 users), 2) tweeted about crispr both in conjunction with John Oliver and elsewhere (~187 users), 3) tweeted about crispr but never in conjunction with John Oliver (~26340 users). The wordcloud below gives a general understanding of the personal descriptions for these three groups, where the text size of each word is a measure of the words frequency within the group, not across groups (for example, the same text size in groups 1 and 2 does not indicate the same frequencies).</p>
+<p>In the below plots, A indicates users who only mentioned CRISPR in conjunction with John Oliver, B indicates users who never mentioned John Oliver, and C indicates uers who mentioned CRISPR both in conjunction and others.</p>
+<p>The users who mentioned crispr only alongside John Oliver (green text) show a diversity of occupational descriptions (celebrity, teacher, coach, assistant), and a number of potential media references (fan, tv, web). The users who mentioned crispr both in relation to John Oliver and in other contexts show a large preference for biomedical and scientific descriptions (genomics, biotech, research, cancer, health).</p>
+<p>Unfortunately, this wordcloud algorithm partitions the words so that each word only appears in the group where it has the highest frequency, thus words that are common across groups, such as “science” only appear in one group. This issue leads the group where John Oliver and CRISPR are never comentioned to include very few words because the group size is so large that the frequency of common words is much smaller than those words’ frequencies in the the other groups. This algorithm would be improved by providing a mixed mechanism, potentially blending the colors to indicate to degree to which a word appears in multiple groups.</p>
+<p>We can get a little bit more information on the group that never mentioned John Oliver by splitting the users into two groups: 1) mentioned John Oliver, regardless of other mentions of CRISPR, and 2) never mentioned John Oliver within tweets about CRISPR.</p>
+</div>
+</div>
+</div>
+<div id="among-users-who-first-tweeted-about-crispr-in-relation-to-john-oliver-who-are-they-retweeting" class="section level2">
+<h2>Among users who first tweeted about CRISPR in relation to John Oliver, who are they retweeting?</h2>
+<p>Among all retweets, the most common sources are The Rock (who starred in a fictional movie about CRISPR gone wrong), Sciences New (the news branch of Science Magazine), Scientific American, STAT news, and Nature Biotechnology. Beyond the first source, most of the sources are academic or professional organizations with a focus on health and technology.</p>
+<p>Among the 359 users who first tweeted about CRISPR in conjunction with John Oliver, the most popular tweet sources of their first tweets were TIME (63), Synthego (43), Rolling Stone (36), and the Bulletin of the Atomic Scientists (8). When we look at the source of all retweets in this group, the same sources top the list. In comparison to the entire retweet dataset, those individuals who first retweeted about crispr in conjunction with John Oliver seem to respond to information from more general news organizations. Inter</p>
+</div>
+
+      </div>
+      
+      
+      
+    </div>
+  </div>
+  
+  
+  
+</div>
+
+    </div><footer class="text-center p-2 text-muted footer">
+  
+    
+    <div class="py-2 lead">
+      
+        
+          <a class="ml-2" href="https://github.com/danbernstein"><span class="fab fa-github" aria-label="Join us on Github"></span></a>
+        
+      
+        
+          <a class="ml-2" href="https://twitter.com/danbernstein18"><span class="fab fa-twitter" aria-label="Join us on Twitter"></span></a>
+        
+      
+    </div>
+    
+  
+
+  
+
+  <div class="py-2 copyright">
+    <small>Copyright &#169; 2020 Dan Bernstein <b>&#183;</b> Content license: CC-BY-SA-3.0 <b>&#183;</b> Powered by <a class="font-weight-bold text-reset text-decoration-none" href="https://gohugo.io">Hugo</a> <b>&#183;</b> Theme <a class="font-weight-bold text-reset text-decoration-none" href="">Shadows</a> by <span class="softorage"><a class="font-weight-bold text-reset" href="https://softorage.com">Softorage</a></span></small>
+  </div>
+</footer>
+
+    
+    
+    
+    <script src="/assets/js/main.min.6ff0d57b7558f0225c80bade926a349330bc25d85e7ceff50d911f1156023c3e.js" integrity="sha256-b/DVe3VY8CJcgLrekmo0kzC8JdhefO/1DZEfEVYCPD4=" crossorigin="anonymous"></script>
+    <script src="/assets/js/custom.min.c8274a0cac0477f854e63f09626cc63858bb2bc9db8faecbb2834846952c7fd6.js" integrity="sha256-yCdKDKwEd/hU5j8JYmzGOFi7K8nbj67LsoNIRpUsf9Y=" crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Lato&display=swap" rel="stylesheet">
+    
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+  </body>
+</html>

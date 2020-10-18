@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
-    <lastBuildDate>Sun, 13 Sep 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://danbernstein.netlify.app/tags/cloud-computing/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 16 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://danbernstein.netlify.app/tags/cloud-computing/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Commons Mistakes When Using the AWS Cloud Development Kit</title>
+      <link>https://danbernstein.netlify.app/post/2020-10-16-commons-errors-using-the-aws-cloud-development-kit/</link>
+      <pubDate>Fri, 16 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2020-10-16-commons-errors-using-the-aws-cloud-development-kit/</guid>
+      <description>The AWS Cloud Development Kit (CDK) is a set of tools that make it easy to write code to specify cloud infrastructure and deploy it using common scripting languages, like Python or Javascript. Previously, you had to use YAML or XML templates to deploy AWS cloud infrastructure using the CloudFormation service. The CDK is a wrapper around these templates that makes Infrastructure as a Service (IaaS) more accessible and allows you to take advantage of complex operations that you cannot accomplish in template files.</description>
+    </item>
+    
     <item>
       <title>A Simple Way to Understand AWS Services</title>
       <link>https://danbernstein.netlify.app/post/2020-09-13-a-simple-way-to-understand-aws-services/</link>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>machine learning on Data By Dan</title>
+    <link>https://danbernstein.netlify.app/tags/machine-learning/</link>
+    <description>Recent content in machine learning on Data By Dan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
+    <lastBuildDate>Sat, 30 Jun 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://danbernstein.netlify.app/tags/machine-learning/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Stacked Ensemble Modeling</title>
+      <link>https://danbernstein.netlify.app/post/2018-06-30/kaggle-advanced-regression/</link>
+      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2018-06-30/kaggle-advanced-regression/</guid>
+      <description>Summary I looked to Kaggle to further practice building predictive models. After optimizing single and ensemble regression techniques, I uncovered ensemble stacking as a method for building a strong predictive model from a collection of weak learners. The outcome is drastic improvements in predictive accuracy. This post will provide an overview of:
+the basics of automating data preparation using caret building stacked ensemble modelling using caretEnsemble reason through how the various models that I used improve the ensemble predictions  This post will deal less with the specifics of the dataset, and rather provide an overview of how these packages provide easy, flexible, and powerful methods for developing strong predictive models.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,130 @@
+---
+title: What I Am Reading
+author: Dan
+date: '2020-10-17'
+slug: []
+categories: []
+tags: ["what i'm reading"]
+description: ''
+lastmod: ''
+image: ''
+author_twitter: ''
+---
+
+```{r, include=F, echo=F}
+library(rgoodreads)
+library(here)
+library(secret)
+library(httr)  
+library(tidyverse)
+library(xml2)
+library(lubridate)
+library(knitr)
+library(kableExtra)
+
+GOODREADS_KEY = keyring::key_get('GOODREADS_PUBLIC_KEY')
+
+user_id = "60637949"
+
+shelf_books_url = 'https://www.goodreads.com/review/list?v=2'
+
+get_shelf <- function(user_id, shelf_name) {
+  response_list_shelf <- 
+    httr::GET(shelf_books_url, query=list(
+    key = GOODREADS_KEY,
+    id=user_id,
+    shelf=shelf_name,
+    sort='date_read'
+  ))
+  return(read_xml(response_list_shelf$content))
+}
+
+parse_xml <- function(doc) {
+  df <- 
+    tibble(
+      Title = xml_find_all(doc, '//title') %>% xml_text(),
+      book_link = xml_find_all(doc, '//book/link') %>% xml_text(),
+      Author = xml_find_all(doc, '//name') %>% xml_text(),
+      author_link = xml_find_all(doc, '//authors/author/link') %>% xml_text(),
+      date_started = xml_find_all(doc, '//started_at') %>% xml_text(),
+      date_read = xml_find_all(doc, '//read_at') %>% xml_text()
+    ) 
+  return(df)
+}
+
+clean_df <- function(df){
+  clean_df <-
+    df %>% 
+      mutate(
+        Title = glue::glue('[{Title}]({book_link})'),
+        Author = glue::glue('[{Author}]({author_link})'),
+        date_started = lubridate::as_datetime(date_started, format='%a %b %d %H:%M:%S %z %Y'),
+        date_started = tidyr::replace_na(strftime(date_started, '%B %d, %Y'), '--'),
+        date_read = lubridate::as_datetime(date_read, format='%a %b %d %H:%M:%S %z %Y'),
+        date_read = tidyr::replace_na(strftime(date_read, '%B %d, %Y'), '--')
+      )
+  return(clean_df)
+}
+
+
+get_book_top_shelves <- function(book_id){
+  genreExceptions = c(
+    'to-read', 'currently-reading', 'owned', 'default', 'favorites', 'books-i-own',
+    'ebook', 'kindle', 'library', 'audiobook', 'owned-books', 'audiobooks', 'my-books',
+    'ebooks', 'to-buy', 'english', 'calibre', 'books', 'british', 'audio', 'my-library',
+    'favourites', 're-read', 'general', 'e-books'
+  )
+
+  url <- 'https://www.goodreads.com/book/show.xml'
+  resp <- 
+    httr::GET(url, query=list(
+    key = GOODREADS_KEY,
+    id=50
+  ))
+  
+  doc <- read_xml(resp$content)
+  nodes <- xml_find_all(doc, '//book/popular_shelves/shelf') %>% xml_attr('name')
+  
+  real_genres = c()
+  for (node in nodes ){
+    if (!(node %in% genreExceptions)){
+      real_genres <- c(real_genres, node)
+    }
+  }
+  return(str_replace(real_genres[1], '-', ' '))
+}
+```
+
+```{r, echo=F}
+current_shelf <- get_shelf(user_id, 'currently-reading') 
+
+output_current_df <- 
+  parse_xml(current_shelf) %>% 
+  clean_df(.) %>% 
+  select(Title, Author, `Date Added`=date_started)
+
+read_shelf <- get_shelf(user_id, 'read') 
+
+output_read_df <-
+  parse_xml(read_shelf) %>% 
+  clean_df(.) %>% 
+  select(Title, 
+         Author, 
+         `Date Started` = date_started, 
+         `Date Finished` = date_read)
+
+```
+
+```{r, echo=F, message=F}
+output_current_df %>% 
+  kableExtra::kable(.) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover")) %>% 
+  add_header_above(header = c("Current Reading" = 3))
+```
+
+
+```{r, echo=F}
+kableExtra::kable(output_read_df) %>% 
+  kable_styling(bootstrap_options = c("striped", "hover")) %>% 
+  add_header_above(header = c("Recently Read" = 4))
+```

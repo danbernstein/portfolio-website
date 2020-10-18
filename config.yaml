@@ -16,9 +16,13 @@ menus:
   main:
     - identifier: "about" # different for all menu entries, useful especially when menu name coincides
       name: "About Dan" # shown on website/blog
-      url: "/about-dan/" # user is taken to this url when user clicks on menu item
+      url: "/menu/about-dan/" # user is taken to this url when user clicks on menu item
       weight: 10 # used to sort menu items by weight
-
+    - identifier: "reading" # different for all menu entries, useful especially when menu name coincides
+      name: "What I Am Reading" # shown on website/blog
+      url: "/menu/what-i-m-reading" # user is taken to this url when user clicks on menu item
+      weight: 10 # used to sort menu items by weight
+      
 # Allow HTML in markdown to be rendered, for social platform list in configuration options
 markup:
   goldmark:

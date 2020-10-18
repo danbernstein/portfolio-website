@@ -7,7 +7,61 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
-    <lastBuildDate>Mon, 12 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://danbernstein.netlify.app/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 17 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://danbernstein.netlify.app/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>what i&#39;m reading</title>
+      <link>https://danbernstein.netlify.app/tags/what-im-reading/</link>
+      <pubDate>Sat, 17 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/tags/what-im-reading/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>AWS</title>
+      <link>https://danbernstein.netlify.app/tags/aws/</link>
+      <pubDate>Fri, 16 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/tags/aws/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cloud computing</title>
+      <link>https://danbernstein.netlify.app/tags/cloud-computing/</link>
+      <pubDate>Fri, 16 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/tags/cloud-computing/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>IaaS</title>
+      <link>https://danbernstein.netlify.app/tags/iaas/</link>
+      <pubDate>Fri, 16 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/tags/iaas/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>python</title>
+      <link>https://danbernstein.netlify.app/tags/python/</link>
+      <pubDate>Fri, 16 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>tips</title>
+      <link>https://danbernstein.netlify.app/tags/tips/</link>
+      <pubDate>Fri, 16 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/tags/tips/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>chrome</title>
       <link>https://danbernstein.netlify.app/tags/chrome/</link>
@@ -59,24 +113,6 @@
       <pubDate>Fri, 02 Oct 2020 00:00:00 +0000</pubDate>
       
       <guid>https://danbernstein.netlify.app/tags/talks/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>AWS</title>
-      <link>https://danbernstein.netlify.app/tags/aws/</link>
-      <pubDate>Sun, 13 Sep 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://danbernstein.netlify.app/tags/aws/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>cloud computing</title>
-      <link>https://danbernstein.netlify.app/tags/cloud-computing/</link>
-      <pubDate>Sun, 13 Sep 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://danbernstein.netlify.app/tags/cloud-computing/</guid>
       <description></description>
     </item>
     
@@ -153,15 +189,6 @@
     </item>
     
     <item>
-      <title>python</title>
-      <link>https://danbernstein.netlify.app/tags/python/</link>
-      <pubDate>Wed, 12 Dec 2018 00:00:00 +0000</pubDate>
-      
-      <guid>https://danbernstein.netlify.app/tags/python/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>analysis</title>
       <link>https://danbernstein.netlify.app/tags/analysis/</link>
       <pubDate>Tue, 30 Oct 2018 00:00:00 +0000</pubDate>
@@ -176,6 +203,33 @@
       <pubDate>Tue, 30 Oct 2018 00:00:00 +0000</pubDate>
       
       <guid>https://danbernstein.netlify.app/tags/forecasting/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>bibliometrics</title>
+      <link>https://danbernstein.netlify.app/tags/bibliometrics/</link>
+      <pubDate>Mon, 30 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/tags/bibliometrics/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>network analysis</title>
+      <link>https://danbernstein.netlify.app/tags/network-analysis/</link>
+      <pubDate>Mon, 30 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/tags/network-analysis/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>machine learning</title>
+      <link>https://danbernstein.netlify.app/tags/machine-learning/</link>
+      <pubDate>Sat, 30 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/tags/machine-learning/</guid>
       <description></description>
     </item>
     

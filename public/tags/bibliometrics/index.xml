@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>bibliometrics on Data By Dan</title>
+    <link>https://danbernstein.netlify.app/tags/bibliometrics/</link>
+    <description>Recent content in bibliometrics on Data By Dan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
+    <lastBuildDate>Mon, 30 Jul 2018 00:00:00 +0000</lastBuildDate><atom:link href="https://danbernstein.netlify.app/tags/bibliometrics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The John Oliver Effect</title>
+      <link>https://danbernstein.netlify.app/post/2018-07-30/the-john-oliver-effect/</link>
+      <pubDate>Mon, 30 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2018-07-30/the-john-oliver-effect/</guid>
+      <description>Background John Oliver recently discussed genetic editing on Last Week Tonight. Luckily by chance I have had an automated R script running everyday that collects all tweets that mention the term CRISPR, the leading method of genetic editing at this time. Bringing these two events together, I am interested to see how John Oliver discussing genetic editing might impact the level of social media activity surrounding the topic, represented by the tweets captured mentioned CRISPR.</description>
+    </item>
+    
+  </channel>
+</rss>

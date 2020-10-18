@@ -3,6 +3,76 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://danbernstein.netlify.app/</loc>
+    <lastmod>2020-10-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/menu/</loc>
+    <lastmod>2020-10-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/tags/</loc>
+    <lastmod>2020-10-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/menu/what-i-m-reading/</loc>
+    <lastmod>2020-10-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/tags/what-im-reading/</loc>
+    <lastmod>2020-10-17T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/tags/aws/</loc>
+    <lastmod>2020-10-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/tags/cloud-computing/</loc>
+    <lastmod>2020-10-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/post/2020-10-16-commons-errors-using-the-aws-cloud-development-kit/</loc>
+    <lastmod>2020-10-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/post/2020-10-16-copying-millions-of-files-between-s3-buckets/</loc>
+    <lastmod>2020-10-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/tags/iaas/</loc>
+    <lastmod>2020-10-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/post/</loc>
+    <lastmod>2020-10-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/tags/python/</loc>
+    <lastmod>2020-10-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/post/2020-10-16-sets-are-your-friend/</loc>
+    <lastmod>2020-10-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/tags/tips/</loc>
+    <lastmod>2020-10-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://danbernstein.netlify.app/tags/chrome/</loc>
     <lastmod>2020-10-12T00:00:00+00:00</lastmod>
   </url>
@@ -13,27 +83,12 @@
   </url>
   
   <url>
-    <loc>https://danbernstein.netlify.app/</loc>
-    <lastmod>2020-10-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://danbernstein.netlify.app/post/recipe-scraper/</loc>
     <lastmod>2020-10-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://danbernstein.netlify.app/tags/javascript/</loc>
-    <lastmod>2020-10-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://danbernstein.netlify.app/post/</loc>
-    <lastmod>2020-10-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://danbernstein.netlify.app/tags/</loc>
     <lastmod>2020-10-12T00:00:00+00:00</lastmod>
   </url>
   
@@ -64,16 +119,6 @@
   
   <url>
     <loc>https://danbernstein.netlify.app/post/2020-09-13-a-simple-way-to-understand-aws-services/</loc>
-    <lastmod>2020-09-13T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://danbernstein.netlify.app/tags/aws/</loc>
-    <lastmod>2020-09-13T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://danbernstein.netlify.app/tags/cloud-computing/</loc>
     <lastmod>2020-09-13T00:00:00+00:00</lastmod>
   </url>
   
@@ -138,7 +183,7 @@
   </url>
   
   <url>
-    <loc>https://danbernstein.netlify.app/about-dan/</loc>
+    <loc>https://danbernstein.netlify.app/menu/about-dan/</loc>
     <lastmod>2019-01-14T00:00:00+00:00</lastmod>
   </url>
   
@@ -168,11 +213,6 @@
   </url>
   
   <url>
-    <loc>https://danbernstein.netlify.app/tags/python/</loc>
-    <lastmod>2018-12-12T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://danbernstein.netlify.app/tags/analysis/</loc>
     <lastmod>2018-10-30T00:00:00+00:00</lastmod>
   </url>
@@ -190,6 +230,51 @@
   <url>
     <loc>https://danbernstein.netlify.app/post/2018-10-22/mortality-rate-projections/</loc>
     <lastmod>2018-10-22T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/post/2018-10-09-forecasting-population-projects/</loc>
+    <lastmod>2018-10-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/post/2018-09-30/climate-modeling/</loc>
+    <lastmod>2018-09-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/post/2018-09-02/learning-forecasting/</loc>
+    <lastmod>2018-09-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/tags/bibliometrics/</loc>
+    <lastmod>2018-07-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/tags/network-analysis/</loc>
+    <lastmod>2018-07-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/post/2018-07-30/the-john-oliver-effect/</loc>
+    <lastmod>2018-07-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/post/2018-07-23/dc-bike-crash-analysis/</loc>
+    <lastmod>2018-07-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/tags/machine-learning/</loc>
+    <lastmod>2018-06-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://danbernstein.netlify.app/post/2018-06-30/kaggle-advanced-regression/</loc>
+    <lastmod>2018-06-30T00:00:00+00:00</lastmod>
   </url>
   
 </urlset>

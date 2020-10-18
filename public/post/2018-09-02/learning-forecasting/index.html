@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+  
+    
+      
+
+
+
+
+
+
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<title>Forecasting | Data By Dan</title>
+<meta name="title" content="Forecasting | Data By Dan" />
+<meta name="description" content="Introduction I looked into a number of resources to learn how to handle time series data and conduct educated statistical forecasting. Many of these resources jumped right into the equations and lacked a comprehensive introduction and discussion to faciliate learning. I found that a combination of two resources provided the right introduction to the self-learner, such as myself:
+Introduction to Time Series Analysis is a website available from the National Institute of Standards and Technology (NIST) Information Technology Library."> 
+
+
+<link rel="canonical" href="https://danbernstein.netlify.app/post/2018-09-02/learning-forecasting/" />
+
+
+  
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:description" content="" /> 
+  <meta name="twitter:title" content="Forecasting | Data By Dan" />
+  <meta name="twitter:url" content="https://danbernstein.netlify.app/post/2018-09-02/learning-forecasting/" />
+  <meta name="twitter:site" content="@Softorage" /> 
+  <meta name="twitter:creator" content="@Softorage" /> 
+   
+
+
+
+  
+  <meta property="og:title" content="Forecasting | Data By Dan" />
+  <meta property="og:description" content="" /> 
+  <meta property="og:site_name" content="Data By Dan" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://danbernstein.netlify.app/post/2018-09-02/learning-forecasting/" />
+  
+   
+
+
+
+<meta property="article:published_time" content="2018-09-02 00:00:00 &#43;0000 UTC" />
+
+
+  
+  
+  <script type="application/ld+json">
+      { 
+          "@context": "http://schema.org", 
+          "@type": "BlogPosting",
+          "headline": "Forecasting",
+          
+          "url": "https://danbernstein.netlify.app/",
+          
+          "datePublished": "2018-09-02T00:00:00Z",
+          
+          
+          "dateModified": "2018-09-02T00:00:00Z",
+          
+          "description": ,
+          
+          
+          "author": {
+              "@type": "Person",
+              "name": "Dan"
+          },
+          
+          "publisher": {
+            "@type": "Organization",
+            "name": "Dan Bernstein",
+            "logo": {
+              "@type": "ImageObject",
+              "url": ""
+            }
+          },
+          
+          "sameAs" : [
+            
+            
+              "https://github.com/danbernstein",  
+            
+              "https://twitter.com/danbernstein18"
+            ]
+          
+        }
+      </script>
+  
+
+
+    
+    <meta name="generator" content="Hugo 0.76.4" />
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/assets/css/main.min.640c7db3aa8bb5e109570ad983be6a38ed5af9bb464dd329d1a91e14ff9f331e.css" integrity="sha256-ZAx9s6qLteEJVwrZg75qOO1a&#43;btGTdMp0akeFP&#43;fMx4=" crossorigin="anonymous">
+  
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+  
+  <link rel=apple-touch-icon sizes=180x180 href=https://danbernstein.netlify.app//assets/favicon/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=https://danbernstein.netlify.app//assets/favicon/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=https://danbernstein.netlify.app//assets/favicon/favicon-16x16.png><link rel=manifest href=https://danbernstein.netlify.app//assets/favicon/site.webmanifest><link rel=mask-icon href=https://danbernstein.netlify.app//assets/favicon/safari-pinned-tab.svg color=#7817c4><link rel=icon href=https://danbernstein.netlify.app//assets/favicon/favicon.ico type=image/x-icon><link rel="shortcut icon" href=https://danbernstein.netlify.app//assets/favicon/favicon.ico type=image/x-icon><meta name=apple-mobile-web-app-title content="Vibrant Shadows Theme"><meta name=application-name content="Vibrant Shadows Theme"><meta name=msapplication-TileColor content="#ffffff"><meta name=theme-color content="#ffffff">
+  
+  
+  
+  <meta name="theme-color" content="#fff6f8">
+  
+  <meta name="msapplication-navbutton-color" content="#fff6f8">
+  
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  
+</head>
+<body><header>
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top flex-column">
+    <div class="container-fluid">
+      
+      <a class="navbar-brand rounded px-3" href="https://danbernstein.netlify.app/"><span class="text-nav"><span class="brand">&nbsp;&nbsp;Data By Dan</span></span></a>
+      
+      
+        <a class="navbar-toggler border-0 bg-nav p-2" role="button" href="#" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="text-clr2">&#9776;</span>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-md-auto">
+             
+            
+              
+                <li class="nav-item mx-1 my-2">
+                  <a class="btn bg-nav text-clr1" href="/menu/about-dan/">About Dan</a>
+                </li>
+              
+            
+              
+                <li class="nav-item mx-1 my-2">
+                  <a class="btn bg-nav text-clr1" href="/menu/what-i-m-reading">What I Am Reading</a>
+                </li>
+              
+            
+          </ul>
+          
+            
+          
+        </div>
+      
+    </div>
+    
+  </nav>
+</header>
+<div id="content">
+<div class="container-fluid bg-clr1 text-nav text-center pb-3 pt-4 position-relative shadow">
+  <div style="height:3.5rem;"></div>
+  <h1>Forecasting</h1>
+  <p class="description"></p>
+</div>
+<div class="container-fluid bg-nav p-4">  
+  <div class="row">
+ 
+    <div class="col-md-auto">
+ 
+        
+      
+      <div class="py-1">
+        <div class="d-inline mr-auto small text-muted post-meta"></span>
+        
+        
+          
+            
+          
+        
+          
+        
+          
+            
+          
+        
+          
+            
+          
+        By Dan &#183; 16 min read &#183; <span class=''>Last updated: September 2, 2018</div>
+        
+        
+        
+        <div class="d-inline ml-auto float-right">
+          Share on:&nbsp;&nbsp;
+          <span class="lead">
+            
+              <a href="https://www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-09-02%2flearning-forecasting%2f&quote=Forecasting" rel="noreferrer nofollow" target="_blank" title="Share on Facebook" aria-label="Share on Facebook"><span class="fab fa-facebook"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://twitter.com/intent/tweet?source=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-09-02%2flearning-forecasting%2f&text=Forecasting:%0Ahttps%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-09-02%2flearning-forecasting%2f" rel="noreferrer nofollow" target="_blank" title="Share on Twitter" aria-label="Share on Twitter"><span class="fab fa-twitter"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://www.linkedin.com/shareArticle?mini=true&url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-09-02%2flearning-forecasting%2f&title=Forecasting&summary=&source=Data%20By%20Dan" rel="noreferrer nofollow" target="_blank" title="Share on LinkedIn" aria-label="Share on LinkedIn"><span class="fab fa-linkedin"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://t.me/share/url?url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-09-02%2flearning-forecasting%2f&text=Forecasting" rel="noreferrer nofollow" target="_blank" title="Share on Telegram" aria-label="Share on Telegram"><span class="fab fa-telegram"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="whatsapp://send?text=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-09-02%2flearning-forecasting%2f%0A%0AForecasting" data-text="Forecasting" data-href="https://danbernstein.netlify.app/post/2018-09-02/learning-forecasting/" rel="noreferrer nofollow" target="_blank" title="Share on Whatsapp" aria-label="Share on Whatsapp"><span class="fab fa-whatsapp"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="https://reddit.com/submit?url=https%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-09-02%2flearning-forecasting%2f&title=Forecasting" rel="noreferrer nofollow" target="_blank" title="Share on Reddit" aria-label="Share on Reddit"><span class="fab fa-reddit"></span></a>&nbsp;&nbsp;
+            
+            
+              <a href="mailto:?subject=Forecasting&body=%0A%0Ahttps%3a%2f%2fdanbernstein.netlify.app%2fpost%2f2018-09-02%2flearning-forecasting%2f" target="_blank" title="Share via email" aria-label="Share via email"><span class="fas fa-envelope"></span></a>
+            
+          </span>
+        </div>
+        
+        
+        
+          <div class="pt-2 pb-3">
+          <span class="">Tags:</span>&nbsp;&nbsp;&nbsp;<a href="/tags/r"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">R</span></a><a href="/tags/analysis"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">ANALYSIS</span></a><a href="/tags/forecasting"><span class="badge badge-pill bg-clr2 text-nav mr-2 py-2">FORECASTING</span></a></div>
+        
+        
+      </div>
+      
+      
+      <div class="py-3">
+      
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>I looked into a number of resources to learn how to handle time series data and conduct educated statistical forecasting. Many of these resources jumped right into the equations and lacked a comprehensive introduction and discussion to faciliate learning. I found that a combination of two resources provided the right introduction to the self-learner, such as myself:</p>
+<ol style="list-style-type: decimal">
+<li><p><a href="https://www.itl.nist.gov/div898/handbook/pmc/section4/pmc4.htm">Introduction to Time Series Analysis</a> is a website available from the National Institute of Standards and Technology (NIST) Information Technology Library. The website will provide an overview of the important terminology and major concepts for time series analysis with limited mathematics.</p></li>
+<li><p>The online ebook, <a href="https://otexts.org/fpp2/"><em>Forecasting: Principles and Practice</em></a>, provides an in-depth, applied introduction to time series analysis and forecasting. The statistics are introduced and explained in ways that make sense and allow the reader to reason through without just accepting algorithms at face value without any understand of how they operate. After finishing this book, I feel comfortable reading journal articles on applied forecasting and using what I know to work through concepts I do not understand yet.</p></li>
+</ol>
+</div>
+<div id="application" class="section level2">
+<h2>Application</h2>
+<p>I will walk through the development of improved models to mirror the logical flow introduced in <em>Forecasting</em>. I do not intend to go through the concepts or algorithms in-depth, but I will reference the resources mentioned when needed. I will be analyzing the Capital Bikeshare monthly ridership for the past eight years because I have the data easily accessible from a past project and I am familiar with potential covariates that might be useful later on. The the workflow will be:</p>
+<ol style="list-style-type: decimal">
+<li>preparing time series data for modeling, including wrangling and checking modeling assumptions</li>
+<li>building multiple models to determine the most accurate, including averaging models to potentially boost accuracy</li>
+<li>building dynamic regression models to incorporate predictors</li>
+<li>building hierarchical and grouped models</li>
+</ol>
+<div id="packages-for-time-series-analysis" class="section level3">
+<h3>Packages for time series analysis</h3>
+<p>The fpp2 package is associated with the <em>Forecasting</em> ebook and it loads a number of datasets used through the book. The package also requires a number of relevant packages for fitting and analyzing time series models.</p>
+<pre class="r"><code>library(fpp2)</code></pre>
+</div>
+<div id="import-the-data-for-univariate-analysis" class="section level3">
+<h3>Import the data for univariate analysis</h3>
+<p>Capital Bikeshare ridership is released quarterly, with information about date and time and whether the user was a member or casual rider. I have aggregated and stored the data at the monthly level for total ridership, and separately for members and casual riders. These three time series will be the forecast variables for analysis.</p>
+</div>
+<div id="preparing-the-time-series-data-for-modeling" class="section level3">
+<h3>Preparing the time series data for modeling</h3>
+<div id="cleaning" class="section level4">
+<h4>Cleaning</h4>
+<pre class="r"><code>raw &lt;- read_csv(&quot;./time_series/processed_data/count_byyearandmonth_casual_member_total.csv&quot;)
+
+head(raw)</code></pre>
+<p>The data consists of five columns, the first two denote the year and month that serve as identifiers. The other three rows are counts for the total ridership (“n”), casual riders (“Casual”), and member riders (“Member”). It is worth noting that there are about 30 rides that were missing a Casual/Member classification, and that monthly aggregation is not included. This might be relevant during the hierachical and grouped modeling because the two columns will not add up to the total ridership in some rows.</p>
+</div>
+<div id="creating-time-series-ts-objects" class="section level4">
+<h4>Creating time series (ts) objects</h4>
+<p>The first month of data has been removed because it is substantially lower than even the second month in the dataset. Inclusion of the first month creates a large outlier.</p>
+<p>While the month and year are useful when importing new data, those columns are not explicitly used to create the ts object. Instead, those columns are removed, and the remaining three columns, all of which are monthly counts, are piped into the ts() function and the start month and frequency are set to assign the counts to the appropriate months.</p>
+<p>The output object does not look very different from the raw data, but the structure of the object is a multivariate time series (“mts”) where all three variables are outcome variables that we want to model. Later on, we will multivariate time series that include predictor variables that intend to refine model accuracy.</p>
+<pre class="r"><code>raw.ts &lt;- 
+  raw %&gt;% 
+  slice(-1) %&gt;% 
+  select(-year, -month) %&gt;% 
+  ts(., start = c(2010, 9), frequency = 12)
+
+head(raw.ts)</code></pre>
+</div>
+<div id="descriptive-patterns" class="section level4">
+<h4>Descriptive patterns</h4>
+<p>We can use the time plot to determine the features of the time series to inform model building.</p>
+<pre class="r"><code>raw.ts[,3] %&gt;% 
+  autoplot(., series = &quot;Total&quot;) +
+  autolayer(raw.ts[,1], series = &quot;Casual&quot;) +
+  autolayer(raw.ts[,2], series = &quot;Member&quot;)</code></pre>
+<p>The time series all have a general upward trend over the eight years. The time series also have a clear seasonal pattern; ridership increases markedly from January through the summer then declines until the next cycle begins. The seasonal pattern appears to increase in amplitude over time, meaning the difference between the high and low points in each seasona seem to increase as time goes on. This pattern likely has to do with the growing availability and popularity of Capital Bikeshare over the time period. This hypothesis will be explored below.</p>
+<p>On a more technical note, the seasonal and trend evident in the plot indicate that the time series are non-stationary. The Unit Root test confirms this; the test-statistic is higher than the 1 percent critical value, so the null hypothesis is rejected and the observed data is non-stationary. I will need to convert the data to a stationary format before proceeding.</p>
+<pre class="r"><code>library(urca)
+
+raw.ts[,3] %&gt;% ur.kpss() %&gt;% summary()
+
+raw.ts[,3] %&gt;% ndiffs()
+nsdiffs(raw.ts[,3])</code></pre>
+<p>The ndiffs() function indicates that one differencing operation will be suitable to create a stationary time series. After taking the logarithm (to stablise the mean) and differencing once (to stablize the mean), the output does pass the Unit Root Test. The large initial value is surprising, but we will move on for now.</p>
+<pre class="r"><code>total.diff &lt;-
+  raw.ts[,3] %&gt;% 
+  log() %&gt;% 
+  diff()
+
+total.diff %&gt;% ur.kpss() %&gt;% summary()
+
+total.diff %&gt;% autoplot()</code></pre>
+</div>
+</div>
+<div id="building-a-model" class="section level3">
+<h3>Building a model</h3>
+<p>ARIMA models and Exponential Smoothing (ES) are the two most common methods for time series forecasting. While ARIMA models pick up on autocorrelation in the observed data, ES estimates and leverages the underlying seasonal and trend components in the observed data. Here we will build both of these models and compare the accuracy.</p>
+<p>For now, we will only work with the time series for the total ridership. The training set includes monthly counts through the end of 2016. The test set and prediction horizon will be the time period beyond the training data, from the first quarter of 2017 through the end of the first quarter of 2018.</p>
+<pre class="r"><code>total.ts &lt;- raw.ts[,3]
+
+train &lt;- window(total.ts, end=c(2017, 1))
+
+h &lt;- length(total.ts) - length(train)</code></pre>
+<p>The ARIMA model chooses a ARIMA model with 0 autoregressive terms, 1 differences, and 3 lagged forecast error terms, with an additional seasonal component (2,1,1)[12]. Because this model was created with a Box-Cox Transformation and bias adjustment, the point prediction for the test data assumes a larger increasing trend in comparison to the simple optimized model chosen by auto.arima() without those parameters. The test data does not follow the increasing trend in the arima.lambda model, so the automated arima model is more accurate for the test data according to root mean squared error (RMSE), a common metric for comparing models because it is agnostic to scale and differencing.</p>
+<pre class="r"><code>arima.lambda &lt;- 
+  train %&gt;% 
+  auto.arima(., lambda=0, biasadj=T) %&gt;% 
+  forecast(h = h)
+
+arima.lambda %&gt;% summary()
+
+arima.auto &lt;- forecast(auto.arima(train),  h=h)
+
+total.ts %&gt;% 
+  autoplot()+
+  autolayer(arima.auto, series = &quot;ARIMA&quot;, PI = F)+
+  autolayer(arima.lambda, series = &quot;ARIMA: lambda = 0&quot;, PI = F)
+
+accuracy(arima.auto, total.ts)[&#39;Test set&#39;, &#39;RMSE&#39;]
+accuracy(arima.lambda, total.ts)[&#39;Test set&#39;, &#39;RMSE&#39;]</code></pre>
+</div>
+<div id="building-and-comparing-multiple-models" class="section level3">
+<h3>Building and comparing multiple models</h3>
+<p>ets() will fit the exponential smoothing model (the function name stands for error trend season to convey that it looks for the trend patterns emblematic of exponential smoothing). A third method</p>
+<pre class="r"><code>models &lt;- list()
+
+models$arima.auto &lt;- arima.auto
+models$arima.lambda &lt;- arima.lambda
+models$ETS.lambda &lt;- forecast(ets(train, lambda = 0), h=h)
+models$ETS &lt;- forecast(ets(train), h=h)
+models$STLF.lambda &lt;- forecast(stlf(train), h=h)
+models$STLF &lt;- forecast(stlf(train), h=h)
+models$TBATS &lt;- forecast(tbats(train, lambda = 0), h = h)
+
+total.ts %&gt;% 
+  autoplot(series = &quot;Observed Data&quot;)+
+  autolayer(models$STLF, series = &quot;STLF&quot;, PI = F)+
+  autolayer(models$ETS, series = &quot;ETS&quot;, PI = F)+
+  autolayer(models$arima.auto, series = &quot;ARIMA&quot;, PI = F)+
+  autolayer(models$arima.lambda, series = &quot;ARIMA: Lambda = 0&quot;, PI = F)+
+  autolayer(models$TBATS, series = &quot;TBATS&quot;, PI = F)
+
+
+lapply(models, function(x){accuracy(x, total.ts)[&#39;Test set&#39;, &#39;RMSE&#39;]})</code></pre>
+<p>It appears that the ETS method performed the best among these four. Unfortunately, all models violate the residual assumptions; the model residuals are distinguishable from white noise and do not fully capture the dynamics of the observed data. Only the ARIMA model with a box-cox transformation passes the Ljung-Box test. This does not mean the other models are not worthwhile, all of them outperformed the transformed ARIMA model in terms of accuracy, but they are not fully utilizing patterns in the data because there is still autocorrelation between data points.</p>
+<pre class="r"><code>lapply(models, function(x){checkresiduals(x, plot = F)})</code></pre>
+</div>
+<div id="improving-accuracy-through-averaging" class="section level3">
+<h3>Improving accuracy through averaging</h3>
+<p>As a form of ensemble modeling, averaging the point predictions from multiple models often improves model accuracy. In this case, the test set RMSE is better than any individual model when we combined three models, STLF.lambda, ETS, and TBATS. Adding a fourth model that performs well individually, such as STLF or ETS.lambda, both increase the aggregated RMSE, so they are left out. The reason that adding another form a model already in the averaged value does not improve the accuracy is likely that both models are from the same statistical equation, it seems that there is less to be gained by averaging. From this I infer that combining two ETS models is not advantageous, whereas averaging two models that have different approaches to detecting patterns, such as ETS and STLF, would complement each other and improve performance. Using the three models is better than only the two top performing models.</p>
+<pre class="r"><code>Combination &lt;- (models$STLF.lambda[[&quot;mean&quot;]] + models$ETS[[&quot;mean&quot;]] + models$TBATS[[&quot;mean&quot;]])/3
+
+accuracy(Combination, total.ts)[&#39;Test set&#39;, &#39;RMSE&#39;]
+
+Combination2 &lt;- (models$STLF.lambda[[&quot;mean&quot;]] + models$ETS[[&quot;mean&quot;]])/2
+
+accuracy(Combination2, total.ts)[&#39;Test set&#39;, &#39;RMSE&#39;]
+
+total.ts %&gt;% 
+  autoplot()+
+  autolayer(Combination2, series = &quot;Combination of ETS and ARIMA&quot;)+
+  autolayer(Combination, series = &quot;Combination of all four models&quot;)+
+  autolayer(models$ETS, series = &quot;ETS&quot;, PI = F)+
+  autolayer(models$arima.auto, series = &quot;ARIMA&quot;, PI = F)+
+  autolayer(models$TBATS, series = &quot;TBATS&quot;, PI = F)+
+  autolayer(models$STLF.lambda, series = &quot;STLF.lambda&quot;, PI = F)+
+  autolayer(models$STLF, series = &quot;STLF&quot;, PI = F)</code></pre>
+</div>
+<div id="neural-network-model" class="section level3">
+<h3>Neural Network Model</h3>
+<p>Another potential model is a neural network (nn) model which is based on non-linear relationships between predictor and outcome variables. The nn model predicts a more rapid increase in ridership after 2018 begins, while the observed data lags behind.</p>
+<pre class="r"><code>nn.fit &lt;- nnetar(train, lambda = 0)
+
+total.ts %&gt;% 
+  autoplot()+
+  autolayer(forecast(nn.fit,  h = h, PI = F))
+
+accuracy(forecast(nn.fit), total.ts)</code></pre>
+</div>
+<div id="multivariate-analysis" class="section level3">
+<h3>Multivariate Analysis</h3>
+<p>The models presented up to this point only use patterns in the ridership count itself. Other variables might assist in forecast future ridership, including monthly average temperature, precipitation, and bicycle availability. I will gather these three data sources and incorporate the information into a dynamic regression model to see how these variables affect forecast accuracy.</p>
+<div id="importing-predictors" class="section level4">
+<h4>Importing predictors</h4>
+<p>The National Weather Service has monthly average temperature and precipitation for Washington, DC going back to 1871. These records likely come from a single or a few monitoring sites, but they will give a rough estimate of how these variables affects ridership. The tabulizer package provides the function to extract a table from a pdf, and then it is easy to wrangle that data into a table of the pertinent range (2010-2018).</p>
+<pre class="r"><code>library(tabulizer)
+
+temp.table &lt;- extract_tables(&quot;https://www.weather.gov/media/lwx/climate/dcatemps.pdf&quot;)
+
+header &lt;- function(df){
+  names(df) &lt;- as.character(unlist(df[1,]))
+  df[-1,]
+}
+
+ts.temp &lt;-  
+  temp.table[[5]][c(1, 20, 22:26, 28:30),1:13] %&gt;% 
+  data.frame(stringsAsFactors = F) %&gt;% 
+  header(.) %&gt;% 
+  tidyr::gather(., &quot;Month&quot;, &quot;Temperature (Degrees Fahrenheit)&quot;, 2:13) %&gt;% 
+  arrange(-desc(YEAR)) %&gt;% 
+  select(-YEAR, -Month) %&gt;% 
+  ts(start = c(2010, 09), end = c(2018, 02), frequency = 12)</code></pre>
+<pre class="r"><code>precip.table &lt;- extract_tables(&quot;https://www.weather.gov/media/lwx/climate/dcaprecip.pdf&quot;)
+
+ts.precip &lt;-  
+  precip.table[[5]][c(1, 16, 18:22, 24:26),1:13] %&gt;% 
+  data.frame(stringsAsFactors = F) %&gt;% 
+  header(.) %&gt;% 
+  tidyr::gather(., &quot;Month&quot;, &quot;Temperature (Degrees Fahrenheit)&quot;, 2:13) %&gt;% 
+  arrange(-desc(YEAR)) %&gt;% 
+  select(-YEAR, -Month) %&gt;% 
+  ts(start = c(2010, 09), end = c(2018, 02), frequency = 12) </code></pre>
+<pre class="r"><code>stations &lt;- read_csv(&quot;./learning_forecasting/station_firstuse_latlon.csv&quot;)
+
+ts.stations &lt;-
+  stations %&gt;% 
+  mutate(MONTH = as.Date(paste(format(as.Date(Time), &quot;%Y-%m&quot;), &quot;-01&quot;, sep = &quot;&quot;))) %&gt;% 
+  select(-Time, YEAR) %&gt;% 
+  count(MONTH) %&gt;% 
+  padr::pad(end_val = as.Date(&quot;2018-02-01&quot;)) %&gt;% 
+  tidyr::replace_na(list(n = 0)) %&gt;% 
+  mutate(total = cumsum(n)) %&gt;% 
+  select(total) %&gt;% 
+  ts(start = c(2010, 9), end = c(2018, 02), frequency = 12) </code></pre>
+</div>
+<div id="dynamic-regression-model" class="section level4">
+<h4>Dynamic Regression Model</h4>
+<pre class="r"><code>covars &lt;- cbind(ts.temp, ts.precip, ts.stations) %&gt;% 
+  window(end = c(2018, 2))
+
+# Restrict data so models use same fitting period
+# use 1-4 lagged values in the xreg predictors
+fit1 &lt;- auto.arima(total.ts, xreg=covars[,1:3],
+                   stationary=TRUE)
+
+fit1
+
+fcast &lt;- forecast(fit1, xreg=cbind(
+ # rep(mean(covars[,1], 8)),rep(mean(covars[,2], 8)),rep(mean(covars[,3], 8))
+  rep(77.3, 20), mean(0, 20), rep(454, 20)
+  ))
+
+fcast %&gt;% autoplot()</code></pre>
+<p>I generalized the function provided in <em>Forecasting</em> to create lags of various lengths. Unforunately, the larger the lag, the smaller the dataset, so the information criteria are lower than models that use smaller lags and larger datasets. These modelscan not be compared for that reason, among others.</p>
+<pre class="r"><code>predictors &lt;- function(ts, var, lags){
+  cbind(
+    var = ts[,var],
+    varLag1 = stats::lag(ts[,var],-lags[1]),
+    varLag2 = stats::lag(ts[,var],-lags[2]),
+    varLag3 = stats::lag(ts[,var],-lags[3])
+  ) %&gt;% 
+    window(end = c(2018, 2))
+}</code></pre>
+<pre class="r"><code>lagpreds.mult &lt;- cbind(predictors(covars, &quot;ts.temp&quot;, c(1,2,3)),
+                       predictors(covars, &quot;ts.stations&quot;, c(1,2,3)))
+
+fit1 &lt;- auto.arima(total.ts[4:90], xreg=lagpreds.mult[4:90,1:5],
+  stationary=T) # best model has 4 lagged terms for temperature and the present station number
+
+fit2 &lt;- auto.arima(total.ts[4:90], xreg=lagpreds.mult[4:90, 1:3],
+  stationary=TRUE)
+
+c(fit1[[&quot;aicc&quot;]], fit2[[&quot;aicc&quot;]])</code></pre>
+<p>Dynamic regression and lagged predictor terms do not improve the model AICC beyond the best models based on the best models produced by purely the forecast variable. It is logical because it seems unlikely that the number of stations will have a large impact in the short run.</p>
+</div>
+</div>
+</div>
+
+      </div>
+      
+      
+      
+    </div>
+  </div>
+  
+  
+  
+</div>
+
+    </div><footer class="text-center p-2 text-muted footer">
+  
+    
+    <div class="py-2 lead">
+      
+        
+          <a class="ml-2" href="https://github.com/danbernstein"><span class="fab fa-github" aria-label="Join us on Github"></span></a>
+        
+      
+        
+          <a class="ml-2" href="https://twitter.com/danbernstein18"><span class="fab fa-twitter" aria-label="Join us on Twitter"></span></a>
+        
+      
+    </div>
+    
+  
+
+  
+
+  <div class="py-2 copyright">
+    <small>Copyright &#169; 2020 Dan Bernstein <b>&#183;</b> Content license: CC-BY-SA-3.0 <b>&#183;</b> Powered by <a class="font-weight-bold text-reset text-decoration-none" href="https://gohugo.io">Hugo</a> <b>&#183;</b> Theme <a class="font-weight-bold text-reset text-decoration-none" href="">Shadows</a> by <span class="softorage"><a class="font-weight-bold text-reset" href="https://softorage.com">Softorage</a></span></small>
+  </div>
+</footer>
+
+    
+    
+    
+    <script src="/assets/js/main.min.6ff0d57b7558f0225c80bade926a349330bc25d85e7ceff50d911f1156023c3e.js" integrity="sha256-b/DVe3VY8CJcgLrekmo0kzC8JdhefO/1DZEfEVYCPD4=" crossorigin="anonymous"></script>
+    <script src="/assets/js/custom.min.c8274a0cac0477f854e63f09626cc63858bb2bc9db8faecbb2834846952c7fd6.js" integrity="sha256-yCdKDKwEd/hU5j8JYmzGOFi7K8nbj67LsoNIRpUsf9Y=" crossorigin="anonymous"></script>
+    
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Lato&display=swap" rel="stylesheet">
+    
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+  </body>
+</html>

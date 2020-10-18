@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>tips on Data By Dan</title>
+    <link>https://danbernstein.netlify.app/tags/tips/</link>
+    <description>Recent content in tips on Data By Dan</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright &amp;#169; 2020 Softorage. All rights reserved.</copyright>
+    <lastBuildDate>Fri, 16 Oct 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://danbernstein.netlify.app/tags/tips/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Commons Mistakes When Using the AWS Cloud Development Kit</title>
+      <link>https://danbernstein.netlify.app/post/2020-10-16-commons-errors-using-the-aws-cloud-development-kit/</link>
+      <pubDate>Fri, 16 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2020-10-16-commons-errors-using-the-aws-cloud-development-kit/</guid>
+      <description>The AWS Cloud Development Kit (CDK) is a set of tools that make it easy to write code to specify cloud infrastructure and deploy it using common scripting languages, like Python or Javascript. Previously, you had to use YAML or XML templates to deploy AWS cloud infrastructure using the CloudFormation service. The CDK is a wrapper around these templates that makes Infrastructure as a Service (IaaS) more accessible and allows you to take advantage of complex operations that you cannot accomplish in template files.</description>
+    </item>
+    
+    <item>
+      <title>Copying Millions of Files Between S3 Buckets Without Managing Servers</title>
+      <link>https://danbernstein.netlify.app/post/2020-10-16-copying-millions-of-files-between-s3-buckets/</link>
+      <pubDate>Fri, 16 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2020-10-16-copying-millions-of-files-between-s3-buckets/</guid>
+      <description>Issue: I need to copy thousands or millions of files between S3 buckets. This might be because you regularly move data between a test and a production environments or your data architecture has changed and the new bucket names make more sense. Whether you are doing it once or regularly, there are multiple options for moving a large number of files between buckets, and the choice might come down to your familiarity with different AWS computing services, such as Lambda, EC2, and EMR.</description>
+    </item>
+    
+    <item>
+      <title>Sets Are Your Friend</title>
+      <link>https://danbernstein.netlify.app/post/2020-10-16-sets-are-your-friend/</link>
+      <pubDate>Fri, 16 Oct 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://danbernstein.netlify.app/post/2020-10-16-sets-are-your-friend/</guid>
+      <description>Issue: When working with thousands or millions of files, you will often find discrepancies in number of files and will need to find a quick way to identify where the discrepancies come from. In these situations, the logical solution is a for loop or list comprehension because they both iterate over a list of values, compute something, and return a value. In some situations, these options are not the most efficient because they require each element to be evaluated individually.</description>
+    </item>
+    
+  </channel>
+</rss>

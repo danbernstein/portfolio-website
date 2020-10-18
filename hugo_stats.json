@@ -32,7 +32,13 @@
       "small",
       "span",
       "strong",
+      "table",
+      "tbody",
+      "td",
+      "th",
+      "thead",
       "title",
+      "tr",
       "ul"
     ],
     "classes": [
@@ -125,6 +131,9 @@
       "shadow-sm",
       "small",
       "softorage",
+      "table",
+      "table-hover",
+      "table-striped",
       "text-center",
       "text-clr1",
       "text-clr2",
