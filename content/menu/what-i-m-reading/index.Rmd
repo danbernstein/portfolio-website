@@ -22,7 +22,7 @@ library(lubridate)
 library(knitr)
 library(kableExtra)
 
-GOODREADS_KEY = keyring::key_get('GOODREADS_PUBLIC_KEY')
+GOODREADS_KEY = Sys.getenv('GOODREADS_KEY')
 
 user_id = "60637949"
 
@@ -44,6 +44,7 @@ parse_xml <- function(doc) {
     tibble(
       Title = xml_find_all(doc, '//title') %>% xml_text(),
       book_link = xml_find_all(doc, '//book/link') %>% xml_text(),
+      book_id = xml_find_all(doc, '//book/id') %>% xml_text(),
       Author = xml_find_all(doc, '//name') %>% xml_text(),
       author_link = xml_find_all(doc, '//authors/author/link') %>% xml_text(),
       date_started = xml_find_all(doc, '//started_at') %>% xml_text(),
@@ -68,6 +69,7 @@ clean_df <- function(df){
 
 
 get_book_top_shelves <- function(book_id){
+  Sys.sleep(0.5)
   genreExceptions = c(
     'to-read', 'currently-reading', 'owned', 'default', 'favorites', 'books-i-own',
     'ebook', 'kindle', 'library', 'audiobook', 'owned-books', 'audiobooks', 'my-books',
@@ -79,7 +81,7 @@ get_book_top_shelves <- function(book_id){
   resp <- 
     httr::GET(url, query=list(
     key = GOODREADS_KEY,
-    id=50
+    id=book_id
   ))
   
   doc <- read_xml(resp$content)
@@ -91,8 +93,9 @@ get_book_top_shelves <- function(book_id){
       real_genres <- c(real_genres, node)
     }
   }
-  return(str_replace(real_genres[1], '-', ' '))
+  return(str_to_title(str_replace(real_genres[1], '-', ' ')))
 }
+
 ```
 
 ```{r, echo=F}
@@ -101,17 +104,22 @@ current_shelf <- get_shelf(user_id, 'currently-reading')
 output_current_df <- 
   parse_xml(current_shelf) %>% 
   clean_df(.) %>% 
-  select(Title, Author, `Date Added`=date_started)
+  rowwise() %>% 
+  mutate(book_genre = get_book_top_shelves(book_id)) %>% 
+  select(Title, Author, `Book Genre` = book_genre, `Date Added`=date_started)
 
-read_shelf <- get_shelf(user_id, 'read') 
+read_shelf <- get_shelf(user_id, 'read')  
 
 output_read_df <-
   parse_xml(read_shelf) %>% 
   clean_df(.) %>% 
+  rowwise() %>% 
+  mutate(book_genre = get_book_top_shelves(book_id)) %>% 
   select(Title, 
          Author, 
+         `Book Genre` = book_genre,
          `Date Started` = date_started, 
-         `Date Finished` = date_read)
+         `Date Finished` = date_read) 
 
 ```
 
@@ -119,12 +127,11 @@ output_read_df <-
 output_current_df %>% 
   kableExtra::kable(.) %>% 
   kable_styling(bootstrap_options = c("striped", "hover")) %>% 
-  add_header_above(header = c("Current Reading" = 3))
+  add_header_above(header = c("Current Reading" = 4))
 ```
-
 
 ```{r, echo=F}
 kableExtra::kable(output_read_df) %>% 
   kable_styling(bootstrap_options = c("striped", "hover")) %>% 
-  add_header_above(header = c("Recently Read" = 4))
+  add_header_above(header = c("Recently Read" = 5))
 ```
