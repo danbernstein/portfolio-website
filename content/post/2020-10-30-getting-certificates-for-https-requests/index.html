@@ -1,0 +1,35 @@
+---
+title: Getting Certificates For HTTPS Requests
+author: Dan
+date: '2020-10-30'
+slug: []
+categories: []
+tags:
+  - webscraping
+  - python
+  - tips
+description: ''
+lastmod: ''
+image: ''
+author_twitter: ''
+---
+
+
+
+<p>Many websites use HTTPS to encrypt communication between your computer and their servers. Your browser will execute this automatically so you never see it happen. The only indicator is the icon depicting a lock next to the URL in the address bar.</p>
+<p><img src="/2020-10-30-getting-certificates-for-https-requests/index_files/Screenshot%20from%202020-10-30%2015-36-47.png" /></p>
+<p>This presents an issue when you would like to make a programmatic request to their servers. We need that same certificate to access this website. Without the certificate chain, the request will fail. The following script will return an error the script does not have the proper certificates to communicate with the server over HTTPS.</p>
+<pre><code>import requests
+
+requests.get(&#39;https://odyssey.gwinnettcourts.com/Portal/&#39;)</code></pre>
+<p>To get the certifcate chain (in Chrome):
+1. Click on the lock icon next to the address bar.
+2. Click “Certificates”.
+3. Click “Details”.
+4. Click “Export…”.
+5. Save the file to your local computer. Make sure you select “Base64-encoded ASCII, certificate chain” as the format. Otherwise you will not have the appropriate chain of certificates to make the request properly.</p>
+<p>After downloading the certificate, you add the path to the certificate file to your request and the request will execute properly. In some cases, this will not solve your connection issue, but it will address many of them.</p>
+<pre><code>import requests
+
+cert = &#39;/path/to/my_certificate_chain.crt&#39;
+requests.get(&#39;https://odyssey.gwinnettcourts.com/Portal/&#39;,verify=cert)</code></pre>

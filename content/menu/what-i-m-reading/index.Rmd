@@ -1,5 +1,5 @@
 ---
-title: What I Am Reading
+title: What I'm Reading
 author: Dan
 date: '2020-10-17'
 slug: []
@@ -106,7 +106,7 @@ output_current_df <-
   clean_df(.) %>% 
   rowwise() %>% 
   mutate(book_genre = get_book_top_shelves(book_id)) %>% 
-  select(Title, Author, `Book Genre` = book_genre, `Date Added`=date_started)
+  select(Title, Author, `Genre*` = book_genre, `Date Added`=date_started)
 
 read_shelf <- get_shelf(user_id, 'read')  
 
@@ -117,21 +117,27 @@ output_read_df <-
   mutate(book_genre = get_book_top_shelves(book_id)) %>% 
   select(Title, 
          Author, 
-         `Book Genre` = book_genre,
+         `Genre*` = book_genre,
          `Date Started` = date_started, 
          `Date Finished` = date_read) 
 
 ```
 
 ```{r, echo=F, message=F}
+
+genre_caption <- 'Here, Genre is the name of the most common Goodreads "shelf" that the book appears on, excluding common shelf names such as "to read" and "ebook".'
+
 output_current_df %>% 
-  kableExtra::kable(.) %>% 
+  kableExtra::kable(., 
+  caption=genre_caption) %>% 
   kable_styling(bootstrap_options = c("striped", "hover")) %>% 
   add_header_above(header = c("Current Reading" = 4))
 ```
 
 ```{r, echo=F}
-kableExtra::kable(output_read_df) %>% 
+kableExtra::kable(
+  output_read_df,
+  caption=genre_caption) %>% 
   kable_styling(bootstrap_options = c("striped", "hover")) %>% 
   add_header_above(header = c("Recently Read" = 5))
 ```

@@ -1,0 +1,44 @@
+---
+title: From Data Analysis to Data Engineering
+author: Dan
+date: '2020-10-18'
+slug: []
+categories: []
+tags:
+  - python
+  - cloud computing
+  - computer vision
+  - AWS
+description: ''
+lastmod: ''
+image: ''
+author_twitter: ''
+---
+
+I am not sure when data analysis turns into data engineering. It might be a mentality to write code that is efficiently repetitive, where you are just as concerned with how the code will run on the one hundredth iteration than on the one time you run it manually on your local computer. 
+
+This mentality fundamentally changes how you write code; it impacts the way you log, how you encapsulate and parameterize functions, and how you document your code. 
+
+But still, it is hard to know when you start to call a project a data engineering project rather than just a complex data science project because at their core, both disciplines are about producing data in a different form than you got it, one that is more informative for some audience. 
+
+As I was building Safe Lane, I was never sure what it exactly *was*; was it data science, data engineering, software? At every step, I would say 'well it is just...' and fill in the blank with whatever technical collection of resources it was at that time. At this point, I know it is software and I want to document the series of "well it is just..." statements that took the project from data science to data engineering.
+
+
+## Just a script
+
+
+## Just a container running a script 
+
+
+## Just a container running a bunch of scripts
+
+
+## Just a bunch of containers
+
+
+## Just a bunch of containers running on the cloud
+
+
+## Just a bunch of containers
+
+## 
