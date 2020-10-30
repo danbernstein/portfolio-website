@@ -13,6 +13,7 @@ description: ''
 lastmod: ''
 image: ''
 author_twitter: ''
+draft: true
 ---
 
 I am not sure when data analysis turns into data engineering. It might be a mentality to write code that is efficiently repetitive, where you are just as concerned with how the code will run on the one hundredth iteration than on the one time you run it manually on your local computer. 
