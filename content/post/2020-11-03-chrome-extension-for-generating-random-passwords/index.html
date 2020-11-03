@@ -1,0 +1,117 @@
+---
+title: Chrome Extension for Generating Random Passwords
+author: Dan
+date: '2020-11-03'
+slug: []
+categories: []
+tags:
+  - javascript
+  - chrome
+  - tools
+description: ''
+lastmod: ''
+image: ''
+author_twitter: ''
+---
+
+
+
+<p>I started using Last Pass to manage my passwords about a month ago. Since then, I have found that I like how easy it is to generate new passwords using Last Pass, but it fails to work well across my laptop and my cell phone. Because I use Google Chrome on both devices, I want to return to using Chrome for password management, while benefiting from the ease of password generation that Last Pass provided. To address this, I wrote a Chrome extension to generate random string passwords.</p>
+<p>The extension produces a simple dropdown that allows you to change the number of characters and whether to include special characters. There are additional options provided by the commercial tools, like Last Pass, but these two options address the majority of my password needs.</p>
+<p><img src="/2020-11-03-chrome-extension-for-generating-random-passwords/index_files/Screenshot%20from%202020-11-03%2013-52-34.png" /></p>
+<p>Because the extension is just generating strings, rather than interacting with the browser, the extension is just two files: an HTML file for the rendered dropdown menu, and a JavaScript file to handle click functionality.</p>
+<p>The HTML file includes the inputs that the user changes to generate their password.
+The button “generate/copy” generates the string, which then appears in the box below, and it also copies the password to the clipboard so the user can then directly paste it into a password field when they are changing their password.</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;style&gt;
+      button {
+        margin: 10px;
+      }
+      div {
+        margin: 10px;
+        text-align: center;
+      }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div&gt;
+      &lt;label&gt;special characters&lt;/label&gt;
+      &lt;input type=&quot;checkbox&quot; id=&#39;special&#39; checked&gt;&lt;/input&gt;
+    &lt;/div&gt;
+    &lt;div&gt;
+      &lt;label&gt;character length: &lt;/label&gt;
+      &lt;b&gt;
+        &lt;output id=&#39;string_length_output&#39;&gt;
+          32
+        &lt;/output&gt;
+      &lt;/b&gt;
+      &lt;input type=&quot;range&quot; id=&quot;characters&quot; min=&quot;1&quot; max=&quot;100&quot; value=&quot;32&quot;&gt;
+    &lt;/div&gt;
+    &lt;div&gt;
+      &lt;button id=&#39;btnGenerate&#39;&gt;Generate/copy&lt;/button&gt;
+    &lt;/div&gt;
+    &lt;input type=&quot;text&quot; id=&#39;outputString&#39;&gt;&lt;/input&gt;
+    &lt;!--  
+      &lt;input type=&quot;checkbox&quot; id=&#39;showPW&#39;&gt;&lt;/input&gt;
+    --&gt; 
+    &lt;script src=&quot;popup.js&quot;&gt;&lt;/script&gt;
+    &lt;p style=&quot;color: grey;&quot;&gt;
+      Icons made by &lt;a href=&quot;https://www.flaticon.com/authors/flat-icons&quot; title=&quot;Flat Icons&quot;&gt;Flat Icons&lt;/a&gt; from &lt;a href=&quot;https://www.flaticon.com/&quot; title=&quot;Flaticon&quot;&gt; www.flaticon.com&lt;/a&gt;
+    &lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>Once the user clicks the button, the inputs are used to generate a random string that meets their specifications using the <code>makeid</code> function.</p>
+<pre><code>let btnGenerator = document.getElementById(&#39;btnGenerate&#39;);
+let outputString = document.getElementById(&#39;outputString&#39;);
+let special = document.getElementById(&#39;special&#39;);
+let string_length = document.getElementById(&#39;characters&#39;);
+let string_length_output = document.getElementById(&#39;string_length_output&#39;);
+// * let show_pw = document.getElementById(&#39;showPW&#39;);
+
+function makeid(length, special=true) {
+  var result           = &#39;&#39;;
+  var characters       = &#39;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789&#39;;
+
+  if ( special ) {
+    var special_characters = &#39;!@#$%^&amp;*()&#39;
+    var characters = characters.concat(special_characters)
+  }
+  console.log(characters)
+  var charactersLength = characters.length;
+  for ( var i = 0; i &lt; length; i++ ) {
+     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+}
+
+function copyToClipboard() {
+  var copyText = document.getElementById(&quot;outputString&quot;);
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); /*For mobile devices*/
+  document.execCommand(&quot;copy&quot;);
+}
+
+string_length.oninput = function() {
+  string_length_output.value = string_length.value;
+}
+
+btnGenerator.onclick = function() {
+  let string_length_value = string_length.value;
+  let special_value = special.checked;
+
+  let new_value = makeid(string_length_value, special_value);
+  outputString.value = new_value;
+  copyToClipboard()
+};
+
+/* show_pw.onclick = function() {
+  var x = document.getElementById(&quot;outputString&quot;);
+  if (x.type === &quot;password&quot;) {
+    x.type = &quot;text&quot;;
+  } else {
+    x.type = &quot;password&quot;;
+  }
+}
+*/</code></pre>
