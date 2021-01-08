@@ -1,0 +1,28 @@
+---
+title: Differences Between Local Testing and Chrome Deployment
+author: ''
+date: '2020-11-15'
+slug: []
+categories: []
+tags:
+  - chrome
+  - javascript
+  - testing
+  - tips
+description: ''
+lastmod: ''
+image: ''
+author_twitter: ''
+---
+
+
+
+<p>While implementing testing coverage across a <a href="/post/recipe-scraper/">chrome extension to parse recipes from webpages</a>, a number of errors came up as I tested the code automatically using <a href="https://jestjs.io/">Jest</a> on my local computer and when manually testing on real webpages. The issues all boil down to how code is packaged and made available when deployed as a chrome extension.</p>
+<p>All scripts that are used in a chrome extension must be declared in the <code>manifest.json</code> file. This includes scripts that directly interact with the Chrome API and any dependencies that those scripts use. In my case, I had split out my functions across mutliple files to make it easier to test and debug specific features. After creating multiple files, I had forgotten to declare each of these files in the manifest file. After deploying, I received errors stating <code>getPrintUrl is not a function</code>.</p>
+<p>When importing from a relative path in javascript, you can use <code>const { importedThing } = require('path/to/importedThing')</code>. However, when your extension is bundled and deployed to the browser, the file system is not the same; your files are re-packaged under a file system that uses the chrome extension ID. Additionally, because you have declared your scripts in the manifest file, you do not need to use <code>require()</code> in your code, and doing so actually triggers errors stating <code>cannot access `X` before initialization</code></p>
+<p>These differences between your file organization and declaration present an issue for testing. To develop well-tested code, we want to be able to test every function and and every pathway that data can move through your functions. But, we need to be able to know when the code is running in an environment run by Jest and when the code is being run in deployment in Chrome. To do so, we can detect the presence of the <code>JEST_WORKER_ID</code> environmental variable which is set to <code>1</code> when Jest is running the environment. When this environmental variable is present, we should import the required functions from relative path, and when it is not, we should not import anything because Chrome manages the code organization and deployment.</p>
+<p>To implement this, we simply wrap our <code>require()</code> statements in an if statement and change the <code>const</code> to <code>var</code>:</p>
+<pre><code>if ( process.env.JEST_WORKER_ID !== undefined ) {
+  var { importedThing } = require(&#39;path/to/importedThing&#39;)
+}</code></pre>
+<p>By making this adjustment in every script that imports from a relative path, we are prepared for both local testing and deployment.</p>
