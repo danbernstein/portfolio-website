@@ -58,7 +58,10 @@ params:
     contentLicense: "CC-BY-SA-3.0" # cc-by-3.0, etc or 'All right reserved.' should also be same as the one in copyright above
     titleSeparator: " | " # used in website/blog title, to separate (say) page title from website/blog title | default: " | "
     attribution: "enable" # attribute Hugo team for awesome software and Softorage for great theme | default: "enable"
-    tags: ['cloud computing', 'python', 'javascript', 'R', 'tools', 'tips', 'talks', 'freelance and pro bono work']
+    tags: ['cloud computing', 'python', 'javascript', 'R', 
+    'tools', 'tips', 'talks', 
+    #'freelance and pro bono work'
+    ]
   brand:
     name: "Data By Dan" # brand name (Samy's blog), usually just one word that is name of the brand | required | no default
     logo: "" # path (preferably relative path) to brand's good resolution logo | required | no default
