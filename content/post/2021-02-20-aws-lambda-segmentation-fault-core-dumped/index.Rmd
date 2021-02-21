@@ -1,0 +1,20 @@
+---
+title: Solved - AWS Lambda, Segmentation Fault (Core Dumped)
+author: Dan
+date: '2021-02-20'
+slug: []
+categories: []
+tags:
+  - AWS
+  - cloud computing
+  - quick fix
+description: ''
+lastmod: ''
+image: ''
+author_twitter: ''
+---
+
+
+I recently discovered that a couple lambda functions were not failing properly. These lambda functions were configured to send messages to a queue which were then relayed to a slack channel; however, I was finding that data was missing with no clear explanation. Looking upstream, I found that the queues that fed the failing lambda functions contained unavailable messages, meaning they had been sent to the lambda function but the lambda function had no successfully processed them, thus they were sent back to the queue as were unavailable until their visibility timeout was reached. in this case, the timeout was set to multiple hours. Looking at the CloudWatch logs for these lambda functions, they had failed to start up properly, failing less than ten seconds after instantiation with a `RuntimeExitError` with the message `Error: Runtime exited segmentation fault (core dumped)`. The memory used was less than the maximum value, so it did not appear that the lambda was maxing out the memory. However, it actually was. Simply increasing the lambda function's maximum memory removed the error and allowed the function to succeed. 
+
+I have come across this error multiple times without recording the solution. While the question is common online, there are a variety of answers that did not meet my needs. The appropriate solution can be found on [StackOverflow](https://stackoverflow.com/a/60411294/9948810).
